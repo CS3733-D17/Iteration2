@@ -12,22 +12,31 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-public class DefaultPage implements IPageFrame{
+public class EmployeePage implements IPageFrame{
     
     private String body;
     private String title;
     private User user;
     
-    public DefaultPage(String title, String bodyContent)
+    public EmployeePage(String title, String bodyContent)
     {
         this.title = title;
         this.body = bodyContent;
         this.user = null;
     }
     
-    public DefaultPage(String title)
+    public EmployeePage(String title)
     {
         this(title, "");
+    }
+    
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -54,29 +63,26 @@ public class DefaultPage implements IPageFrame{
 "<nav class=\"navbar navbar-default\">\n" +
 "  <div class=\"container-fluid\">\n" +
 "    <div class=\"navbar-header\">\n" +
-"       <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#colaNav\">\n" +
-"        <span class=\"icon-bar\"></span>\n" +
-"        <span class=\"icon-bar\"></span>\n" +
-"        <span class=\"icon-bar\"></span>\n" +
-"      </button>"+
 "      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\">COLA Search Registry</a>\n" +
-"    </div>\n<div class=\"collapse navbar-collapse\" id=\"colaNav\">" +
+"    </div>\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
-"      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"\">Search</a></li>\n" +
+"      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"\">Home</a></li>\n" +
+"      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">Page 1 <span class=\"caret\"></span></a>\n" +
+"        <ul class=\"dropdown-menu\">\n" +
+"          <li><a href=\"#\">Page 1-1</a></li>\n" +
+"          <li><a href=\"#\">Page 1-2</a></li>\n" +
+"          <li><a href=\"#\">Page 1-3</a></li>\n" +
+"        </ul>\n" +
+"      </li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
 "    </ul>\n" +
 "    <ul class=\"nav navbar-nav navbar-right\">\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"account/signup\"><span class=\"glyphicon glyphicon-user\"></span> Sign Up</a></li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"account/login\"><span class=\"glyphicon glyphicon-log-in\"></span> Login</a></li>\n" +
 "    </ul>\n" +
-"  </div></div>\n" +
+"  </div>\n" +
 "</nav>";
         
-    }
-
-    @Override
-    public void setUser(User user) {
-        this.user = user;
     }
     
     

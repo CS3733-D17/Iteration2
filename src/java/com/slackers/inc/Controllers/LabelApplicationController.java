@@ -6,14 +6,19 @@
 package com.slackers.inc.Controllers;
 
 import com.slackers.inc.database.DerbyConnection;
-import com.slackers.inc.database.IEntity;
+import com.slackers.inc.database.entities.Address;
 import com.slackers.inc.database.entities.ApplicationApproval;
+import com.slackers.inc.database.entities.BeerLabel;
+import com.slackers.inc.database.entities.DistilledLabel;
+import com.slackers.inc.database.entities.Label;
+import com.slackers.inc.database.entities.Label.BeverageType;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.database.entities.LabelApplication.RevisionType;
 import com.slackers.inc.database.entities.LabelComment;
 import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
+import com.slackers.inc.database.entities.WineLabel;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -21,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -49,6 +55,64 @@ public class LabelApplicationController {
     public LabelApplication getLabelApplication()
     {
         return this.application;
+    }
+    
+    public LabelApplication createApplicationFromRequest(HttpServletRequest request)
+    {
+        User pageUser = AccountController.getPageUser(request);
+        if (!(pageUser instanceof Manufacturer))
+            return null;
+        
+        Label l = this.createLabelFromRequest(request);
+        if (l==null)
+            return null;
+        this.application.setLabel(l);
+        
+        this.application.setEmailAddress(request.getParameter("email"));
+        this.application.setApplicant((Manufacturer) pageUser);
+        this.application.setPhoneNumber(request.getParameter("phone"));
+        this.application.setRepresentativeId(request.getParameter("representativeId"));
+        try
+        {            
+            this.application.setApplicantAddress(Address.tryParse(request.getParameter("address")));
+            this.application.setMailingAddress(Address.tryParse(request.getParameter("mailAddress")));
+        } catch (Exception e) {}
+        
+        return this.application;
+    }
+    
+    public Label createLabelFromRequest(HttpServletRequest request)
+    {
+        Label label = new Label();
+        
+        label.setIsAccepted(false);
+        label.setPlantNumber(request.getParameter("plantNumber"));
+        label.setBrandName(request.getParameter("brandName"));
+        label.setRepresentativeIdNumber(request.getParameter("repIdNumber"));
+        try
+        {
+            label.setProductSource(Label.BeverageSource.valueOf("source"));            
+            Label.BeverageType type = Label.BeverageType.valueOf(request.getParameter("type"));
+            if (type == BeverageType.BEER)
+            {
+                BeerLabel newLabel = new BeerLabel();
+                newLabel.setEntityValues(label.getEntityValues());
+                return newLabel;
+            }
+            if (type == BeverageType.DISTILLED)
+            {
+                DistilledLabel newLabel = new DistilledLabel();
+                newLabel.setEntityValues(label.getEntityValues());
+                return newLabel;
+            }
+            if (type == BeverageType.WINE)
+            {
+                WineLabel newLabel = new WineLabel();
+                newLabel.setEntityValues(label.getEntityValues());
+                return newLabel;
+            }
+        } catch (Exception e){}        
+        return label;
     }
     
     public boolean setNewReviewer(UsEmployee employee) throws SQLException
@@ -95,6 +159,8 @@ public class LabelApplicationController {
     public boolean createApplication() throws SQLException
     {
         this.application.setStatus(LabelApplication.ApplicationStatus.NOT_COMPLETE);
+        this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
+        this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
         db.createEntity(this.application);
         return true;
     }

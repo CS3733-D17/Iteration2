@@ -5,10 +5,12 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.Controllers.AccountController;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Scanner;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,26 +23,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "LoginServlet", urlPatterns = {"/account/login"})
 public class LoginServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            DefaultPage pg = new DefaultPage("Cola Search");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "login-partial.html"));
-            out.println(WebComponentProvider.buildPage(pg));
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -58,7 +40,7 @@ public class LoginServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             DefaultPage pg = new DefaultPage("Login");
             pg.setBody(WebComponentProvider.loadPartialPage(this, "login-partial.html"));
-            out.println(WebComponentProvider.buildPage(pg));
+            out.println(WebComponentProvider.buildPage(pg, request));
         }
     }
 
@@ -75,11 +57,20 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            DefaultPage pg = new DefaultPage("Cola Search");
-            String user = request.getParameter("email");
-            pg.setBody(user+"<br>Submitted:<br>"+WebComponentProvider.printParameters(request));
-            out.println(WebComponentProvider.buildPage(pg));
+            try {
+                /* TODO output your page here. You may use following sample code. */
+                AccountController c = new AccountController();
+                if (c.loginUser(request, response))
+                {
+                    response.sendRedirect(WebComponentProvider.WEB_ROOT);
+                    return;
+                }
+                response.sendRedirect("login");
+                return;
+            } catch (SQLException ex) {
+                response.sendRedirect("login");
+                return;
+            }
         }
     }
 
