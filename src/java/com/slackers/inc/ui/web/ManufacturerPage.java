@@ -12,24 +12,33 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-public class DefaultPage implements IPageFrame{
+public class ManufacturerPage implements IPageFrame{
     
     private String body;
     private String title;
     private User user;
     
-    public DefaultPage(String title, String bodyContent)
+    public ManufacturerPage(String title, String bodyContent)
     {
         this.title = title;
         this.body = bodyContent;
         this.user = null;
     }
     
-    public DefaultPage(String title)
+    public ManufacturerPage(String title)
     {
         this(title, "");
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
     @Override
     public String getBody() {
         return body;
@@ -60,23 +69,26 @@ public class DefaultPage implements IPageFrame{
 "        <span class=\"icon-bar\"></span>\n" +
 "      </button>"+
 "      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\">COLA Search Registry</a>\n" +
-"    </div>\n<div class=\"collapse navbar-collapse\" id=\"colaNav\">" +
+"    </div><div class=\"collapse navbar-collapse\" id=\"colaNav\">\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
 "      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"\">Search</a></li>\n" +
+"      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">Applications <span class=\"caret\"></span></a>\n" +
+"        <ul class=\"dropdown-menu\">\n" +
+"          <li><a href=\"#\">Working</a></li>\n" +
+"          <li><a href=\"#\">Under Review</a></li>\n" +
+"          <li><a href=\"#\">Accepted</a></li>\n" +
+"          <li><a href=\"#\">All</a></li>\n" +
+"        </ul>\n" +
+"      </li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
 "    </ul>\n" +
 "    <ul class=\"nav navbar-nav navbar-right\">\n" +
-"      <li><a href=\""+WebComponentProvider.root(request)+"account/signup\"><span class=\"glyphicon glyphicon-user\"></span> Sign Up</a></li>\n" +
-"      <li><a href=\""+WebComponentProvider.root(request)+"account/login\"><span class=\"glyphicon glyphicon-log-in\"></span> Login</a></li>\n" +
+"      <li><a href=\""+WebComponentProvider.root(request)+"account/settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " Welcome "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +
+"      <li><a href=\""+WebComponentProvider.root(request)+"account/logout\"><span class=\"glyphicon glyphicon-log-out\"></span> Logout</a></li>\n" +
 "    </ul>\n" +
 "  </div></div>\n" +
 "</nav>";
         
-    }
-
-    @Override
-    public void setUser(User user) {
-        this.user = user;
     }
     
     

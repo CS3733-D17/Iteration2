@@ -6,19 +6,39 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.User.UserType;
+import com.sun.xml.wss.impl.misc.Base64;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Created by SrinuL on 3/30/17.
  */
 public class AccountController {
 
+    private static final String EMAIL_COOKIE = "SSINCEmail";
+    private static final String PASSWORD_COOKIE = "SSINCMisc";
+    private static final String PREV_UNAME = "SSINCPN";
+    
+    private static final String SALT = "?8kL91A!s";
+    
     private DerbyConnection db;
     private User user;
 
+    public static enum Permission
+    {
+        NONE,
+        MANUFACTURER,
+        EMPLOYEE,
+        ADMIN;
+    }
+    
     public AccountController(User user) throws SQLException {
         db = DerbyConnection.getInstance();
         this.user = user;
@@ -28,6 +48,155 @@ public class AccountController {
         this(new User(null, null, null, null));
     }
 
+    private String getPasswordEnc(String password)
+    {
+        password += SALT; // salt for security
+        byte[] bytes = password.getBytes(StandardCharsets.UTF_8);
+        try
+        {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            bytes = md.digest(bytes);
+        } catch (Exception e){}
+        password = null; // promote gc of password. Prevent from hanging in memory
+        return Base64.encode(bytes);
+    }
+    
+    public static User getPageUser(HttpServletRequest request)
+    {
+        try
+        {
+            AccountController acc = new AccountController();
+            String email = request.getParameter("email");
+            String pass = request.getParameter("password");
+            for (Cookie c : request.getCookies())
+            {
+                if (c.getName().equals(EMAIL_COOKIE))
+                {
+                    email = c.getValue();
+                }
+                if (c.getName().equals(PASSWORD_COOKIE))
+                {
+                    pass = c.getValue();
+                }
+            }
+            if (email!=null && pass!=null)
+            {
+                return acc.getUser(email, pass);
+            }
+            return null;
+        }catch (Exception e)
+        {
+            return null;
+        }
+    }
+    
+    public boolean verifyPermission(HttpServletRequest request, HttpServletResponse response, Permission requiredPermission) 
+    {
+        if (requiredPermission == Permission.NONE)
+            return true;
+        String email = null;
+        String pass = null;
+        for (Cookie c : request.getCookies())
+        {
+            if (c.getName().equals(EMAIL_COOKIE))
+            {
+                email = c.getValue();
+            }
+            if (c.getName().equals(PASSWORD_COOKIE))
+            {
+                pass = c.getValue();
+            }
+        }
+        if (email!=null && pass!=null)
+        {
+            try {
+                this.user.setEmail(email);
+                this.user.setPassword(null);
+                db.getEntity(user, "email");
+                if (user.getPassword().equals(pass))
+                {
+                    if (user.getUserType() == UserType.ADMIN)
+                    {
+                        return true;
+                    }
+                    if (user.getUserType() == UserType.MANUFACTURER && requiredPermission == Permission.MANUFACTURER)
+                    {
+                        return true;
+                    }
+                    if (user.getUserType() == UserType.US_EMPLOYEE && requiredPermission == Permission.EMPLOYEE)
+                    {
+                        return true;
+                    }
+                }
+            } catch (SQLException ex) {
+                return false;
+            }
+        }
+        return false;
+    }
+    
+    public boolean verifyCredentials(HttpServletRequest request, HttpServletResponse response) 
+    {
+        String email = null;
+        String pass = null;
+        for (Cookie c : request.getCookies())
+        {
+            if (c.getName().equals(EMAIL_COOKIE))
+            {
+                email = c.getValue();
+            }
+            if (c.getName().equals(PASSWORD_COOKIE))
+            {
+                pass = c.getValue();
+            }
+        }
+        if (email!=null && pass!=null)
+        {
+            try {
+                return this.verifyCredentials(email, this.getPasswordEnc(pass));
+            } catch (SQLException ex) {
+                return false;
+            }
+        }
+        else
+        {
+            this.loginUser(request, response);
+        }
+        return false;
+    }
+    
+    public boolean logout(HttpServletRequest request, HttpServletResponse response) 
+    {
+        String email = null;
+        String pass = null;
+        for (Cookie c : request.getCookies())
+        {
+            if (c.getName().equals(EMAIL_COOKIE))
+            {
+                c.setMaxAge(0);
+                c.setValue(null);
+                c.setPath("/");
+                response.addCookie(c);
+            }
+            if (c.getName().equals(PASSWORD_COOKIE))
+            {
+                c.setMaxAge(0);
+                c.setValue(null);
+                c.setPath("/");
+                response.addCookie(c);
+            }
+        }
+        if (email!=null && pass!=null)
+        {
+            try {
+                return this.verifyCredentials(email, pass);
+            } catch (SQLException ex) {
+                return false;
+            }
+        }
+        return false;
+    }
+    
     // returns true if the credentials are valid, and false otherwise
     public boolean verifyCredentials(String email, String password) throws SQLException {
         
@@ -42,8 +211,45 @@ public class AccountController {
         return password.equals(user.getPassword());
     }
 
+    public boolean loginUser(HttpServletRequest request, HttpServletResponse response) 
+    {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        if (email!=null && password!=null)
+        {
+            User usr = null;
+            try {
+                
+                usr = this.getUser(email, this.getPasswordEnc(password));
+            } catch (SQLException ex) {
+                Logger.getLogger(AccountController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalStateException ex) {
+                Logger.getLogger(AccountController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (usr!=null)
+            {
+                Cookie prevName = new Cookie(PREV_UNAME, email);
+                Cookie uName = new Cookie(EMAIL_COOKIE, email);
+                Cookie uPass = new Cookie(PASSWORD_COOKIE, this.getPasswordEnc(password));
+                uName.setMaxAge(60*60*24);
+                uPass.setMaxAge(60*60*24);
+                prevName.setMaxAge(60*60*24);
+                uName.setPath("/");
+                uPass.setPath("/");
+                prevName.setPath("/");
+                response.addCookie(uName);
+                response.addCookie(uPass);
+                response.addCookie(prevName);
+            }     
+            return usr!=null;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-    public User loginUser(String email, String password) throws SQLException, IllegalStateException
+    public User getUser(String email, String password) throws SQLException, IllegalStateException
     {
         if (this.verifyCredentials(email, password))
         {
@@ -64,12 +270,39 @@ public class AccountController {
                throw new IllegalStateException("User type is unknown!"); 
             }
             db.getEntity(this.user, this.user.getPrimaryKeyName());
-            System.out.println("LOADED USER: "+this.user);
             return this.user;
         }
         else
         {
             return null;
+        }
+    }
+    
+    public boolean createAccount(HttpServletRequest request, HttpServletResponse response) 
+    {
+        String firstName = request.getParameter("fName");
+        String lastName = request.getParameter("lName");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String uType = request.getParameter("uType");
+        UserType type = null;
+        if (uType != null && uType.equals("manufacturer"))
+            type = UserType.MANUFACTURER;
+        if (uType != null && uType.equals("employee"))
+            type = UserType.US_EMPLOYEE;
+        
+        if (firstName == null || lastName == null || email == null || password == null || type == null)
+        {
+            return false;
+        }
+        try
+        {
+            boolean res = this.createAccount(firstName, lastName, email, this.getPasswordEnc(password), type);
+            return this.loginUser(request, response);
+        }
+        catch (Exception e)
+        {
+            return false;
         }
     }
     
@@ -123,7 +356,7 @@ public class AccountController {
         String em = this.user.getEmail();
         String pass = this.user.getPassword();
         try {
-            return this.loginUser(em, pass)!=null;
+            return this.getUser(em, pass)!=null;
         } catch (SQLException ex) {
             Logger.getLogger(AccountController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalStateException ex) {
