@@ -48,8 +48,7 @@ public class SearchController {
         System.out.println(String.join(", ", columns));
         return db.getAllEntites_Typed(target, columns.toArray(new String[columns.size()]));
     }
-    public static void keywordSearch() {
-        String keywords = "hi -bye";
+    public static void keywordSearch(String keywords) {
         String parts[] = keywords.split(" -");
         System.out.println("contains: " + parts[0]);
         System.out.println("does not contain: " + parts[1]);
