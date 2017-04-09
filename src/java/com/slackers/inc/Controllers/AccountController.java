@@ -6,7 +6,7 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.User.UserType;
-import com.sun.xml.wss.impl.misc.Base64;
+//import com.sun.xml.wss.impl.misc.Base64;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
@@ -58,7 +58,8 @@ public class AccountController {
             bytes = md.digest(bytes);
         } catch (Exception e){}
         password = null; // promote gc of password. Prevent from hanging in memory
-        return Base64.encode(bytes);
+        //return Base64.encode(bytes);
+        return String.valueOf(bytes);
     }
     
     public static User getPageUser(HttpServletRequest request)

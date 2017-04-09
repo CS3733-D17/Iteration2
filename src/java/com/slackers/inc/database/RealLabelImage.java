@@ -5,30 +5,31 @@
  */
 package com.slackers.inc.database;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
 /**
  *
  * @author Fabio Borges
  */
-public class RealLabelImage implements ILabelImage
-{
-    private String fileName;
+public class RealLabelImage implements ILabelImage {
+    private FileInputStream fileName;
     
-    public RealLabelImage(String fileName)
-    {
+    public RealLabelImage(FileInputStream fileName) {
         this.fileName = fileName;
         loadImage(fileName);
     }
     
-    public String getFileName()
-    { return fileName; }
-    
-    public void display()
-    {
+    public String getFileName() throws IOException{
+        return fileName.getFD().toString();
+    }
+
+    @Override
+    public void display() {
         
     }
     
-    private void loadImage(String fileName)
-    {
+    private void loadImage(FileInputStream fileName) {
         
     }
 }
