@@ -72,12 +72,12 @@ public class ManufacturerPage implements IPageFrame{
 "    </div><div class=\"collapse navbar-collapse\" id=\"colaNav\">\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
 "      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"\">Search</a></li>\n" +
-"      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">Applications <span class=\"caret\"></span></a>\n" +
+"      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\""+WebComponentProvider.root(request)+"\">Applications <span class=\"caret\"></span></a>\n" +
 "        <ul class=\"dropdown-menu\">\n" +
-"          <li><a href=\"#\">Working</a></li>\n" +
-"          <li><a href=\"#\">Under Review</a></li>\n" +
-"          <li><a href=\"#\">Accepted</a></li>\n" +
-"          <li><a href=\"#\">All</a></li>\n" +
+"          <li><a href=\"Working\">Working</a></li>\n" +
+"          <li><a href=\"UnderReview\">Under Review</a></li>\n" +
+"          <li><a href=\"Accepted\">Accepted</a></li>\n" +
+"          <li><a href=\""+WebComponentProvider.root(request)+"All\">All</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
