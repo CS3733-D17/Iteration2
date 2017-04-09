@@ -47,6 +47,10 @@ public class Label implements IEntity{
     private BeverageSource productSource;
     private BeverageType productType;
     private String brandName;
+    private String serialNumber;
+    private String fancifulName;
+    private String formula;
+    private String generalInfo;
     
     private ApplicationApproval approval;
     
@@ -60,7 +64,11 @@ public class Label implements IEntity{
         this.productType = BeverageType.UNKNOWN;
         this.representativeIdNumber = "";
         this.brandName = "";
+        this.serialNumber = "";
         this.approval = new ApplicationApproval();
+        this.fancifulName = "";
+        this.formula = "";
+        this.generalInfo = "";
     }
 
     public ApplicationApproval getApproval() {
@@ -78,7 +86,17 @@ public class Label implements IEntity{
             this.setIsAccepted(true);
             this.approval = approval;
         }
-    }    
+    }  
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+    
+    
 
     public double getAlcoholContent() {
         return alcoholContent;
@@ -144,6 +162,31 @@ public class Label implements IEntity{
         this.brandName = brandName;
     }
 
+    public String getFancifulName() {
+        return fancifulName;
+    }
+
+    public void setFancifulName(String fancifulName) {
+        this.fancifulName = fancifulName;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
+
+    public String getGeneralInfo() {
+        return generalInfo;
+    }
+
+    public void setGeneralInfo(String generalInfo) {
+        this.generalInfo = generalInfo;
+    }
+    
+
     @Override
     public String getTableName() {
         return TABLE;
@@ -161,6 +204,11 @@ public class Label implements IEntity{
         values.put("productType", this.productType.name());
         values.put("brandName", this.brandName);
         values.put("approval", this.approval.getPrimaryKeyValue());  
+        values.put("serialNumber", this.serialNumber);
+        
+        values.put("fancifulName", this.fancifulName);
+        values.put("formula", this.formula);
+        values.put("generalInfo", this.generalInfo);
         return values;
     }
 
@@ -174,7 +222,12 @@ public class Label implements IEntity{
         values.put("productSource", this.productSource.name());
         values.put("productType", this.productType.name());
         values.put("brandName", this.brandName);
-        values.put("approval", this.approval.getPrimaryKeyValue());  
+        values.put("approval", this.approval.getPrimaryKeyValue()); 
+        values.put("serialNumber", this.serialNumber);
+        
+        values.put("fancifulName", this.fancifulName);
+        values.put("formula", this.formula);
+        values.put("generalInfo", this.generalInfo);
         return values;
     }
 
@@ -213,6 +266,25 @@ public class Label implements IEntity{
         {
             this.brandName = (String) values.get("brandName");
         }
+        if (values.containsKey("serialNumber"))
+        {
+            this.serialNumber = (String) values.get("serialNumber");
+        }
+        
+        if (values.containsKey("fancifulName"))
+        {
+            this.fancifulName = (String) values.get("fancifulName");
+        }
+        if (values.containsKey("formula"))
+        {
+            this.formula = (String) values.get("formula");
+        }
+        
+        if (values.containsKey("generalInfo"))
+        {
+            this.generalInfo = (String) values.get("generalInfo");
+        }
+        
         if(values.containsKey("approval")){
             long val = (long)values.get("approval");
             if (val==0)
@@ -244,6 +316,10 @@ public class Label implements IEntity{
         pairs.put("productType", String.class);
         pairs.put("brandName", String.class);
         pairs.put("approval", Long.class);
+        pairs.put("serialNumber", String.class);
+        pairs.put("fancifulName", String.class);
+        pairs.put("formula", String.class);
+        pairs.put("generalInfo", String.class);
         return pairs;
     }
 
@@ -256,9 +332,15 @@ public class Label implements IEntity{
         cols.add("alchoholContent float");        
         cols.add("representativeIdNumber varchar(128)");
         cols.add("plantNumber varchar(128)");
-        cols.add("productSource varchar(64)");
+        cols.add("productSource varchar(64)");        
         cols.add("productType varchar(64)");
         cols.add("brandName varchar(128)");
+        cols.add("fancifulName varchar(256)");
+        cols.add("formula varchar(1024)");
+        cols.add("grapeVarietal varchar(128)");
+        cols.add("wineAppelation varchar(128)");
+        cols.add("generalInfo varchar(1024)");
+        cols.add("serialNumber varchar(64)");
         cols.add("phLevel float");
         cols.add("vintage int");
         return cols;

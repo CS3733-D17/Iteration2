@@ -5,8 +5,13 @@
  */
 package com.slackers.inc.ui.web.form;
 
+import com.slackers.inc.Controllers.AccountController;
+import com.slackers.inc.ui.web.WebComponentProvider;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,8 +39,13 @@ public class FormCreate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            AccountController c = new AccountController();
+            
             out.println("Create get");            
+        } catch (SQLException ex) {
+            Logger.getLogger(FormCreate.class.getName()).log(Level.SEVERE, null, ex);
         }
+        response.sendRedirect(WebComponentProvider.root(request));
     }
 
     /**

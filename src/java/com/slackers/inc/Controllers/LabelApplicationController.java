@@ -11,9 +11,9 @@ import com.slackers.inc.database.entities.ApplicationApproval;
 import com.slackers.inc.database.entities.BeerLabel;
 import com.slackers.inc.database.entities.DistilledLabel;
 import com.slackers.inc.database.entities.Label;
+import com.slackers.inc.database.entities.Label.BeverageSource;
 import com.slackers.inc.database.entities.Label.BeverageType;
 import com.slackers.inc.database.entities.LabelApplication;
-import com.slackers.inc.database.entities.LabelApplication.RevisionType;
 import com.slackers.inc.database.entities.LabelComment;
 import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
@@ -22,7 +22,7 @@ import com.slackers.inc.database.entities.WineLabel;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,7 +76,8 @@ public class LabelApplicationController {
         {            
             this.application.setApplicantAddress(Address.tryParse(request.getParameter("address")));
             this.application.setMailingAddress(Address.tryParse(request.getParameter("mailAddress")));
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         
         return this.application;
     }
@@ -88,7 +89,13 @@ public class LabelApplicationController {
         label.setIsAccepted(false);
         label.setPlantNumber(request.getParameter("plantNumber"));
         label.setBrandName(request.getParameter("brandName"));
-        label.setRepresentativeIdNumber(request.getParameter("repIdNumber"));
+        
+        label.setFancifulName(request.getParameter("fancifulName"));
+        label.setGeneralInfo(request.getParameter("generalInfo"));
+        
+        label.setFormula(request.getParameter("formula"));
+        
+        label.setRepresentativeIdNumber(request.getParameter("representativeId"));
         try
         {
             label.setProductSource(Label.BeverageSource.valueOf("source"));            
@@ -109,10 +116,106 @@ public class LabelApplicationController {
             {
                 WineLabel newLabel = new WineLabel();
                 newLabel.setEntityValues(label.getEntityValues());
+                newLabel.setPhLevel(Double.parseDouble(request.getParameter("pH")));
+                newLabel.setVintage(Integer.parseInt(request.getParameter("vintage")));
+                newLabel.setGrapeVarietal(request.getParameter("grapeVarietal"));
+                newLabel.setWineAppelation(request.getParameter("wineAppelation"));
                 return newLabel;
             }
         } catch (Exception e){}        
         return label;
+    }
+    
+    public String validateApplication()
+    {
+        if (this.application.getEmailAddress() == null || this.application.getEmailAddress().length()<3)
+        {
+            return "Invalid email address";
+        }
+        if (this.application.getApplicant() == null || this.application.getApplicant().getEmail().equals(Manufacturer.NULL_MANUFACTURER.getEmail())
+                || (this.application.getApplicant() instanceof Manufacturer))
+        {
+            return "Invalid applicant";
+        }
+        if (this.application.getApplicantAddress()== null || this.application.getApplicantAddress().getZipCode()==-1)
+        {
+            return "Invalid applicant address";
+        }
+        if (this.application.getMailingAddress() == null)
+        {
+            this.application.setMailingAddress(this.application.getApplicantAddress());//use mailing address as default
+        }
+        if (this.application.getMailingAddress() == null || this.application.getMailingAddress().getZipCode()==-1)
+        {            
+            return "Invalid mailing address";
+        }
+        if (this.application.getPhoneNumber() == null || this.application.getPhoneNumber().length()<10 || this.application.getPhoneNumber().length()>21)
+        {
+            return "Invalid phone number";
+        }
+        if (this.application.getRepresentativeId()== null || this.application.getRepresentativeId().length()<3)
+        {
+            return "Invalid representative Id ";
+        }
+        return null;
+    }
+    
+    public String validateLabel()
+    {
+        Label l = this.application.getLabel();
+        if (l == null)
+        {
+            return "Invalid label information";
+        }
+        if (l.getBrandName() == null || l.getBrandName().length()<2)
+        {
+            return "Invalid brand name";
+        }
+        if (l.getPlantNumber()== null || l.getPlantNumber().length()<2)
+        {
+            return "Invalid plant number";
+        }
+        if (l.getSerialNumber()== null || l.getSerialNumber().length()<5 || l.getSerialNumber().length()>10)
+        {
+            return "Invalid serial number";
+        }
+        if (l.getProductSource() == null || l.getProductSource()==BeverageSource.UNKNOWN)
+        {
+            return "Invalid beverage source";
+        }
+        if (l.getProductType()== null || l.getProductType()==BeverageType.UNKNOWN)
+        {
+            return "Invalid beverage type";
+        }
+        if (l.getProductType()== null || l.getProductType()==BeverageType.UNKNOWN)
+        {
+            return "Invalid beverage type";
+        }
+        if (l.getRepresentativeIdNumber()== null || l.getRepresentativeIdNumber().length()<5)
+        {
+            return "Invalid representative id";
+        }        
+        if (l.getAlcoholContent()<0 || l.getAlcoholContent()>100)
+        {
+            return "Invalid alchohol content";
+        }
+        
+        if (l.getFormula()== null || l.getFormula().length()<5)
+        {
+            return "Formula is invalid";
+        }
+        if (l instanceof WineLabel)
+        {
+            if (((WineLabel)l).getPhLevel()<0||((WineLabel)l).getPhLevel()>14)
+            {
+                return "Invalid pH level";
+            }
+            if (((WineLabel)l).getGrapeVarietal()== null||((WineLabel)l).getGrapeVarietal().length()<5)
+            {
+                return "Grape varietal is invalid";
+            }
+        }
+        return null;
     }
     
     public boolean setNewReviewer(UsEmployee employee) throws SQLException
@@ -133,11 +236,6 @@ public class LabelApplicationController {
     {
         this.application.setApplicationApproval(approval);
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
-    }
-    
-    public boolean isRevisionAllowed(RevisionType type)
-    {
-        return this.application.getAllowedRevisions().contains(type);
     }
     
     public boolean saveApplication() throws SQLException
@@ -186,10 +284,8 @@ public class LabelApplicationController {
         this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
         this.application.setApplicationApproval(null);
-        this.application.setAllowedRevisions(new HashSet<>());
-        System.out.println(this.application);
         boolean res = db.writeEntity(this.application, this.application.getPrimaryKeyName());
-        this.autoSelectReviewer();
+        //this.autoSelectReviewer();
         return res;
     }
     
@@ -257,5 +353,11 @@ public class LabelApplicationController {
         }
         
         return false;
+    }
+    
+    public static List<LabelApplication> getNextBatch()
+    {
+        List<LabelApplication> out = new LinkedList<>();
+        return out;
     }
 }

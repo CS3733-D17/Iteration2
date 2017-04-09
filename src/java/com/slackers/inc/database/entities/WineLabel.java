@@ -15,11 +15,15 @@ public class WineLabel extends Label{
 
     private int vintage;
     private double phLevel;
+    private String grapeVarietal;
+    private String wineAppelation;
     
     public WineLabel() {
         super();
         this.vintage = 0;
-        this.phLevel = 0;
+        this.phLevel = 0;        
+        this.grapeVarietal = "";
+        this.wineAppelation = "";
         super.setProductType(BeverageType.WINE);
     }
 
@@ -38,6 +42,23 @@ public class WineLabel extends Label{
     public void setPhLevel(double phLevel) {
         this.phLevel = phLevel;
     }
+    
+    
+    public String getGrapeVarietal() {
+        return grapeVarietal;
+    }
+
+    public void setGrapeVarietal(String grapeVarietal) {
+        this.grapeVarietal = grapeVarietal;
+    }
+
+    public String getWineAppelation() {
+        return wineAppelation;
+    }
+
+    public void setWineAppelation(String wineAppelation) {
+        this.wineAppelation = wineAppelation;
+    }
 
     @Override
     public WineLabel deepCopy() {
@@ -51,6 +72,9 @@ public class WineLabel extends Label{
         Map<String,Class> pairs = super.getEntityNameTypePairs();
         pairs.put("phLevel", Double.class);
         pairs.put("vintage", Integer.class);
+
+        pairs.put("grapeVarietal", String.class);
+        pairs.put("wineAppelation", String.class);        
         return pairs;
     }
 
@@ -65,6 +89,14 @@ public class WineLabel extends Label{
         {
             this.vintage = (int) values.get("vintage");
         }
+        if (values.containsKey("grapeVarietal"))
+        {
+            this.grapeVarietal = (String) values.get("grapeVarietal");
+        }
+        if (values.containsKey("wineAppelation"))
+        {
+            this.wineAppelation = (String) values.get("wineAppelation");
+        }
     }
 
     @Override
@@ -72,6 +104,9 @@ public class WineLabel extends Label{
         Map<String,Object> values = super.getUpdatableEntityValues();
         values.put("phLevel", this.phLevel);
         values.put("vintage", this.vintage);
+        
+        values.put("grapeVarietal", this.grapeVarietal);
+        values.put("wineAppelation", this.wineAppelation);
         return values;
     }
 
@@ -80,6 +115,9 @@ public class WineLabel extends Label{
         Map<String,Object> values = super.getEntityValues();
         values.put("phLevel", this.phLevel);
         values.put("vintage", this.vintage);
+        
+        values.put("grapeVarietal", this.grapeVarietal);
+        values.put("wineAppelation", this.wineAppelation);
         return values;
     }
     
