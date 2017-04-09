@@ -5,20 +5,22 @@
  */
 package com.slackers.inc.database;
 
+import java.io.FileInputStream;
+
 /**
  *
  * @author Fabio Borges
  */
 public class ProxyLabelImage implements ILabelImage {
     private RealLabelImage realLabel;
-    private String fileName;
+    private FileInputStream fileName;
 
-    public ProxyLabelImage(String fileName) {
+    public ProxyLabelImage(FileInputStream fileName) {
 
         this.fileName = fileName;
     }
 
-    public String getFileName() { return fileName; }
+    public FileInputStream getFileStream() { return fileName; }
 
     // Load the real image if it has not been loaded and display that image
     @Override
