@@ -83,7 +83,7 @@ public class ManufacturerPage implements IPageFrame{
 "      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
 "    </ul>\n" +
 "    <ul class=\"nav navbar-nav navbar-right\">\n" +
-"      <li><a href=\""+WebComponentProvider.root(request)+"account/settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " Welcome "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +
+"      <li><a href=\""+WebComponentProvider.root(request)+"account/manufacturer-settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " Welcome "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"account/logout\"><span class=\"glyphicon glyphicon-log-out\"></span> Logout</a></li>\n" +
 "    </ul>\n" +
 "  </div></div>\n" +
