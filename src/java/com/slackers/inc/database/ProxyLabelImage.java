@@ -11,24 +11,8 @@ package com.slackers.inc.database;
  */
 public class ProxyLabelImage implements ILabelImage
 {
-    private RealLabelImage realLabel;
-    private String fileName;
-    
-    public ProxyLabelImage(String fileName)
+    public ProxyLabelImage()
     {
-        this.fileName = fileName;
-    }
-    
-    public String getFileName()
-    { return fileName; }
-    
-    // Load the real image if it has not been loaded and display that image
-    //@Override
-    public void display()
-    {
-        if(realLabel == null)
-            realLabel = new RealLabelImage(fileName);
-        
-        realLabel.display();
+
     }
 }
