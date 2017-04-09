@@ -6,6 +6,7 @@
 package com.slackers.inc.database;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  *
@@ -20,7 +21,9 @@ public class ProxyLabelImage implements ILabelImage {
         this.fileName = fileName;
     }
 
-    public FileInputStream getFileStream() { return fileName; }
+    public String getFileName() throws IOException{
+        return fileName.getFD().toString();
+    }
 
     // Load the real image if it has not been loaded and display that image
     @Override
