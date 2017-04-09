@@ -14,79 +14,76 @@
 	<div class="container">
 		<h2>Label Search</h2>
 		<div>
-			<form>
+			<form oninput="words.value=keywords.value">
+				<button class="button" type="submit">run</button>
 				<div class="row">
                 	<div class="col-md-6">
-						<ul class="nav nav-tabs">
-							<li class="active"><a data-toggle="tab" href="#basic">home</a></li>
-							<li><a data-toggle="tab" href="#advanced">menu1</a></li>
-						</ul>
-						<div class="tab-content">
-							<div id="basic" class="tab-pane fade in active">
-								<div class="input-group">
-									<input type="text" class="form-control" placeholder="Search">
-									<div class="input-group-btn">
-										<button class="btn btn-default" type="submit">
-											<i class="glyphicon glyphicon-search"></i>
-										</button>
-									</div>
-								</div>
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Search" id="keywords">
+							<div class="input-group-btn">
+								<button class="btn btn-default" type="button">
+									<i class="glyphicon glyphicon-search"></i>
+								</button>
 							</div>
-
-							<div id="advanced" class="tab-pane fade">
-								<h3>Menu 1</h3>
-								<div class="form-group">
-									<label>Alcohol Content</label>
-									<input class="form-control" placeholder="Values between 0.0 - 100.0" type="text">
-								</div>
-
-								<div class="form-group">
-									<label>Origin Location</label>
-									<input class="form-control" placeholder="Origin Location" type="text">
-								</div>
-								<div  class="form-group">
-									<label>Source of Product</label>
-									<select class="form-control" id="subject" name="subject">
-										<option selected value="na">
-											Choose One:
-										</option>
-										<option value="Domestic">
-											Domestic
-										</option>
-										<option value="Imported">
-											Imported
-										</option>
-									</select>
-								</div>
-
-								<div class="form-group">
-									<label>PH Level</label>
-									<input class="form-control" placeholder="PH Level" type="text">
-								</div>
-
-								<div class="form-group">
-									<label>Vintage Year</label>
-									<input class="form-control" placeholder="Vintage Year" type="text">
-								</div>
-								<button type="submit" class="btn btn-primary btn-md">Search</button>
-
-							</div>
-
 						</div>
+						<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#advanced">Advanced</button>
 
+						<div id="advanced" class="collapse">
+							<ul class = "pagination">
+								<li class="active"><a href="#Wine" data-toggle="tab">Wine</a></li>
+								<li><a href="#Beer" data-toggle="tab">Beer</a></li>
+							</ul>
+							<div class="form-group">
+								<label>Alcohol Content</label>
+								<input class="form-control" placeholder="Values between 0.0 - 100.0" type="text" id="alcoholContent">
+							</div>
+
+							<div class="form-group">
+								<label>Origin Location</label>
+								<input class="form-control" placeholder="Origin Location" type="text" id="originLocation">
+							</div>
+							<div  class="form-group">
+								<label>Source of Product</label>
+								<select class="form-control" id="subject" name="subject">
+									<option selected value="na">
+										Choose One:
+									</option>
+									<option value="Domestic">
+										Domestic
+									</option>
+									<option value="Imported">
+										Imported
+									</option>
+								</select>
+							</div>
+							<div class="tab-content">
+								<div id = "Beer" class="tab-pane fade in active">
+
+
+								</div>
+
+								<div id = "Wine" class="tab-pane fade in active">
+
+									<div class="form-group">
+										<label>pH Level</label>
+										<input class="form-control" placeholder="PH Level" type="text" id="pHLevel">
+									</div>
+
+									<div class="form-group">
+										<label>Vintage Year</label>
+										<input class="form-control" placeholder="Vintage Year" type="text" id="vintageYear">
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<output name="words" for="keywords"></output>
 					</div>
 				</div>
 			</form>
+
 		</div>
 
-		<form class="form-horizontal">
-			<div class="form-group">
-				<label class="control-label col-sm-2">Email:</label>
-				<div class="col-sm-10">
-					<p class="form-control-static">someone@example.com</p>
-				</div>
-			</div>
-		</form>
 	</div>
 
 
