@@ -5,10 +5,8 @@
  */
 package com.slackers.inc.ui.web;
 
-import com.slackers.inc.Controllers.AccountController;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jason
  */
-@WebServlet(name = "ApplicationsPageServlet", urlPatterns = {"/All"})
-public class ApplicationsPageServlet extends HttpServlet {
+@WebServlet(name = "ProcessPage", urlPatterns = {"/processPage1"})
+public class ProcessPage extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +37,10 @@ public class ApplicationsPageServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ApplicationsPageServlet</title>");            
+            out.println("<title>Servlet ProcessPage</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ApplicationsPageServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProcessPage at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,8 +60,8 @@ public class ApplicationsPageServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            ManufacturerPage pg = new ManufacturerPage("applicationList");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "applicationList-partial.html"));
+            EmployeePage pg = new EmployeePage("processPage");
+            pg.setBody(WebComponentProvider.loadPartialPage(this, "ApplicationProccessList-partial.html"));
             out.println(WebComponentProvider.buildPage(pg, request));
         }
     }
@@ -80,7 +78,6 @@ public class ApplicationsPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
     }
 
     /**
