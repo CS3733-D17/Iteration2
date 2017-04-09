@@ -33,6 +33,15 @@ public class SearchServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            String keywords = request.getParameter("keywords");
+            String originLocation = request.getParameter("originLocation");
+            String alcoholContent = request.getParameter("alcoholContent");
+            String subject = request.getParameter("subject");
+            String pHLevel = request.getParameter("pHLevel");
+            String vintageYear = request.getParameter("vintageYear");
+
+
+
             /* TODO output your page here. You may use following sample code. */
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Cola Search");
             out.println(WebComponentProvider.buildPage(pg, request));

@@ -1,6 +1,5 @@
 package com.slackers.inc.Controllers;
 
-import com.slackers.inc.Controllers.LabelApplicationController;
 import com.slackers.inc.database.entities.*;
 
 import java.sql.Date;
