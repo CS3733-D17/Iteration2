@@ -92,7 +92,7 @@ public class LabelApplicationController {
         
         label.setFancifulName(request.getParameter("fancifulName"));
         label.setGeneralInfo(request.getParameter("generalInfo"));
-        
+        label.setSerialNumber(request.getParameter("serialNumber"));
         label.setFormula(request.getParameter("formula"));
         
         label.setRepresentativeIdNumber(request.getParameter("representativeId"));
