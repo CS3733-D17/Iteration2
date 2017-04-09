@@ -10,7 +10,8 @@ package com.slackers.inc.database;
  * @author Fabio Borges 
  * 
  */
-public interface ILabelImage
-{
-    
+public interface ILabelImage {
+
+    public void display();
+
 }
