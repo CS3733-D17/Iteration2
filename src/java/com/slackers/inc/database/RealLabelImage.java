@@ -11,9 +11,24 @@ package com.slackers.inc.database;
  */
 public class RealLabelImage implements ILabelImage
 {
-    public RealLabelImage()
+    private String fileName;
+    
+    public RealLabelImage(String fileName)
+    {
+        this.fileName = fileName;
+        loadImage(fileName);
+    }
+    
+    public String getFileName()
+    { return fileName; }
+    
+    public void display()
     {
         
     }
     
+    private void loadImage(String fileName)
+    {
+        
+    }
 }
