@@ -7,19 +7,19 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</head>
-	
+
 	<body>
 
 	<div class="container">
 		<h2>Label Search</h2>
 		<div>
-			<form>
+			<form action="SuperSlackers" method="post">
 				<div class="row">
-                	<div class="col-md-6">
+					<div class="col-md-6">
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="Search" id="keywords">
 							<div class="input-group-btn">
-								<button class="btn btn-default" type="button">
+								<button class="btn btn-default" type="submit" value="">
 									<i class="glyphicon glyphicon-search"></i>
 								</button>
 							</div>
@@ -40,7 +40,7 @@
 								<label>Origin Location</label>
 								<input class="form-control" placeholder="Origin Location" type="text" id="originLocation">
 							</div>
-							<div  class="form-group">
+							<div class="form-group">
 								<label>Source of Product</label>
 								<select class="form-control" id="subject" name="subject">
 									<option selected value="na">
