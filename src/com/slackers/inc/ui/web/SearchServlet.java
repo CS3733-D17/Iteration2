@@ -35,11 +35,10 @@ public class SearchServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String keywords = request.getParameter("keywords");
             String originLocation = request.getParameter("originLocation");
-            String alcoholContent = request.getParameter("alcoholContent");
+            double alcoholContent = Double.valueOf(request.getParameter("alcoholContent"));
             String subject = request.getParameter("subject");
-            String pHLevel = request.getParameter("pHLevel");
-            String vintageYear = request.getParameter("vintageYear");
-
+            double pHLevel = Double.valueOf(request.getParameter("pHLevel"));
+            int vintageYear = Integer.valueOf(request.getParameter("vintageYear"));
 
 
             /* TODO output your page here. You may use following sample code. */
