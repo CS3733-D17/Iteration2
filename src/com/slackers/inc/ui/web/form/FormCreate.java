@@ -5,8 +5,14 @@
  */
 package com.slackers.inc.ui.web.form;
 
+import com.slackers.inc.Controllers.LabelApplicationController;
+import com.slackers.inc.ui.web.IPageFrame;
+import com.slackers.inc.ui.web.WebComponentProvider;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +40,11 @@ public class FormCreate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            out.println("Create get");            
+            String form = WebComponentProvider.loadPartialPage(this, "submit-label.html");
+            String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Create Label Application");
+            pg.setBody(form.replace("##FORM_CONTENT", formTemplate));
+            out.println(WebComponentProvider.buildPage(pg, request));
         }
     }
 
@@ -51,7 +61,11 @@ public class FormCreate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            out.println("Create post");
+            LabelApplicationController appControl = new LabelApplicationController();
+            appControl.createApplicationFromRequest(request);
+            out.println(appControl.getLabelApplication());
+        } catch (SQLException ex) {
+            Logger.getLogger(FormCreate.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

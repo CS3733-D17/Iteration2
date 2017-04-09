@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface IPageFrame {
     public String getNavBar(HttpServletRequest request);
     public String getBody();
+    public void setBody(String body);
     public String getTitle();
     public void setUser(User user);
 }
