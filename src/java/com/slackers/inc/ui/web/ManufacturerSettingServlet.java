@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.slackers.inc.ui.web;
+package java.com.slackers.inc.ui.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
