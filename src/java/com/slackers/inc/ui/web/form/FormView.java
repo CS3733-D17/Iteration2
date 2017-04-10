@@ -7,16 +7,12 @@ package com.slackers.inc.ui.web.form;
 
 import com.slackers.inc.Controllers.AccountController;
 import com.slackers.inc.Controllers.LabelApplicationController;
-import com.slackers.inc.database.entities.Label.BeverageType;
-import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.User;
+import com.slackers.inc.database.entities.User.UserType;
 import com.slackers.inc.ui.web.IPageFrame;
 import com.slackers.inc.ui.web.WebComponentProvider;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,8 +48,21 @@ public class FormView extends HttpServlet {
             WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            form = form.replace("##FORM_CONTENT", formTemplate);
+            
+            User usr = AccountController.getPageUser(request);
+            if (usr==null || usr.getUserType() != UserType.MANUFACTURER || usr.getUserType() != UserType.US_EMPLOYEE)
+            { }
+            else if (usr.getUserType() != UserType.MANUFACTURER)
+            {
+                form = form.replace("##ACTION_BUTTON", " <a href = \"/SuperSlackers/form/edit?id=##ID\" class=\"btn btn-warning\" style=\"width:100%; margin-top: 30px;\">Edit Label Application</a>");
+            }
+            else if (usr.getUserType() != UserType.US_EMPLOYEE)
+            {
+                form = form.replace("##ACTION_BUTTON", " <a href = \"/SuperSlackers/form/process?id=##ID\" class=\"btn btn-warning\" style=\"width:100%; margin-top: 30px;\">Process Label Application</a>");
+            }            
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "View Label Application");
-            pg.setBody(form.replace("##FORM_CONTENT", formTemplate).replace("##ID", Long.toString(appId)));
+            pg.setBody(form.replace("##ID", Long.toString(appId))+appControl.renderCommentList(request));
             out.println(WebComponentProvider.buildPage(pg, request));
         }
         catch (Exception e)

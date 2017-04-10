@@ -352,6 +352,44 @@ public class LabelApplicationController {
         response.addCookie(lbl);
     }
     
+    public String renderCommentList(HttpServletRequest request)
+    {
+        StringBuilder b = new StringBuilder();
+        b.append("<div class=\"row\">").append("<div class=\"col-sm-1 col-md-2\"></div>");
+        b.append("<div class=\"col-sm-10 col-md-8\">");
+        for (LabelComment comment : this.application.getComments())
+        {
+            b.append(this.renderComment(request, comment));
+        }
+        b.append("</div>");
+        b.append("<div class=\"col-sm-1 col-md-2\"></div>").append("</div>");
+        return b.toString();
+    }
+    
+    public String renderComment(HttpServletRequest request, LabelComment comment)
+    {
+        if (comment==null)
+            return null;
+        User usr = AccountController.getPageUser(request);
+        
+        StringBuilder b = new StringBuilder();
+        b.append("<div class=\"panel panel-info\">").append("<div class=\"panel-heading\">");
+        if (usr==null)
+        {
+            b.append("Unknown");
+        }
+        else
+        {
+            b.append(usr.getFirstName()+" "+usr.getLastName());
+        }
+        b.append("<div style=\"float:right;\">").append(comment.getDate()).append("</div>");
+        b.append("</div>").append("<div class=\"panel-body\">");
+        b.append(comment.getComment());
+        b.append("</div>").append("</div>");
+        return b.toString();
+    }
+    
+    
     public boolean setNewReviewer(UsEmployee employee) throws SQLException
     {
         this.application.setSubmitter(this.application.getReviewer());

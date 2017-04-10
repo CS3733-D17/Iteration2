@@ -9,6 +9,7 @@ import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.IEntity;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,11 +30,13 @@ public class LabelComment implements IEntity{
     private long commentId;
     private String comment;
     private User commenter;
+    private Date date;
 
     public LabelComment(User submitter, String comment) {
         this.comment = comment;
         this.commenter = submitter;
         this.commentId = 0;
+        date = new Date(new java.util.Date().getTime());
     }
 
     public LabelComment()
@@ -65,6 +68,10 @@ public class LabelComment implements IEntity{
         this.commenter = submitter;
     }    
 
+    public Date getDate() {
+        return date;
+    }
+    
     @Override
     public String getTableName() {
         return TABLE;
@@ -77,6 +84,7 @@ public class LabelComment implements IEntity{
         values.put("comment", this.comment);
         if (this.commenter!=null)
             values.put("commenter", this.commenter.getPrimaryKeyValue());
+        values.put("date", this.date);
         return values;
     }
 
@@ -86,6 +94,7 @@ public class LabelComment implements IEntity{
         values.put("comment", this.comment);
         if (this.commenter!=null)
             values.put("commenter", this.commenter.getPrimaryKeyValue());
+        values.put("date", this.date);
         return values;
     }
 
@@ -98,6 +107,10 @@ public class LabelComment implements IEntity{
         if (values.containsKey("comment"))
         {
             this.comment = (String) values.get("comment");
+        }
+        if (values.containsKey("date"))
+        {
+            this.date = (Date) values.get("date");
         }
         if (values.containsKey("commenter"))
         {
@@ -116,6 +129,7 @@ public class LabelComment implements IEntity{
         pairs.put("commentId", Long.class);
         pairs.put("comment", String.class);
         pairs.put("commenter", String.class);
+        pairs.put("date", Date.class);
         return pairs;
     }
 
@@ -124,6 +138,7 @@ public class LabelComment implements IEntity{
         List<String> cols = new LinkedList<>();
         cols.add("commentId bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)");
         cols.add("comment long varchar");
+        cols.add("date date");
         cols.add("commenter varchar(512)");
         return cols;
     }
