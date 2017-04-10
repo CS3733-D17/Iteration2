@@ -31,11 +31,13 @@ public class ApplicationsPageServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         try (PrintWriter out = response.getWriter()) {
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "applicationPage");
+            pg.setBody(WebComponentProvider.loadPartialPage(this, "applicationList-partial.html"));
             out.println(WebComponentProvider.buildPage(pg, request));
         }
     }
@@ -50,14 +52,8 @@ public class ApplicationsPageServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            ManufacturerPage pg = new ManufacturerPage("applicationList");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "applicationList-partial.html"));
-            out.println(WebComponentProvider.buildPage(pg, request));
-        }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /**
@@ -69,10 +65,8 @@ public class ApplicationsPageServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request,response);
     }
 
     /**
