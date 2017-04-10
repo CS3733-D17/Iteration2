@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package java.com.slackers.inc.ui.web.form;
+package com.slackers.inc.ui.web.form;
 
 import java.com.slackers.inc.Controllers.LabelApplicationController;
-import java.com.slackers.inc.ui.web.IPageFrame;
-import java.com.slackers.inc.ui.web.WebComponentProvider;
+import com.slackers.inc.ui.web.IPageFrame;
+import com.slackers.inc.ui.web.WebComponentProvider;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;

@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package java.com.slackers.inc.ui.web;
+package com.slackers.inc.ui.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,18 +33,9 @@ public class SearchServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String keywords = request.getParameter("keywords");
-            String originLocation = request.getParameter("originLocation");
-            double alcoholContent = Double.valueOf(request.getParameter("alcoholContent"));
-            String subject = request.getParameter("subject");
-            double pHLevel = Double.valueOf(request.getParameter("pHLevel"));
-            int vintageYear = Integer.valueOf(request.getParameter("vintageYear"));
-
-
             /* TODO output your page here. You may use following sample code. */
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Cola Search");
             out.println(WebComponentProvider.buildPage(pg, request));
-            WebComponentProvider.loadPartialPage(this,"Results-partial.html");
         }
     }
 
@@ -57,8 +49,7 @@ public class SearchServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -71,8 +62,7 @@ public class SearchServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
 

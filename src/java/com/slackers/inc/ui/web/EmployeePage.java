@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package java.com.slackers.inc.ui.web;
+package com.slackers.inc.ui.web;
 
 import java.com.slackers.inc.database.entities.User;
 import javax.servlet.http.HttpServletRequest;
