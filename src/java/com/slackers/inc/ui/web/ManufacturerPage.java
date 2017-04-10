@@ -30,6 +30,7 @@ public class ManufacturerPage implements IPageFrame{
         this(title, "");
     }
 
+    @Override
     public User getUser() {
         return user;
     }
@@ -71,19 +72,19 @@ public class ManufacturerPage implements IPageFrame{
 "      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\">COLA Search Registry</a>\n" +
 "    </div><div class=\"collapse navbar-collapse\" id=\"colaNav\">\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
-"      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"\">Search</a></li>\n" +
-"      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">Applications <span class=\"caret\"></span></a>\n" +
+"      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"manufacturerSearch\">Search</a></li>\n" +
+"      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"\">Applications <span class=\"caret\"></span></a>\n" +
 "        <ul class=\"dropdown-menu\">\n" +
-"          <li><a href=\"#\">Working</a></li>\n" +
-"          <li><a href=\"#\">Under Review</a></li>\n" +
-"          <li><a href=\"#\">Accepted</a></li>\n" +
-"          <li><a href=\"#\">All</a></li>\n" +
+"          <li><a href=\"Working\">Working</a></li>\n" +
+"          <li><a href=\"UnderReview\">Under Review</a></li>\n" +
+"          <li><a href=\"Accepted\">Accepted</a></li>\n" +
+"          <li><a href=\""+WebComponentProvider.root(request)+"All\">All</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
 "    </ul>\n" +
 "    <ul class=\"nav navbar-nav navbar-right\">\n" +
-"      <li><a href=\""+WebComponentProvider.root(request)+"account/manufacturer-settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " Welcome "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +
+"      <li><a href=\""+WebComponentProvider.root(request)+"account/settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " Welcome "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"account/logout\"><span class=\"glyphicon glyphicon-log-out\"></span> Logout</a></li>\n" +
 "    </ul>\n" +
 "  </div></div>\n" +

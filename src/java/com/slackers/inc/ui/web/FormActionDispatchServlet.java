@@ -46,13 +46,12 @@ public class FormActionDispatchServlet extends HttpServlet {
                         this.getServletContext().getRequestDispatcher("/form/create").forward(request, response);
                     if (action.equalsIgnoreCase("edit"))
                         this.getServletContext().getRequestDispatcher("/form/edit").forward(request, response);
-                    if (action.equalsIgnoreCase("review"))
-                        this.getServletContext().getRequestDispatcher("/form/reveiw").forward(request, response);
+                    if (action.equalsIgnoreCase("view"))
+                        this.getServletContext().getRequestDispatcher("/form/view").forward(request, response);
                 }                
             }            
         } catch (Exception ex) {
         }
-        response.sendRedirect(WebComponentProvider.WEB_ROOT);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

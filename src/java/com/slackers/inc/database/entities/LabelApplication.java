@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +42,14 @@ public class LabelApplication implements IEntity{
         UNKNOWN;
     }
     
+    public static enum ApplicationType
+    {
+        NEW,
+        EXEMPT,
+        DISTINCT,
+        RESUBMIT;
+    }
+    
     private long applicationId;
     
     
@@ -52,6 +61,7 @@ public class LabelApplication implements IEntity{
     private String emailAddress;
     private Date applicationDate;
     private ApplicationStatus status;
+    private Map<ApplicationType,String> applicationTypes;
     private String applicant;
     private String reviewer;
     private String submitter;
@@ -68,6 +78,7 @@ public class LabelApplication implements IEntity{
         this.applicationDate = new java.sql.Date(new java.util.Date().getTime());
         this.applicationId = applicationId;
         this.comments = new LinkedList<>();
+        this.applicationTypes = new HashMap<>();
         this.emailAddress = "";
         this.label = new Label();
         this.mailingAddress = new Address();
@@ -109,7 +120,8 @@ public class LabelApplication implements IEntity{
             values.put("label", this.label.getPrimaryKeyValue());
         values.put("comments", LabelComment.commentListToString(this.comments));
         if (this.applicationApproval!=null)
-            values.put("applicationApproval", (long)this.applicationApproval.getPrimaryKeyValue());       
+            values.put("applicationApproval", (long)this.applicationApproval.getPrimaryKeyValue()); 
+        values.put("applicationTypes", this.getAppTypes());
         return values;
     }
 
@@ -134,7 +146,8 @@ public class LabelApplication implements IEntity{
             values.put("label", this.label.getPrimaryKeyValue());
         values.put("comments", LabelComment.commentListToString(this.comments));
         if (this.applicationApproval!=null)
-            values.put("applicationApproval", (long)this.applicationApproval.getPrimaryKeyValue());        
+            values.put("applicationApproval", (long)this.applicationApproval.getPrimaryKeyValue());    
+        values.put("applicationTypes", this.getAppTypes());
         return values;
     }
 
@@ -183,6 +196,10 @@ public class LabelApplication implements IEntity{
         if (values.containsKey("submitter"))
         {
             this.submitter = (String)values.get("submitter");
+        }
+        if (values.containsKey("applicationTypes"))
+        {
+            this.setAppTypes((String)values.get("applicationTypes"));
         }
         if (values.containsKey("label"))
         {
@@ -253,6 +270,7 @@ public class LabelApplication implements IEntity{
         pairs.put("submitter", String.class);        
         pairs.put("label", Long.class);
         pairs.put("comments", String.class);
+        pairs.put("applicationTypes", String.class);        
         pairs.put("applicationApproval", Long.class);        
         pairs.put("allowedRevisions", String.class);
         return pairs;
@@ -272,6 +290,7 @@ public class LabelApplication implements IEntity{
         cols.add("applicant varchar(256)");
         cols.add("reviewer varchar(256)");
         cols.add("submitter varchar(256)");
+        cols.add("applicationTypes varchar(256)");        
         cols.add("label varchar(4096)");
         cols.add("comments long varchar");
         cols.add("applicationApproval bigint");
@@ -554,9 +573,51 @@ public class LabelApplication implements IEntity{
         }
     }
     
+    public void addApplicationType(ApplicationType applicationType, String value)
+    {
+        this.applicationTypes.put(applicationType,value);
+    }
+    
+    public Map<ApplicationType,String> getApplicationTypes()
+    {
+        return this.applicationTypes;
+    }
+    
+    private String getAppTypes()
+    {
+        List<String> types = new LinkedList<>();
+        for (Entry<ApplicationType,String> e : this.applicationTypes.entrySet())
+        {
+            types.add(e.getKey().name()+"##"+e.getValue());
+        }
+        return DerbyConnection.collectionToString(types);
+    }
+    
+    private void setAppTypes(String storedString)
+    {
+        try
+        {
+            List<String> types = DerbyConnection.collectionFromString(storedString);
+            for (String s : types)
+            {
+                try
+                {
+                    String[] vals = s.split("##");
+                    if (vals.length>1 && vals[1] != null && !vals[1].equals(""))
+                        this.applicationTypes.put(ApplicationType.valueOf(vals[0]), vals[1]);
+                    else
+                        this.applicationTypes.put(ApplicationType.valueOf(vals[0]), "");
+                }
+                catch(Exception e)
+                {}
+            }
+        }
+        catch (Exception e){}
+    }
+    
     @Override
     public String toString() {
-        return "LabelApplication{" + "applicationId=" + applicationId + ", representativeId=" + representativeId + ", applicantAddress=" + applicantAddress + ", mailingAddress=" + mailingAddress + ", phoneNumber=" + phoneNumber + ", emailAddress=" + emailAddress + ", applicationDate=" + applicationDate + ", status=" + status + ", applicant=" + applicant + ", reviewer=" + reviewer + ", submitter=" + submitter + ", label=" + label + '}';
+        return "LabelApplication{" + "applicationId=" + applicationId + ", representativeId=" + representativeId + ", applicantAddress=" + applicantAddress + ", mailingAddress=" + mailingAddress + ", phoneNumber=" + phoneNumber + ", emailAddress=" + emailAddress + ", applicationDate=" + applicationDate + ", status=" + status + ", applicant=" + applicant + ", reviewer=" + reviewer + ", submitter=" + submitter + ", label=" + label + ", appType="+this.getAppTypes()+'}';
     }
     
     
