@@ -24,7 +24,8 @@ public class User implements IEntity{
         UNKNOWN,
         MANUFACTURER,
         US_EMPLOYEE,
-        COLA_USER;
+        COLA_USER,
+        ADMIN;
     }
     
     private String password;

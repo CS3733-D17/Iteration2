@@ -5,8 +5,12 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.Controllers.AccountController;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-@WebServlet(name = "NewServlet", urlPatterns = {"/New"})
-public class NewServlet extends HttpServlet {
+@WebServlet(name = "FormActionDispatchServlet", urlPatterns = {"/form"})
+public class FormActionDispatchServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,16 +37,23 @@ public class NewServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet NewServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>HELLO WORLD</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            
+            AccountController controller = new AccountController();
+            if (controller.verifyPermission(request, response, AccountController.Permission.EMPLOYEE)||
+                    controller.verifyPermission(request, response, AccountController.Permission.MANUFACTURER))
+            {
+                String action = request.getParameter("action");            
+                if (action!=null) // id already validated as a number because didn't throw exception
+                {
+                    if (action.equalsIgnoreCase("create"))
+                        this.getServletContext().getRequestDispatcher("/form/create").forward(request, response);
+                    if (action.equalsIgnoreCase("edit"))
+                        this.getServletContext().getRequestDispatcher("/form/edit").forward(request, response);
+                    if (action.equalsIgnoreCase("view"))
+                        this.getServletContext().getRequestDispatcher("/form/view").forward(request, response);
+                }                
+            }            
+        } catch (Exception ex) {
         }
     }
 

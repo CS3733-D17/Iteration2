@@ -5,12 +5,18 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.database.entities.User;
+import javax.servlet.http.HttpServletRequest;
+
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
 public interface IPageFrame {
-    public String getNavBar();
+    public String getNavBar(HttpServletRequest request);
     public String getBody();
+    public void setBody(String body);
     public String getTitle();
+    public void setUser(User user);
+    public User getUser();
 }

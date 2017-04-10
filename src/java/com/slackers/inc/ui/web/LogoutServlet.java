@@ -21,8 +21,32 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/account/login"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "LogoutServlet", urlPatterns = {"/account/logout"})
+public class LogoutServlet extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            AccountController c;
+            try {
+                c = new AccountController();
+                c.logout(request, response);
+            } catch (SQLException ex) {
+                Logger.getLogger(LogoutServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } 
+            response.sendRedirect(WebComponentProvider.WEB_ROOT);
+        }
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -34,14 +58,8 @@ public class LoginServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            DefaultPage pg = new DefaultPage("Login");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "login-partial.html"));
-            out.println(WebComponentProvider.buildPage(pg, request));
-        }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /**
@@ -53,25 +71,8 @@ public class LoginServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            try {
-                /* TODO output your page here. You may use following sample code. */
-                AccountController c = new AccountController();
-                if (c.loginUser(request, response))
-                {
-                    response.sendRedirect(WebComponentProvider.WEB_ROOT);
-                    return;
-                }
-                response.sendRedirect("login");
-                return;
-            } catch (SQLException ex) {
-                response.sendRedirect("login");
-                return;
-            }
-        }
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /**

@@ -3,9 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.slackers.inc.ui.web;
+package com.slackers.inc.ui.web.form;
 
 import com.slackers.inc.Controllers.AccountController;
+import com.slackers.inc.Controllers.LabelApplicationController;
+import com.slackers.inc.database.entities.Label.BeverageType;
+import com.slackers.inc.database.entities.Manufacturer;
+import com.slackers.inc.database.entities.User;
+import com.slackers.inc.ui.web.IPageFrame;
+import com.slackers.inc.ui.web.WebComponentProvider;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -21,8 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-@WebServlet(name = "SignupServlet", urlPatterns = {"/account/signup"})
-public class SignupServlet extends HttpServlet {
+@WebServlet(name = "FormView", urlPatterns = {"/form/view"})
+public class FormView extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -38,9 +44,21 @@ public class SignupServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            DefaultPage pg = new DefaultPage("Signup");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "createAccount-partial.html"));
+            LabelApplicationController appControl = new LabelApplicationController();
+            Long appId = Long.parseLong(request.getParameter("id"));
+            
+            appControl.loadApplication(appId);
+            appControl.writeApplicationToCookies(response);
+            WebComponentProvider.setSuccessMessage(response, null);
+            String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
+            String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "View Label Application");
+            pg.setBody(form.replace("##FORM_CONTENT", formTemplate).replace("##ID", Long.toString(appId)));
             out.println(WebComponentProvider.buildPage(pg, request));
+        }
+        catch (Exception e)
+        {
+            response.sendRedirect(WebComponentProvider.root(request));
         }
     }
 
@@ -55,39 +73,7 @@ public class SignupServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            DefaultPage pg = new DefaultPage("Create Account");
-            AccountController c = null;
-            try {
-                c = new AccountController();
-            } catch (SQLException ex) {
-                Logger.getLogger(AccountController.class.getName()).log(Level.SEVERE, null, ex);
-                response.sendRedirect("signup");
-                return;
-            }
-            try
-            {
-                if (c.createAccount(request, response))
-                {
-                    response.sendRedirect(WebComponentProvider.WEB_ROOT);
-                    return;
-                }
-                else
-                {
-                    WebComponentProvider.setSuccessMessage(response, "Signup Error");
-                    response.sendRedirect("signup");
-                    return;
-                }
-            }
-            catch (Exception e)
-            {
-                WebComponentProvider.setSuccessMessage(response, "User already exists");
-                response.sendRedirect("signup");
-                return;
-            }
-        }
+        doGet(request, response);
     }
 
     /**

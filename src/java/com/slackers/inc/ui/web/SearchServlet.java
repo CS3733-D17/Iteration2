@@ -29,13 +29,14 @@ public class SearchServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+
             /* TODO output your page here. You may use following sample code. */
-            DefaultPage pg = new DefaultPage("Cola Search");
-            out.println(WebComponentProvider.buildPage(pg));
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Cola Search");
+            out.println(WebComponentProvider.buildPage(pg, request));
+
         }
     }
 
@@ -49,8 +50,7 @@ public class SearchServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -63,8 +63,7 @@ public class SearchServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
 

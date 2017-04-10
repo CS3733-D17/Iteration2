@@ -3,9 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.slackers.inc.ui.web;
+package com.slackers.inc.ui.web.form;
 
 import com.slackers.inc.Controllers.AccountController;
+import com.slackers.inc.Controllers.LabelApplicationController;
+import com.slackers.inc.database.entities.Label.BeverageType;
+import com.slackers.inc.database.entities.Manufacturer;
+import com.slackers.inc.database.entities.User;
+import com.slackers.inc.ui.web.IPageFrame;
+import com.slackers.inc.ui.web.WebComponentProvider;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -21,8 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-@WebServlet(name = "SignupServlet", urlPatterns = {"/account/signup"})
-public class SignupServlet extends HttpServlet {
+@WebServlet(name = "FormCreate", urlPatterns = {"/form/create"})
+public class FormCreate extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -38,8 +44,10 @@ public class SignupServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            DefaultPage pg = new DefaultPage("Signup");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "createAccount-partial.html"));
+            String form = WebComponentProvider.loadPartialPage(this, "submit-label.html");
+            String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Create Label Application");
+            pg.setBody(form.replace("##FORM_CONTENT", formTemplate));
             out.println(WebComponentProvider.buildPage(pg, request));
         }
     }
@@ -57,36 +65,34 @@ public class SignupServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            DefaultPage pg = new DefaultPage("Create Account");
-            AccountController c = null;
-            try {
-                c = new AccountController();
-            } catch (SQLException ex) {
-                Logger.getLogger(AccountController.class.getName()).log(Level.SEVERE, null, ex);
-                response.sendRedirect("signup");
-                return;
-            }
-            try
+            LabelApplicationController appControl = new LabelApplicationController();
+            appControl.createApplicationFromRequest(request);
+            appControl.writeApplicationToCookies(response);
+            String error = appControl.validateApplication();
+            if (error==null)
             {
-                if (c.createAccount(request, response))
+                try
                 {
-                    response.sendRedirect(WebComponentProvider.WEB_ROOT);
-                    return;
+                    Manufacturer man = (Manufacturer)AccountController.getPageUser(request);
+                    appControl.submitApplication(man);
+                    IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Form Submission Complete");
+                    pg.setBody(WebComponentProvider.loadPartialPage(this, "form-submitted.html").replace("##ID", Long.toString(appControl.getLabelApplication().getApplicationId())));
+                    out.println(WebComponentProvider.buildPage(pg, request));
+                    
                 }
-                else
-                {
-                    WebComponentProvider.setSuccessMessage(response, "Signup Error");
-                    response.sendRedirect("signup");
-                    return;
+                catch(Exception e){
+                    response.sendRedirect("/SuperSlackers/form/create");
                 }
             }
-            catch (Exception e)
+            else
             {
-                WebComponentProvider.setSuccessMessage(response, "User already exists");
-                response.sendRedirect("signup");
-                return;
+                //out.println(WebComponentProvider.printParameters(request)+"<br><br>");
+                //out.println(appControl.getLabelApplication().toString());
+                WebComponentProvider.setSuccessMessage(response, error);
+                response.sendRedirect("/SuperSlackers/form/create");
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormCreate.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
