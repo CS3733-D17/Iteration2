@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Jason
  */
 @WebServlet(name = "ProcessPageServlet", urlPatterns = {"/processPage1"})
-public class ProcessPageServlet extends HttpServlet {
+public class ProcessPage extends HttpServlet {
 
     IPageFrame pg;
     /**
@@ -72,7 +72,7 @@ public class ProcessPageServlet extends HttpServlet {
 "                           </div>\n" +
 "                       </div>\n" +
 "                   <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
-"                       <div class=\"panel-body\">Drink information</div>\n" +
+"                       <div class=\"panel-body\"> information</div>\n" +
 "                       </div>\n" +
 "                   </div>");
             b.append(pg.getBody());

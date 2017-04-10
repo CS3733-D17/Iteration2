@@ -56,27 +56,34 @@ public class ApplicationsPageServlet extends HttpServlet {
             pg.setBody(WebComponentProvider.loadPartialPage(this, "applicationList-partial.html"));
             out.println(WebComponentProvider.buildPage(pg, request));
             
-        }    
-        Manufacturer manufacturer = (Manufacturer) (pg.getUser());
-        for(int i = 0; i < manufacturer.getApplications().size(); i++){
+            Manufacturer manufacturer = (Manufacturer) (pg.getUser());
             StringBuilder b = new StringBuilder();
-            b.append("<div class=\"panel panel-default\">\n" +
-"                       <div class=\"panel-heading\">\n" +
-"                           <div class=\"row\">\n" +
-"                               <div class=\"col-md-10\">\n" +
-"                                   <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + manufacturer.getApplications().get(i).getLabel().getBrandName() + "</a>\n" +
-"                               </div>\n" +
-"                               <div class=\"col-md-1 pull-right\">\n" +
-"                                   <button class='btn btn-primary btn-block'>Edit</button>\n" +
+            for(int i = 0; i < manufacturer.getApplications().size(); i++){
+                b.append("<div class=\"panel panel-default\">\n" +
+"                           <div class=\"panel-heading\">\n" +
+"                               <div class=\"row\">\n" +
+"                                   <div class=\"col-md-10\">\n" +
+"                                       <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + manufacturer.getApplications().get(i).getLabel().getBrandName() + "</a>\n" +
+"                                   </div>\n" +
+"                                   <div class=\"col-md-1 pull-right\">\n" +
+"                                       <button class='btn btn-primary btn-block'>Edit</button>\n" +
+"                                   </div>\n" +
 "                               </div>\n" +
 "                           </div>\n" +
-"                       </div>\n" +
-"                   <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
-"                       <div class=\"panel-body\">Drink information</div>\n" +
-"                       </div>\n" +
-"                   </div>");
-            b.append(pg.getBody());
-        }
+"                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
+"                           <div class=\"panel-body\">Drink information</div>\n" +
+"                           </div>\n" +
+"                       </div>");
+            }
+            /*
+            pg = WebComponentProvider.getCorrectFrame(request, "applicationPage");
+            String applications = WebComponentProvider.loadPartialPage(this, "applicationList-partial.html");
+            applications = applications.replace("##Applications", b);
+            pg.setBody(applications);
+            out.println(WebComponentProvider.buildPage(pg, request));
+            */
+        }    
+  
     }
 
     /**
