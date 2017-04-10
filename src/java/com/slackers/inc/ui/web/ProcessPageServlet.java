@@ -5,6 +5,8 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.database.entities.Manufacturer;
+import com.slackers.inc.database.entities.UsEmployee;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -17,9 +19,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jason
  */
-@WebServlet(name = "ProcessPage", urlPatterns = {"/processPage1"})
-public class ProcessPage extends HttpServlet {
+@WebServlet(name = "ProcessPageServlet", urlPatterns = {"/processPage1"})
+public class ProcessPageServlet extends HttpServlet {
 
+    IPageFrame pg;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,19 +34,7 @@ public class ProcessPage extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ProcessPage</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ProcessPage at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+      
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -59,10 +50,32 @@ public class ProcessPage extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         try (PrintWriter out = response.getWriter()) {
-            EmployeePage pg = new EmployeePage("processPage");
+            pg = WebComponentProvider.getCorrectFrame(request, "applicationProcessPage");
             pg.setBody(WebComponentProvider.loadPartialPage(this, "ApplicationProccessList-partial.html"));
             out.println(WebComponentProvider.buildPage(pg, request));
+            
+        }    
+        UsEmployee employee = (UsEmployee) (pg.getUser());
+        for(int i = 0; i < employee.getApplications().size(); i++){
+            StringBuilder b = new StringBuilder();
+            b.append("<div class=\"panel panel-default\">\n" +
+"                       <div class=\"panel-heading\">\n" +
+"                           <div class=\"row\">\n" +
+"                               <div class=\"col-md-10\">\n" +
+"                                   <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + employee.getApplications().get(i).getLabel().getBrandName() + "</a>\n" +
+"                               </div>\n" +
+"                               <div class=\"col-md-1 pull-right\">\n" +
+"                                   <button class='btn btn-primary btn-block'>Edit</button>\n" +
+"                               </div>\n" +
+"                           </div>\n" +
+"                       </div>\n" +
+"                   <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
+"                       <div class=\"panel-body\">Drink information</div>\n" +
+"                       </div>\n" +
+"                   </div>");
+            b.append(pg.getBody());
         }
     }
 

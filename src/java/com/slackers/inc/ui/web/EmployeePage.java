@@ -29,7 +29,8 @@ public class EmployeePage implements IPageFrame{
     {
         this(title, "");
     }
-    
+
+    @Override
     public User getUser() {
         return user;
     }
