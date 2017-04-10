@@ -14,11 +14,13 @@ import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.Label.BeverageSource;
 import com.slackers.inc.database.entities.Label.BeverageType;
 import com.slackers.inc.database.entities.LabelApplication;
+import com.slackers.inc.database.entities.LabelApplication.ApplicationType;
 import com.slackers.inc.database.entities.LabelComment;
 import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.WineLabel;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -26,6 +28,7 @@ import java.util.Base64;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -82,6 +85,22 @@ public class LabelApplicationController {
         this.application.setApplicant((Manufacturer) pageUser);
         this.application.setPhoneNumber(request.getParameter("phone"));
         this.application.setRepresentativeId(request.getParameter("representativeId"));
+        if (request.getParameter("NEW")!=null)
+        {
+            this.application.addApplicationType(LabelApplication.ApplicationType.NEW, null);
+        }
+        if (request.getParameter("DISTINCT")!=null)
+        {
+            this.application.addApplicationType(LabelApplication.ApplicationType.DISTINCT, request.getParameter("capacity"));
+        }
+        if (request.getParameter("EXEMPT")!=null)
+        {
+            this.application.addApplicationType(LabelApplication.ApplicationType.EXEMPT, request.getParameter("state"));
+        }
+        if (request.getParameter("RESUBMIT")!=null)
+        {
+            this.application.addApplicationType(LabelApplication.ApplicationType.RESUBMIT, request.getParameter("tbbid"));
+        }
         try
         {            
             this.application.setApplicantAddress(Address.tryParse(request.getParameter("address")));
@@ -165,9 +184,27 @@ public class LabelApplicationController {
         {
             return "Invalid phone number";
         }
+        for (Entry<ApplicationType,String> e : this.application.getApplicationTypes().entrySet())
+        {
+            if (e.getKey() == ApplicationType.DISTINCT)
+            {
+                if (e.getValue()==null || e.getValue().length()<1)
+                    return "Invalid bottle capacity before closure";
+            }
+            if (e.getKey() == ApplicationType.EXEMPT)
+            {
+                if (e.getValue()==null || e.getValue().length()!=2)
+                    return "Invalid state for exemption";
+            }
+            if (e.getKey() == ApplicationType.RESUBMIT)
+            {
+                if (e.getValue()==null || e.getValue().length()<1)
+                    return "Invalid TBB id for resubmission";
+            }
+        }
         return this.validateLabel();
     }
-    
+   
     public String validateLabel()
     {
         Label l = this.application.getLabel();
@@ -249,6 +286,29 @@ public class LabelApplicationController {
             generalObj.add("address", this.application.getApplicantAddress().toString());
         if (this.application.getMailingAddress()!=null)
             generalObj.add("mailAddress", this.application.getMailingAddress().toString());
+        
+        for (Entry<ApplicationType,String> e : this.application.getApplicationTypes().entrySet())
+        {
+            if (e.getKey() == ApplicationType.NEW)
+            {
+                generalObj.add("NEW", "checked");
+            }
+            if (e.getKey() == ApplicationType.DISTINCT)
+            {
+                generalObj.add("DISTINCT", "checked");
+                generalObj.add("capacity", e.getValue());
+            }
+            if (e.getKey() == ApplicationType.EXEMPT)
+            {
+                generalObj.add("EXEMPT", "checked");
+                generalObj.add("state", e.getValue());
+            }
+            if (e.getKey() == ApplicationType.RESUBMIT)
+            {
+                generalObj.add("RESUBMIT", "checked");
+                generalObj.add("tbbid", e.getValue());
+            }
+        }
                 
         Label l = this.application.getLabel();
         JsonObjectBuilder labelObj = Json.createObjectBuilder().add("plantNumber",l.getPlantNumber())

@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-@WebServlet(name = "FormCreate", urlPatterns = {"/form/view"})
+@WebServlet(name = "FormView", urlPatterns = {"/form/view"})
 public class FormView extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -49,6 +49,7 @@ public class FormView extends HttpServlet {
             
             appControl.loadApplication(appId);
             appControl.writeApplicationToCookies(response);
+            WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "View Label Application");
@@ -72,34 +73,7 @@ public class FormView extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            LabelApplicationController appControl = new LabelApplicationController();
-            appControl.createApplicationFromRequest(request);
-            appControl.writeApplicationToCookies(response);
-            String error = appControl.validateApplication();
-            if (error==null)
-            {
-                try
-                {
-                    Manufacturer man = (Manufacturer)AccountController.getPageUser(request);
-                    appControl.submitApplication(man);
-                    IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Form Submission Complete");
-                    pg.setBody(WebComponentProvider.loadPartialPage(this, "form-submitted.html").replace("##ID", Long.toString(appControl.getLabelApplication().getApplicationId())));
-                    out.println(WebComponentProvider.buildPage(pg, request));
-                }
-                catch(Exception e){
-                    response.sendRedirect("/SuperSlackers/form/create");
-                }
-            }
-            else
-            {
-                WebComponentProvider.setSuccessMessage(response, error);
-                response.sendRedirect("/SuperSlackers/form/create");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(FormView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        doGet(request, response);
     }
 
     /**

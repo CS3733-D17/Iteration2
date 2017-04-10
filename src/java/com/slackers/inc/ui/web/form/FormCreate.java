@@ -78,6 +78,7 @@ public class FormCreate extends HttpServlet {
                     IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Form Submission Complete");
                     pg.setBody(WebComponentProvider.loadPartialPage(this, "form-submitted.html").replace("##ID", Long.toString(appControl.getLabelApplication().getApplicationId())));
                     out.println(WebComponentProvider.buildPage(pg, request));
+                    
                 }
                 catch(Exception e){
                     response.sendRedirect("/SuperSlackers/form/create");
@@ -85,6 +86,8 @@ public class FormCreate extends HttpServlet {
             }
             else
             {
+                //out.println(WebComponentProvider.printParameters(request)+"<br><br>");
+                //out.println(appControl.getLabelApplication().toString());
                 WebComponentProvider.setSuccessMessage(response, error);
                 response.sendRedirect("/SuperSlackers/form/create");
             }
