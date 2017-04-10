@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author jestrada
  */
-@WebServlet(name = "ManufacturerSettingServlet", urlPatterns = {"/account/manufacturer-settings"})
+@WebServlet(name = "ManufacturerSettingServlet", urlPatterns = {"/account/settings"})
 public class ManufacturerSettingServlet extends HttpServlet {
 
     /**
