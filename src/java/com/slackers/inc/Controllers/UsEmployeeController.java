@@ -51,7 +51,7 @@ public class UsEmployeeController {
     public boolean rejectApplication(LabelApplication application){
 
         try {
-            formController.rejectApplication();
+            formController.rejectApplication(this.employee);
         } catch (SQLException e) {
             return false;
         }

@@ -456,7 +456,10 @@ public class LabelApplicationController {
         this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
         this.application.setApplicationApproval(null);
+        this.application.getComments().add(new LabelComment(submitter, "Submitted the application"));
         boolean res = db.writeEntity(this.application, this.application.getPrimaryKeyName());
+        submitter.addApplications(this.application);
+        this.db.writeEntity(submitter, submitter.getPrimaryKeyName());        
         //this.autoSelectReviewer();
         return res;
     }
@@ -468,12 +471,17 @@ public class LabelApplicationController {
         this.application.setApplicationApproval(approval);
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
+        this.application.getComments().add(new LabelComment(submitter, "<span style=\"color:green;\">Application Approved</span>"));
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
     
-    public boolean rejectApplication() throws SQLException
+    public boolean rejectApplication(UsEmployee submitter) throws SQLException
     {
         this.application.setStatus(LabelApplication.ApplicationStatus.REJECTED);
+        this.application.setApplicationApproval(null);
+        submitter.getApplications().remove(this.application);
+        this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
+        this.application.getComments().add(new LabelComment(submitter, "<span style=\"color:red;\">Application Rejected</span>"));
         return this.saveApplication();
     }
     
