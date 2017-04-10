@@ -78,6 +78,9 @@ public class DefaultPage implements IPageFrame{
     public void setUser(User user) {
         this.user = user;
     }
-    
-    
+
+    @Override
+    public User getUser() {
+        return this.user;
+    }
 }

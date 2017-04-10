@@ -30,6 +30,7 @@ public class ManufacturerPage implements IPageFrame{
         this(title, "");
     }
 
+    @Override
     public User getUser() {
         return user;
     }

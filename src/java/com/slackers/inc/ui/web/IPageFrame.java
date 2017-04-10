@@ -18,4 +18,5 @@ public interface IPageFrame {
     public void setBody(String body);
     public String getTitle();
     public void setUser(User user);
+    public User getUser();
 }
