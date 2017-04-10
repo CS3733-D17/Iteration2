@@ -14,11 +14,14 @@ import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.Label.BeverageSource;
 import com.slackers.inc.database.entities.Label.BeverageType;
 import com.slackers.inc.database.entities.LabelApplication;
+import com.slackers.inc.database.entities.LabelApplication.ApplicationType;
 import com.slackers.inc.database.entities.LabelComment;
 import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.WineLabel;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -26,6 +29,8 @@ import java.util.Base64;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -82,6 +87,22 @@ public class LabelApplicationController {
         this.application.setApplicant((Manufacturer) pageUser);
         this.application.setPhoneNumber(request.getParameter("phone"));
         this.application.setRepresentativeId(request.getParameter("representativeId"));
+        if (request.getParameter("NEW")!=null)
+        {
+            this.application.addApplicationType(LabelApplication.ApplicationType.NEW, null);
+        }
+        if (request.getParameter("DISTINCT")!=null)
+        {
+            this.application.addApplicationType(LabelApplication.ApplicationType.DISTINCT, request.getParameter("capacity"));
+        }
+        if (request.getParameter("EXEMPT")!=null)
+        {
+            this.application.addApplicationType(LabelApplication.ApplicationType.EXEMPT, request.getParameter("state"));
+        }
+        if (request.getParameter("RESUBMIT")!=null)
+        {
+            this.application.addApplicationType(LabelApplication.ApplicationType.RESUBMIT, request.getParameter("tbbid"));
+        }
         try
         {            
             this.application.setApplicantAddress(Address.tryParse(request.getParameter("address")));
@@ -165,9 +186,27 @@ public class LabelApplicationController {
         {
             return "Invalid phone number";
         }
+        for (Entry<ApplicationType,String> e : this.application.getApplicationTypes().entrySet())
+        {
+            if (e.getKey() == ApplicationType.DISTINCT)
+            {
+                if (e.getValue()==null || e.getValue().length()<1)
+                    return "Invalid bottle capacity before closure";
+            }
+            if (e.getKey() == ApplicationType.EXEMPT)
+            {
+                if (e.getValue()==null || e.getValue().length()!=2)
+                    return "Invalid state for exemption";
+            }
+            if (e.getKey() == ApplicationType.RESUBMIT)
+            {
+                if (e.getValue()==null || e.getValue().length()<1)
+                    return "Invalid TBB id for resubmission";
+            }
+        }
         return this.validateLabel();
     }
-    
+   
     public String validateLabel()
     {
         Label l = this.application.getLabel();
@@ -249,6 +288,29 @@ public class LabelApplicationController {
             generalObj.add("address", this.application.getApplicantAddress().toString());
         if (this.application.getMailingAddress()!=null)
             generalObj.add("mailAddress", this.application.getMailingAddress().toString());
+        
+        for (Entry<ApplicationType,String> e : this.application.getApplicationTypes().entrySet())
+        {
+            if (e.getKey() == ApplicationType.NEW)
+            {
+                generalObj.add("NEW", "checked");
+            }
+            if (e.getKey() == ApplicationType.DISTINCT)
+            {
+                generalObj.add("DISTINCT", "checked");
+                generalObj.add("capacity", e.getValue());
+            }
+            if (e.getKey() == ApplicationType.EXEMPT)
+            {
+                generalObj.add("EXEMPT", "checked");
+                generalObj.add("state", e.getValue());
+            }
+            if (e.getKey() == ApplicationType.RESUBMIT)
+            {
+                generalObj.add("RESUBMIT", "checked");
+                generalObj.add("tbbid", e.getValue());
+            }
+        }
                 
         Label l = this.application.getLabel();
         JsonObjectBuilder labelObj = Json.createObjectBuilder().add("plantNumber",l.getPlantNumber())
@@ -429,4 +491,142 @@ public class LabelApplicationController {
         List<LabelApplication> out = new LinkedList<>();
         return out;
     }
+
+    public void setEntityValues(Map<String, Object> values) {
+        application.setEntityValues(values);
+    }
+
+    public Map<String, Class> getEntityNameTypePairs() {
+        return application.getEntityNameTypePairs();
+    }
+
+    public void setPrimaryKeyValue(Serializable value) {
+        application.setPrimaryKeyValue(value);
+    }
+
+    public String getRepresentativeId() {
+        return application.getRepresentativeId();
+    }
+
+    public void setRepresentativeId(String representativeId) {
+        application.setRepresentativeId(representativeId);
+    }
+
+    public long getApplicationId() {
+        return application.getApplicationId();
+    }
+
+    public void setApplicationId(long applicationId) {
+        application.setApplicationId(applicationId);
+    }
+
+    public Address getApplicantAddress() {
+        return application.getApplicantAddress();
+    }
+
+    public void setApplicantAddress(Address applicantAddress) {
+        application.setApplicantAddress(applicantAddress);
+    }
+
+    public Address getMailingAddress() {
+        return application.getMailingAddress();
+    }
+
+    public void setMailingAddress(Address mailingAddress) {
+        application.setMailingAddress(mailingAddress);
+    }
+
+    public String getPhoneNumber() {
+        return application.getPhoneNumber();
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        application.setPhoneNumber(phoneNumber);
+    }
+
+    public String getEmailAddress() {
+        return application.getEmailAddress();
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        application.setEmailAddress(emailAddress);
+    }
+
+    public Date getApplicationDate() {
+        return application.getApplicationDate();
+    }
+
+    public void setApplicationDate(Date applicationDate) {
+        application.setApplicationDate(applicationDate);
+    }
+
+    public LabelApplication.ApplicationStatus getStatus() {
+        return application.getStatus();
+    }
+
+    public void setStatus(LabelApplication.ApplicationStatus status) {
+        application.setStatus(status);
+    }
+
+    public Manufacturer getApplicant() {
+        return application.getApplicant();
+    }
+
+    public void setApplicant(Manufacturer applicant) {
+        application.setApplicant(applicant);
+    }
+
+    public UsEmployee getReviewer() {
+        return application.getReviewer();
+    }
+
+    public void setReviewer(UsEmployee reviewer) {
+        application.setReviewer(reviewer);
+    }
+
+    public UsEmployee getSubmitter() {
+        return application.getSubmitter();
+    }
+
+    public void setSubmitter(UsEmployee submitter) {
+        application.setSubmitter(submitter);
+    }
+
+    public Label getLabel() {
+        return application.getLabel();
+    }
+
+    public void setLabel(Label label) {
+        application.setLabel(label);
+    }
+
+    public List<LabelComment> getComments() {
+        return application.getComments();
+    }
+
+    public void setComments(List<LabelComment> comments) {
+        application.setComments(comments);
+    }
+
+    public ApplicationApproval getApplicationApproval() {
+        return application.getApplicationApproval();
+    }
+
+    public void setApplicationApproval(ApplicationApproval applicationApproval) {
+        application.setApplicationApproval(applicationApproval);
+    }
+
+    public void setLabelType(BeverageType type) {
+        application.setLabelType(type);
+    }
+
+    public void addApplicationType(ApplicationType applicationType, String value) {
+        application.addApplicationType(applicationType, value);
+    }
+
+    public Map<ApplicationType, String> getApplicationTypes() {
+        return application.getApplicationTypes();
+    }
+    
+    
 }
