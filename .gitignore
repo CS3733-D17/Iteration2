@@ -1,1 +1,6 @@
-/nbproject/
+/.idea/
+/out/
+/manifest.mf
+/build/
+/test/
+/dist/

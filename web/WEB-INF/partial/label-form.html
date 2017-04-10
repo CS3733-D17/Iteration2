@@ -62,13 +62,13 @@
         </div><br><br>
         <label>Product Type</label><br>
         <div class="btn-group" data-toggle="buttons" style="width:100%;">            
-            <label  class="btn btn-default active" onclick="document.getElementById('wineInfo').style.display = 'none'">
+            <label  id = "BEER-lbl" class="btn btn-default active" onclick="document.getElementById('wineInfo').style.display = 'none'">
                 <input name="type"  id = "BEER" value="BEER" type="radio">Beer
             </label>
-            <label class="btn btn-default" onclick="document.getElementById('wineInfo').style.display = 'block'">
+            <label id = "WINE-lbl" class="btn btn-default" onclick="document.getElementById('wineInfo').style.display = 'block'">
                 <input name="type" id = "WINE" value="WINE" type="radio">Wine
             </label>
-            <label class="btn btn-default" onclick="document.getElementById('wineInfo').style.display = 'none'">
+            <label id = "DISTILLED-lbl" class="btn btn-default" onclick="document.getElementById('wineInfo').style.display = 'none'">
                 <input name="type" id = "DISTILLED" value="DISTILLED" type="radio">Distilled
             </label>
         </div><br>

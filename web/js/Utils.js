@@ -27,16 +27,41 @@ function getMessage()
     }
 }
 
+function unclickBox(id)
+{
+    document.getElementById("wineInfo").style.display= "none";
+    if (document.getElementById(id)!=null)
+        document.getElementById(id).checked = false;
+    if (document.getElementById(id+"-lbl")!=null)
+        document.getElementById(id+"-lbl").className = "btn btn-default";
+}
+
+function clickBox(id)
+{
+    if (document.getElementById(id)!=null)
+        document.getElementById(id).checked = true;
+    if (document.getElementById(id+"-lbl")!=null)
+        document.getElementById(id+"-lbl").className += " active";
+    if (id=="WINE")
+    {
+        document.getElementById("wineInfo").style.display = "block";
+    }
+}
+
 function __fillForm_SUB()
 {
     var out = JSON.parse(atob(getCookie("SSINCAP_GEN")));
     console.log(out);
+    unclickBox("BEER");
+    unclickBox("WINE");
+    unclickBox("DISTILLED");
+    unclickBox("IMPORTED");
+    unclickBox("DOMESTIC");
     Object.keys(out).forEach(function(k){
         console.log("Set "+k+ " to "+out[k]);
         if (k=="source" || k=="type")
         {
-            if (document.getElementById(out[k])!=null)
-                document.getElementById(out[k]).checked = true;
+            clickBox(out[k]);
         }
         else if (k=="NEW" || k=="DISTINCT" || k=="EXEMPT" || k=="RESUBMIT")
         {
@@ -61,8 +86,7 @@ function __fillForm_SUB()
         console.log("Set "+k+ " to "+out[k]);
         if (k=="source" || k=="type")
         {
-            if (document.getElementById(out[k])!=null)
-                document.getElementById(out[k]).checked = true;
+            clickBox(out[k]);
         }
         else
         {
@@ -77,8 +101,7 @@ function __fillForm_SUB()
         console.log("Set "+k+ " to "+out[k]);
         if (k=="source" || k=="type")
         {
-            if (document.getElementById(out[k])!=null)
-                document.getElementById(out[k]).checked = true;
+            clickBox(out[k]);
         }
         else
         {
