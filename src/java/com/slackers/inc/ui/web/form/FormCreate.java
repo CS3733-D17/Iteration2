@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.ui.web.form;
 
-import java.com.slackers.inc.Controllers.LabelApplicationController;
+import com.slackers.inc.Controllers.LabelApplicationController;
 import com.slackers.inc.ui.web.IPageFrame;
 import com.slackers.inc.ui.web.WebComponentProvider;
 import java.io.IOException;

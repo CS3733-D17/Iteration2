@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package java.com.slackers.inc.database.entities;
+package com.slackers.inc.database.entities;
 
+import com.slackers.inc.database.entities.User.UserType;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,7 @@
-package java.com.slackers.inc.Controllers;
+package com.slackers.inc.Controllers;
 
-import java.com.slackers.inc.database.entities.ColaUser;
-import java.com.slackers.inc.database.entities.Label;
+import com.slackers.inc.database.entities.ColaUser;
+import com.slackers.inc.database.entities.Label;
 
 import java.sql.SQLException;
 import java.util.List;

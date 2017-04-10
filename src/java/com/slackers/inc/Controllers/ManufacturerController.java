@@ -1,9 +1,9 @@
-package java.com.slackers.inc.Controllers;
+package com.slackers.inc.Controllers;
 
-import java.com.slackers.inc.database.DerbyConnection;
-import java.com.slackers.inc.database.entities.Label;
-import java.com.slackers.inc.database.entities.LabelApplication;
-import java.com.slackers.inc.database.entities.Manufacturer;
+import com.slackers.inc.database.DerbyConnection;
+import com.slackers.inc.database.entities.Label;
+import com.slackers.inc.database.entities.LabelApplication;
+import com.slackers.inc.database.entities.Manufacturer;
 
 import java.sql.SQLException;
 import java.util.logging.Level;

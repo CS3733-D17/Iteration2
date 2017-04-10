@@ -5,8 +5,8 @@
  */
 package com.slackers.inc.ui.web;
 
-import java.com.slackers.inc.Controllers.AccountController;
-import java.com.slackers.inc.database.entities.User;
+import com.slackers.inc.Controllers.AccountController;
+import com.slackers.inc.database.entities.User;
 import java.io.InputStream;
 import java.util.Map.Entry;
 import java.util.Scanner;

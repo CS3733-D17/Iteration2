@@ -3,22 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package java.com.slackers.inc.Controllers;
+package com.slackers.inc.Controllers;
 
-import java.com.slackers.inc.database.DerbyConnection;
-import java.com.slackers.inc.database.entities.Address;
-import java.com.slackers.inc.database.entities.ApplicationApproval;
-import java.com.slackers.inc.database.entities.BeerLabel;
-import java.com.slackers.inc.database.entities.DistilledLabel;
-import java.com.slackers.inc.database.entities.Label;
-import java.com.slackers.inc.database.entities.Label.BeverageSource;
-import java.com.slackers.inc.database.entities.Label.BeverageType;
-import java.com.slackers.inc.database.entities.LabelApplication;
-import java.com.slackers.inc.database.entities.LabelComment;
-import java.com.slackers.inc.database.entities.Manufacturer;
-import java.com.slackers.inc.database.entities.UsEmployee;
-import java.com.slackers.inc.database.entities.User;
-import java.com.slackers.inc.database.entities.WineLabel;
+import com.slackers.inc.database.DerbyConnection;
+import com.slackers.inc.database.entities.Address;
+import com.slackers.inc.database.entities.ApplicationApproval;
+import com.slackers.inc.database.entities.BeerLabel;
+import com.slackers.inc.database.entities.DistilledLabel;
+import com.slackers.inc.database.entities.Label;
+import com.slackers.inc.database.entities.Label.BeverageSource;
+import com.slackers.inc.database.entities.Label.BeverageType;
+import com.slackers.inc.database.entities.LabelApplication;
+import com.slackers.inc.database.entities.LabelComment;
+import com.slackers.inc.database.entities.Manufacturer;
+import com.slackers.inc.database.entities.UsEmployee;
+import com.slackers.inc.database.entities.User;
+import com.slackers.inc.database.entities.WineLabel;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Comparator;

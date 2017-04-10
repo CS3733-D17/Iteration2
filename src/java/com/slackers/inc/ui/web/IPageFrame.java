@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.ui.web;
 
-import java.com.slackers.inc.database.entities.User;
+import com.slackers.inc.database.entities.User;
 import javax.servlet.http.HttpServletRequest;
 
 /**

@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.ui.web;
 
-import java.com.slackers.inc.Controllers.AccountController;
+import com.slackers.inc.Controllers.AccountController;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;

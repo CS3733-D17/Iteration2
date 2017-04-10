@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-//@WebServlet(name = "SearchServlet", urlPatterns = {"/SuperSlackers"})
+@WebServlet(name = "SearchServlet", urlPatterns = {"/SuperSlackers"})
 public class SearchServlet extends HttpServlet {
 
     /**

@@ -1,11 +1,11 @@
-package java.com.slackers.inc.Controllers;
+package com.slackers.inc.Controllers;
 
-import java.com.slackers.inc.database.DerbyConnection;
-import java.com.slackers.inc.database.entities.ColaUser;
-import java.com.slackers.inc.database.entities.Manufacturer;
-import java.com.slackers.inc.database.entities.UsEmployee;
-import java.com.slackers.inc.database.entities.User;
-import java.com.slackers.inc.database.entities.User.UserType;
+import com.slackers.inc.database.DerbyConnection;
+import com.slackers.inc.database.entities.ColaUser;
+import com.slackers.inc.database.entities.Manufacturer;
+import com.slackers.inc.database.entities.UsEmployee;
+import com.slackers.inc.database.entities.User;
+import com.slackers.inc.database.entities.User.UserType;
 import com.sun.xml.wss.impl.misc.Base64;
 
 import java.nio.charset.StandardCharsets;

@@ -1,6 +1,6 @@
-package java.com.slackers.inc.Controllers.Filters;
+package com.slackers.inc.Controllers.Filters;
 
-import java.com.slackers.inc.database.entities.Label;
+import com.slackers.inc.database.entities.Label;
 
 /**
  * Created by Matt on 4/2/2017.
