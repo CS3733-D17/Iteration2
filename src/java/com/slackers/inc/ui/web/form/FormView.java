@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-@WebServlet(name = "FormCreate", urlPatterns = {"/form/create"})
-public class FormCreate extends HttpServlet {
+@WebServlet(name = "FormCreate", urlPatterns = {"/form/view"})
+public class FormView extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -44,11 +44,20 @@ public class FormCreate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String form = WebComponentProvider.loadPartialPage(this, "submit-label.html");
+            LabelApplicationController appControl = new LabelApplicationController();
+            Long appId = Long.parseLong(request.getParameter("id"));
+            
+            appControl.loadApplication(appId);
+            appControl.writeApplicationToCookies(response);
+            String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
-            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Create Label Application");
-            pg.setBody(form.replace("##FORM_CONTENT", formTemplate));
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "View Label Application");
+            pg.setBody(form.replace("##FORM_CONTENT", formTemplate).replace("##ID", Long.toString(appId)));
             out.println(WebComponentProvider.buildPage(pg, request));
+        }
+        catch (Exception e)
+        {
+            response.sendRedirect(WebComponentProvider.root(request));
         }
     }
 
@@ -89,7 +98,7 @@ public class FormCreate extends HttpServlet {
                 response.sendRedirect("/SuperSlackers/form/create");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(FormCreate.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FormView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

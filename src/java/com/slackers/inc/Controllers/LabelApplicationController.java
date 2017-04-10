@@ -19,20 +19,30 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.WineLabel;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
 public class LabelApplicationController {
+    
+    public static final String APPLICATION_GENERAL_COOKIE_NAME = "SSINCAP_GEN";
+    public static final String APPLICATION_DATA_COOKIE_NAME = "SSINCAP_DATA";
+    public static final String APPLICATION_LABEL_COOKIE_NAME = "SSINCAP_LBL";
     
     private DerbyConnection db;
     private LabelApplication application;
@@ -98,8 +108,10 @@ public class LabelApplicationController {
         label.setRepresentativeIdNumber(request.getParameter("representativeId"));
         try
         {
-            label.setProductSource(Label.BeverageSource.valueOf("source"));            
-            Label.BeverageType type = Label.BeverageType.valueOf(request.getParameter("type"));
+            label.setProductSource(Label.BeverageSource.valueOf(request.getParameter("source")));     
+            label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent").replace("%", "")));
+            BeverageType type = BeverageType.valueOf(request.getParameter("type"));
+            label.setProductType(type);
             if (type == BeverageType.BEER)
             {
                 BeerLabel newLabel = new BeerLabel();
@@ -133,7 +145,7 @@ public class LabelApplicationController {
             return "Invalid email address";
         }
         if (this.application.getApplicant() == null || this.application.getApplicant().getEmail().equals(Manufacturer.NULL_MANUFACTURER.getEmail())
-                || (this.application.getApplicant() instanceof Manufacturer))
+                || !(this.application.getApplicant() instanceof Manufacturer))
         {
             return "Invalid applicant";
         }
@@ -153,11 +165,7 @@ public class LabelApplicationController {
         {
             return "Invalid phone number";
         }
-        if (this.application.getRepresentativeId()== null || this.application.getRepresentativeId().length()<3)
-        {
-            return "Invalid representative Id ";
-        }
-        return null;
+        return this.validateLabel();
     }
     
     public String validateLabel()
@@ -190,16 +198,11 @@ public class LabelApplicationController {
         if (l.getProductType()== null || l.getProductType()==BeverageType.UNKNOWN)
         {
             return "Invalid beverage type";
-        }
-        if (l.getRepresentativeIdNumber()== null || l.getRepresentativeIdNumber().length()<5)
-        {
-            return "Invalid representative id";
-        }        
+        }       
         if (l.getAlcoholContent()<0 || l.getAlcoholContent()>100)
         {
             return "Invalid alchohol content";
-        }
-        
+        }        
         if (l.getFormula()== null || l.getFormula().length()<5)
         {
             return "Formula is invalid";
@@ -216,6 +219,72 @@ public class LabelApplicationController {
             }
         }
         return null;
+    }
+    
+    public void removeApplicationFromCookies(HttpServletResponse response)
+    {
+        Cookie data = new Cookie(APPLICATION_DATA_COOKIE_NAME, null);
+        Cookie gen = new Cookie(APPLICATION_GENERAL_COOKIE_NAME, null);
+        Cookie lbl = new Cookie(APPLICATION_LABEL_COOKIE_NAME, null);
+        
+        data.setMaxAge(0);
+        gen.setMaxAge(0);
+        lbl.setMaxAge(0);
+        
+        data.setPath("/");
+        gen.setPath("/");
+        lbl.setPath("/");
+        
+        response.addCookie(data);
+        response.addCookie(gen);
+        response.addCookie(lbl);
+    }
+    
+    public void writeApplicationToCookies(HttpServletResponse response)
+    {
+        JsonObjectBuilder generalObj = Json.createObjectBuilder().add("email", this.application.getEmailAddress())
+                .add("phone", this.application.getPhoneNumber())
+                .add("representativeId", this.application.getRepresentativeId());
+        if (this.application.getApplicantAddress()!=null)
+            generalObj.add("address", this.application.getApplicantAddress().toString());
+        if (this.application.getMailingAddress()!=null)
+            generalObj.add("mailAddress", this.application.getMailingAddress().toString());
+                
+        Label l = this.application.getLabel();
+        JsonObjectBuilder labelObj = Json.createObjectBuilder().add("plantNumber",l.getPlantNumber())
+                .add("brandName", l.getBrandName())
+                .add("fancifulName", l.getFancifulName())
+                .add("serialNumber", l.getSerialNumber())
+                .add("type", l.getProductType().name())
+                .add("source", l.getProductSource().name())
+                .add("alcoholContent", Double.toString(l.getAlcoholContent()));
+        
+        if (l instanceof WineLabel)
+        {
+            labelObj.add("pH", Double.toString(((WineLabel)l).getPhLevel()))
+                    .add("vintage", ((WineLabel)l).getVintage())
+                    .add("grapeVarietal", ((WineLabel)l).getGrapeVarietal())
+                    .add("wineAppelation", ((WineLabel)l).getWineAppelation());
+        }
+        
+        JsonObjectBuilder dataObj = Json.createObjectBuilder().add("formula",l.getFormula())
+                .add("gereralInfo", l.getGeneralInfo());
+        
+        Cookie data = new Cookie(APPLICATION_DATA_COOKIE_NAME, Base64.getEncoder().encodeToString(dataObj.build().toString().getBytes(StandardCharsets.UTF_8)));
+        Cookie gen = new Cookie(APPLICATION_GENERAL_COOKIE_NAME, Base64.getEncoder().encodeToString(generalObj.build().toString().getBytes(StandardCharsets.UTF_8)));
+        Cookie lbl = new Cookie(APPLICATION_LABEL_COOKIE_NAME, Base64.getEncoder().encodeToString(labelObj.build().toString().getBytes(StandardCharsets.UTF_8)));
+        
+        data.setMaxAge(3600);
+        gen.setMaxAge(3600);
+        lbl.setMaxAge(3600);
+        
+        data.setPath("/");
+        gen.setPath("/");
+        lbl.setPath("/");
+        
+        response.addCookie(data);
+        response.addCookie(gen);
+        response.addCookie(lbl);
     }
     
     public boolean setNewReviewer(UsEmployee employee) throws SQLException
