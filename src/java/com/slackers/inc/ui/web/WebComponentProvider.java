@@ -10,8 +10,6 @@ import com.slackers.inc.database.entities.User;
 import java.io.InputStream;
 import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

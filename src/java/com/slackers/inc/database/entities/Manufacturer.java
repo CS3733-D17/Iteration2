@@ -6,17 +6,12 @@
 package com.slackers.inc.database.entities;
 
 import com.slackers.inc.database.DerbyConnection;
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  *

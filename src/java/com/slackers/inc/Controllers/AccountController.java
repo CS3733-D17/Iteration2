@@ -7,6 +7,7 @@ import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.User.UserType;
 import com.sun.xml.wss.impl.misc.Base64;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 

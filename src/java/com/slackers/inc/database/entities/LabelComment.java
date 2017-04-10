@@ -7,7 +7,6 @@ package com.slackers.inc.database.entities;
 
 import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.IEntity;
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.SQLException;

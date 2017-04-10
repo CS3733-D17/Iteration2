@@ -1,8 +1,7 @@
 package com.slackers.inc.Controllers;
 
-import com.slackers.inc.Controllers.LabelApplicationController;
-import com.slackers.inc.database.entities.*;
-
+import com.slackers.inc.database.entities.LabelApplication;
+import com.slackers.inc.database.entities.UsEmployee;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.logging.Level;

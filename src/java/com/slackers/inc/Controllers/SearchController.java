@@ -5,7 +5,6 @@ import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.entities.Label;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,5 +47,10 @@ public class SearchController {
         System.out.println(String.join(", ", columns));
         return db.getAllEntites_Typed(target, columns.toArray(new String[columns.size()]));
     }
+//    public static void keywordSearch(String keywords) {
+//        String parts[] = keywords.split(" -");
+//        System.out.println("contains: " + parts[0]);
+//        System.out.println("does not contain: " + parts[1]);
+//    }
 
 }

@@ -5,9 +5,6 @@
  */
 package com.slackers.inc.database.entities;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>

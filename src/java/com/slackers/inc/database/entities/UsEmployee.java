@@ -5,6 +5,7 @@
  */
 package com.slackers.inc.database.entities;
 
+import com.slackers.inc.database.entities.User.UserType;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
