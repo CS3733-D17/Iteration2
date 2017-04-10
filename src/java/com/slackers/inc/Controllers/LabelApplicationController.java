@@ -20,6 +20,7 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.WineLabel;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
@@ -28,6 +29,7 @@ import java.util.Base64;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -489,4 +491,142 @@ public class LabelApplicationController {
         List<LabelApplication> out = new LinkedList<>();
         return out;
     }
+
+    public void setEntityValues(Map<String, Object> values) {
+        application.setEntityValues(values);
+    }
+
+    public Map<String, Class> getEntityNameTypePairs() {
+        return application.getEntityNameTypePairs();
+    }
+
+    public void setPrimaryKeyValue(Serializable value) {
+        application.setPrimaryKeyValue(value);
+    }
+
+    public String getRepresentativeId() {
+        return application.getRepresentativeId();
+    }
+
+    public void setRepresentativeId(String representativeId) {
+        application.setRepresentativeId(representativeId);
+    }
+
+    public long getApplicationId() {
+        return application.getApplicationId();
+    }
+
+    public void setApplicationId(long applicationId) {
+        application.setApplicationId(applicationId);
+    }
+
+    public Address getApplicantAddress() {
+        return application.getApplicantAddress();
+    }
+
+    public void setApplicantAddress(Address applicantAddress) {
+        application.setApplicantAddress(applicantAddress);
+    }
+
+    public Address getMailingAddress() {
+        return application.getMailingAddress();
+    }
+
+    public void setMailingAddress(Address mailingAddress) {
+        application.setMailingAddress(mailingAddress);
+    }
+
+    public String getPhoneNumber() {
+        return application.getPhoneNumber();
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        application.setPhoneNumber(phoneNumber);
+    }
+
+    public String getEmailAddress() {
+        return application.getEmailAddress();
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        application.setEmailAddress(emailAddress);
+    }
+
+    public Date getApplicationDate() {
+        return application.getApplicationDate();
+    }
+
+    public void setApplicationDate(Date applicationDate) {
+        application.setApplicationDate(applicationDate);
+    }
+
+    public LabelApplication.ApplicationStatus getStatus() {
+        return application.getStatus();
+    }
+
+    public void setStatus(LabelApplication.ApplicationStatus status) {
+        application.setStatus(status);
+    }
+
+    public Manufacturer getApplicant() {
+        return application.getApplicant();
+    }
+
+    public void setApplicant(Manufacturer applicant) {
+        application.setApplicant(applicant);
+    }
+
+    public UsEmployee getReviewer() {
+        return application.getReviewer();
+    }
+
+    public void setReviewer(UsEmployee reviewer) {
+        application.setReviewer(reviewer);
+    }
+
+    public UsEmployee getSubmitter() {
+        return application.getSubmitter();
+    }
+
+    public void setSubmitter(UsEmployee submitter) {
+        application.setSubmitter(submitter);
+    }
+
+    public Label getLabel() {
+        return application.getLabel();
+    }
+
+    public void setLabel(Label label) {
+        application.setLabel(label);
+    }
+
+    public List<LabelComment> getComments() {
+        return application.getComments();
+    }
+
+    public void setComments(List<LabelComment> comments) {
+        application.setComments(comments);
+    }
+
+    public ApplicationApproval getApplicationApproval() {
+        return application.getApplicationApproval();
+    }
+
+    public void setApplicationApproval(ApplicationApproval applicationApproval) {
+        application.setApplicationApproval(applicationApproval);
+    }
+
+    public void setLabelType(BeverageType type) {
+        application.setLabelType(type);
+    }
+
+    public void addApplicationType(ApplicationType applicationType, String value) {
+        application.addApplicationType(applicationType, value);
+    }
+
+    public Map<ApplicationType, String> getApplicationTypes() {
+        return application.getApplicationTypes();
+    }
+    
+    
 }
