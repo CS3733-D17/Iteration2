@@ -130,6 +130,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
             
             List<Label> drinkList = new LinkedList<Label>();
             drinkList = search.runSearch(label);
+            
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "results");
             String results = WebComponentProvider.loadPartialPage(this, "Results-partial.html");
             
