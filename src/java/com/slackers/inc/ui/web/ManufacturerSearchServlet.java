@@ -153,7 +153,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
 "                       </div>");
             }
             
-            results = results.replace("##Drinks", "");
+            results = results.replace("##Drinks", b);
             pg.setBody(results);
             out.println(WebComponentProvider.buildPage(pg, request));
             
