@@ -63,8 +63,8 @@ public class ManufacturerSearchServlet extends HttpServlet {
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "searchPage");
             pg.setBody(WebComponentProvider.loadPartialPage(this, "search-partial.html"));
             out.println(WebComponentProvider.buildPage(pg, request));
-            
-        }       
+
+        }
     }
 
     /**
@@ -79,10 +79,10 @@ public class ManufacturerSearchServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         SearchController search = new SearchController();
         Label label = new Label();
-        
+
         Map<String, String[]> param = request.getParameterMap();
         for (String parameter: param.keySet()){
             switch(parameter){
@@ -110,54 +110,56 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         switch(request.getParameter("source")){
                             case "Domestic":
                                 source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC);
+                                search.addFilter(source);
                                 break;
                             case "Imported":
                                 source = new ProductSourceFilter(Label.BeverageSource.IMPORTED);
+                                search.addFilter(source);
                                 break;
+                        }
                     }
-                }
                     break;
                 case "pHLevel":
                     break;
                 case "vintageYear":
                     break;
-                
+
             }
-        }    
-        
+        }
+
         System.out.println(label);
-        try (PrintWriter out = response.getWriter()) {  
-            
+        try (PrintWriter out = response.getWriter()) {
+
             List<Label> drinkList = new LinkedList<Label>();
             drinkList = search.runSearch(label);
-            
+
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "results");
             String results = WebComponentProvider.loadPartialPage(this, "Results-partial.html");
-            
+
             StringBuilder b = new StringBuilder();
             for(int i = 0; i < drinkList.size(); i++){
                 b.append("<div class=\"panel panel-default\">\n" +
-"                           <div class=\"panel-heading\">\n" +
-"                               <div class=\"row\">\n" +
-"                                   <div class=\"col-md-10\">\n" +
-"                                       <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + drinkList.get(i).getBrandName() + "</a>\n" +
-"                                   </div>\n" +
-"                                   <div class=\"col-md-1 pull-right\">\n" +
-"                                       <button class='btn btn-primary btn-block'>Edit</button>\n" +
-"                                   </div>\n" +
-"                               </div>\n" +
-"                           </div>\n" +
-"                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
-"                           <div class=\"panel-body\">Drink information</div>\n" +
-"                           </div>\n" +
-"                       </div>");
+                        "                           <div class=\"panel-heading\">\n" +
+                        "                               <div class=\"row\">\n" +
+                        "                                   <div class=\"col-md-10\">\n" +
+                        "                                       <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + drinkList.get(i).getBrandName() + "</a>\n" +
+                        "                                   </div>\n" +
+                        "                                   <div class=\"col-md-1 pull-right\">\n" +
+                        "                                       <button class='btn btn-primary btn-block'>Edit</button>\n" +
+                        "                                   </div>\n" +
+                        "                               </div>\n" +
+                        "                           </div>\n" +
+                        "                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
+                        "                           <div class=\"panel-body\">Drink information</div>\n" +
+                        "                           </div>\n" +
+                        "                       </div>");
             }
-            
+
             results = results.replace("##Drinks", b);
             pg.setBody(results);
             out.println(WebComponentProvider.buildPage(pg, request));
-            
-            
+
+
         } catch (SQLException ex) {
             Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
         }    }
