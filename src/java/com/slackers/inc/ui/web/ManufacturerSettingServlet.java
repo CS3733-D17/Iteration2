@@ -5,6 +5,8 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.database.entities.Manufacturer;
+import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -58,10 +60,21 @@ public class ManufacturerSettingServlet extends HttpServlet {
                 StringBuilder b = new StringBuilder();
                 String manufacturerSettings = WebComponentProvider.loadPartialPage(this, "manufacturerSettings.html");
                 settings = settings.replace("##Manufacturer", manufacturerSettings);
+                
+                Manufacturer manufacturer = (Manufacturer) (pg.getUser());
+                settings = settings.replace("##userFirstName", manufacturer.getFirstName());
+                settings = settings.replace("##userEmail", manufacturer.getEmail());
+                settings = settings.replace("##userLastName", manufacturer.getLastName());
+
             }
             else{
                 settings = settings.replace("##Manufacturer", "");
+                UsEmployee employee = (UsEmployee) (pg.getUser());
+                settings = settings.replace("##userFirstName", employee.getFirstName());
+                settings = settings.replace("##userEmail", employee.getEmail());
+                settings = settings.replace("##userLastName", employee.getLastName());
             }
+            
             pg.setBody(settings);
             out.println(WebComponentProvider.buildPage(pg, request));
             

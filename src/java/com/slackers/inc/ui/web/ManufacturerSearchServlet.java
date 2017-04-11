@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jason
  */
-@WebServlet(name = "ManufacturerSearchServlet", urlPatterns = {"/manufacturerSearch"})
+@WebServlet(name = "ManufacturerSearchServlet", urlPatterns = {"/search"})
 public class ManufacturerSearchServlet extends HttpServlet {
 
     /**
@@ -53,7 +53,8 @@ public class ManufacturerSearchServlet extends HttpServlet {
             pg.setBody(WebComponentProvider.loadPartialPage(this, "search-partial.html"));
             out.println(WebComponentProvider.buildPage(pg, request));
             
-        }       }
+        }       
+    }
 
     /**
      * Handles the HTTP <code>POST</code> method.

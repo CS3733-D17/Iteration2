@@ -72,7 +72,7 @@ public class ManufacturerPage implements IPageFrame{
 "      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\">COLA Search Registry</a>\n" +
 "    </div><div class=\"collapse navbar-collapse\" id=\"colaNav\">\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
-"      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"manufacturerSearch\">Search</a></li>\n" +
+"      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"search\">Search</a></li>\n" +
 "      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"\">Applications <span class=\"caret\"></span></a>\n" +
 "        <ul class=\"dropdown-menu\">\n" +
 "          <li><a href=\"Working\">Working</a></li>\n" +
