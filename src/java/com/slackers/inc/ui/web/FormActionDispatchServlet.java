@@ -6,6 +6,7 @@
 package com.slackers.inc.ui.web;
 
 import com.slackers.inc.Controllers.AccountController;
+import com.slackers.inc.Controllers.LabelApplicationController;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -39,6 +40,9 @@ public class FormActionDispatchServlet extends HttpServlet {
             if (controller.verifyPermission(request, response, AccountController.Permission.EMPLOYEE)||
                     controller.verifyPermission(request, response, AccountController.Permission.MANUFACTURER))
             {
+                LabelApplicationController appControl = new LabelApplicationController();
+                appControl.removeApplicationFromCookies(response);
+                
                 String action = request.getParameter("action");            
                 if (action!=null) // id already validated as a number because didn't throw exception
                 {
@@ -48,6 +52,8 @@ public class FormActionDispatchServlet extends HttpServlet {
                         this.getServletContext().getRequestDispatcher("/form/edit").forward(request, response);
                     if (action.equalsIgnoreCase("view"))
                         this.getServletContext().getRequestDispatcher("/form/view").forward(request, response);
+                    if (action.equalsIgnoreCase("process"))
+                        this.getServletContext().getRequestDispatcher("/form/process").forward(request, response);
                 }                
             }            
         } catch (Exception ex) {

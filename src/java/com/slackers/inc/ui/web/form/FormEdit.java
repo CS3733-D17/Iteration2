@@ -7,16 +7,12 @@ package com.slackers.inc.ui.web.form;
 
 import com.slackers.inc.Controllers.AccountController;
 import com.slackers.inc.Controllers.LabelApplicationController;
-import com.slackers.inc.database.entities.Label.BeverageType;
-import com.slackers.inc.database.entities.Manufacturer;
-import com.slackers.inc.database.entities.User;
+import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.ui.web.IPageFrame;
 import com.slackers.inc.ui.web.WebComponentProvider;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -28,9 +24,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-@WebServlet(name = "FormCreate", urlPatterns = {"/form/create"})
+@WebServlet(name = "FormEdit", urlPatterns = {"/form/edit"})
 @MultipartConfig
-public class FormCreate extends HttpServlet {
+public class FormEdit extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -46,11 +42,24 @@ public class FormCreate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String form = WebComponentProvider.loadPartialPage(this, "submit-label.html");
+            LabelApplicationController appControl = new LabelApplicationController();
+            Long appId = Long.parseLong(request.getParameter("id"));
+            
+            appControl.loadApplication(appId);
+            appControl.writeApplicationToCookies(response);
+            WebComponentProvider.setSuccessMessage(response, null);
+            String form = WebComponentProvider.loadPartialPage(this, "edit-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
-            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Create Label Application");
-            pg.setBody(form.replace("##FORM_CONTENT", formTemplate));
+            form = form.replace("##FORM_CONTENT", formTemplate); 
+            form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, appControl));
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Edit Label Application");
+            pg.setBody(form.replace("##ID", Long.toString(appId))+appControl.renderCommentList(request));
             out.println(WebComponentProvider.buildPage(pg, request));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            response.sendRedirect(WebComponentProvider.root(request));
         }
     }
 
@@ -65,39 +74,54 @@ public class FormCreate extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        
+        String action = request.getParameter("action");
+        String idStr = request.getParameter("id");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            long id = Long.parseLong(idStr);
             LabelApplicationController appControl = new LabelApplicationController();
-            appControl.createApplicationFromRequest(this.getServletContext(), request);
-            appControl.writeApplicationToCookies(response);
-            
-            String error = appControl.validateApplication();
-            if (error==null)
+            appControl.loadApplication(id);
+            UsEmployee emp = (UsEmployee)AccountController.getPageUser(request);
+            if (action!=null)
             {
-                try
+                if (action.equals("accept"))
                 {
-                    WebComponentProvider.setSuccessMessage(response, null);
-                    Manufacturer man = (Manufacturer)AccountController.getPageUser(request);
-                    appControl.submitApplication(man);
-                    IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Form Submission Complete");
-                    pg.setBody(WebComponentProvider.loadPartialPage(this, "form-submitted.html").replace("##ID", Long.toString(appControl.getLabelApplication().getApplicationId())));
-                    out.println(WebComponentProvider.buildPage(pg, request));
-                    
+                    appControl.approveApplication(emp, new Date(new java.util.Date().getTime()+63072000000L));
+                    response.sendRedirect(WebComponentProvider.root(request));
                 }
-                catch(Exception e){
-                    response.sendRedirect("/SuperSlackers/form/create");
+                else if (action.equals("reject"))
+                {
+                    appControl.rejectApplication(emp);
+                    response.sendRedirect(WebComponentProvider.root(request));
+                }
+                else
+                {
+                    System.out.println("no Action");
+                    response.sendRedirect("/SuperSlacker/form/process?id="+id);
                 }
             }
             else
             {
-                //out.println(WebComponentProvider.printParameters(request)+"<br><br>");
-                //out.println(appControl.getLabelApplication().toString());
-                WebComponentProvider.setSuccessMessage(response, error);
-                response.sendRedirect("/SuperSlackers/form/create");
+                System.out.println("action is null");
+                response.sendRedirect("/SuperSlacker/form/process?id="+id);
+            }           
+        }catch (Exception e){
+            e.printStackTrace();
+            try 
+            {
+                long id = Long.parseLong(idStr);
+                System.out.println("shit");
+                response.sendRedirect("/SuperSlacker/form/process?id="+id);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(FormCreate.class.getName()).log(Level.SEVERE, null, ex);
+            catch (Exception ex)
+            {
+                response.sendRedirect(WebComponentProvider.root(request));
+            }
+            
         }
+        
     }
 
     /**
