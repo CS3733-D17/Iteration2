@@ -5,9 +5,8 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.database.entities.Manufacturer;
-import com.slackers.inc.database.entities.UsEmployee;
-import com.slackers.inc.database.entities.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -18,10 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author jestrada
+ * @author Jason
  */
-@WebServlet(name = "ManufacturerSettingServlet", urlPatterns = {"/account/settings"})
-public class ManufacturerSettingServlet extends HttpServlet {
+@WebServlet(name = "AcceptedApplicationsServlet", urlPatterns = {"/AcceptedApplications"})
+public class AcceptedApplicationsServlet extends HttpServlet {
 
     IPageFrame pg;
     /**
@@ -51,34 +50,39 @@ public class ManufacturerSettingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-         try (PrintWriter out = response.getWriter()) {
-            pg = WebComponentProvider.getCorrectFrame(request, "settings");
-            String settings = WebComponentProvider.loadPartialPage(this, "settings-partial.html");
-            User.UserType type = pg.getUser().getUserType();
-            
-            if(type == User.UserType.MANUFACTURER){
-                StringBuilder b = new StringBuilder();
-                String manufacturerSettings = WebComponentProvider.loadPartialPage(this, "manufacturerSettings.html");
-                settings = settings.replace("##Manufacturer", manufacturerSettings);
-                
-                Manufacturer manufacturer = (Manufacturer) (pg.getUser());
-                settings = settings.replace("##userFirstName", manufacturer.getFirstName());
-                settings = settings.replace("##userEmail", manufacturer.getEmail());
-                settings = settings.replace("##userLastName", manufacturer.getLastName());
 
-            }
-            else{
-                settings = settings.replace("##Manufacturer", "");
-                UsEmployee employee = (UsEmployee) (pg.getUser());
-                settings = settings.replace("##userFirstName", employee.getFirstName());
-                settings = settings.replace("##userEmail", employee.getEmail());
-                settings = settings.replace("##userLastName", employee.getLastName());
+        try (PrintWriter out = response.getWriter()) {
+            pg = WebComponentProvider.getCorrectFrame(request, "applicationPage");
+            String applications = WebComponentProvider.loadPartialPage(this, "applicationList-partial.html");
+            
+            Manufacturer manufacturer = (Manufacturer) (pg.getUser());
+            StringBuilder b = new StringBuilder();
+            for(int i = 0; i < manufacturer.getApplications().size(); i++){
+                if(manufacturer.getApplications().get(i).getStatus() == LabelApplication.ApplicationStatus.APPROVED){
+                b.append("<div class=\"panel panel-default\">\n" +
+"                           <div class=\"panel-heading\">\n" +
+"                               <div class=\"row\">\n" +
+"                                   <div class=\"col-md-10\">\n" +
+"                                       <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + manufacturer.getApplications().get(i).getLabel().getBrandName() + "</a>\n" +
+"                                   </div>\n" +
+"                                   <div class=\"col-md-1 pull-right\">\n" +
+"                                       <button class='btn btn-primary btn-block'>Edit</button>\n" +
+"                                   </div>\n" +
+"                               </div>\n" +
+"                           </div>\n" +
+"                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
+"                           <div class=\"panel-body\">Drink information</div>\n" +
+"                           </div>\n" +
+"                       </div>");
+                }
             }
             
-            pg.setBody(settings);
+            applications = applications.replace("##Applications", b);
+            pg.setBody(applications);
             out.println(WebComponentProvider.buildPage(pg, request));
             
-        }
+           
+        } 
     }
 
     /**
@@ -92,20 +96,9 @@ public class ManufacturerSettingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "settings");
-
-            pg.getUser().setFirstName(request.getParameter("firstName"));
-            pg.getUser().setLastName(request.getParameter("lastName"));
-            pg.getUser().setEmail(request.getParameter("email"));
-            
-
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "settings-partial.html"));
-            out.println(WebComponentProvider.buildPage(pg, request));
-        }
+        processRequest(request, response);
     }
-    
+
     /**
      * Returns a short description of the servlet.
      *

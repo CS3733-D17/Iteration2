@@ -75,9 +75,9 @@ public class ManufacturerPage implements IPageFrame{
 "      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"search\">Search</a></li>\n" +
 "      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"\">Applications <span class=\"caret\"></span></a>\n" +
 "        <ul class=\"dropdown-menu\">\n" +
-"          <li><a href=\"Working\">Working</a></li>\n" +
-"          <li><a href=\"UnderReview\">Under Review</a></li>\n" +
-"          <li><a href=\"Accepted\">Accepted</a></li>\n" +
+"          <li><a href=\"WorkingApplications\">Working</a></li>\n" +
+"          <li><a href=\"UnderReviewApplications\">Under Review</a></li>\n" +
+"          <li><a href=\"AcceptedApplications\">Accepted</a></li>\n" +
 "          <li><a href=\""+WebComponentProvider.root(request)+"myApplications\">All</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +

@@ -51,8 +51,12 @@ public class Label implements IEntity{
     private String fancifulName;
     private String formula;
     private String generalInfo;
+    private String labelImageType;
+    private byte[] labelImage;
     
     private ApplicationApproval approval;
+    
+    private boolean pullImageOut;
     
     public Label()
     {
@@ -69,6 +73,9 @@ public class Label implements IEntity{
         this.fancifulName = "";
         this.formula = "";
         this.generalInfo = "";
+        this.labelImage=null;
+        this.labelImageType = "";
+        this.pullImageOut = false;
     }
 
     public ApplicationApproval getApproval() {
@@ -95,8 +102,26 @@ public class Label implements IEntity{
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
-    
-    
+
+    public String getLabelImageType() {
+        return labelImageType;
+    }
+
+    public void setLabelImageType(String labelImageType) {
+        this.labelImageType = labelImageType;
+    }
+
+    public byte[] getLabelImage() {
+        return labelImage;
+    }
+
+    public void setLabelImage(byte[] labelImage) {
+        this.labelImage = labelImage;
+    }
+
+    public void setPullImageOut(boolean pullImageOut) {
+        this.pullImageOut = pullImageOut;
+    }
 
     public double getAlcoholContent() {
         return alcoholContent;
@@ -209,6 +234,13 @@ public class Label implements IEntity{
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
+        
+        if (this.labelImage!=null)
+        {
+            values.put("labelImage", this.labelImage);
+            values.put("labelImageType", this.labelImageType);
+        }
+        
         return values;
     }
 
@@ -228,6 +260,13 @@ public class Label implements IEntity{
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
+        
+        if (this.labelImage!=null)
+        {
+            values.put("labelImage", this.labelImage);
+            values.put("labelImageType", this.labelImageType);
+        }
+        
         return values;
     }
 
@@ -280,6 +319,15 @@ public class Label implements IEntity{
             this.formula = (String) values.get("formula");
         }
         
+        if (values.containsKey("labelImage"))
+        {
+            this.labelImage = (byte[]) values.get("labelImage");
+        }
+        if (values.containsKey("labelImageType"))
+        {
+            this.labelImageType = (String) values.get("labelImageType");
+        }
+        
         if (values.containsKey("generalInfo"))
         {
             this.generalInfo = (String) values.get("generalInfo");
@@ -320,6 +368,11 @@ public class Label implements IEntity{
         pairs.put("fancifulName", String.class);
         pairs.put("formula", String.class);
         pairs.put("generalInfo", String.class);
+        if (this.pullImageOut)
+        {
+            pairs.put("labelImage", byte[].class);
+            pairs.put("labelImageType", String.class);
+        }
         return pairs;
     }
 
@@ -342,7 +395,9 @@ public class Label implements IEntity{
         cols.add("generalInfo varchar(1024)");
         cols.add("serialNumber varchar(64)");
         cols.add("phLevel float");
-        cols.add("vintage int");
+        cols.add("vintage int");        
+        cols.add("labelImage blob");
+        cols.add("labelImageType varchar(64)");
         return cols;
     }
 
@@ -370,7 +425,7 @@ public class Label implements IEntity{
 
     @Override
     public String toString() {
-        return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource=" + productSource + ", productType=" + productType + ", brandName=" + brandName + '}';
+        return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource=" + productSource + ", productType=" + productType + ", brandName=" + brandName + ", labelimage=" + labelImageType +": "+ (labelImage!=null) + '}';
     }
     
 }

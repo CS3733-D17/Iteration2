@@ -50,6 +50,13 @@ function clickBox(id)
 
 function __fillForm_SUB()
 {
+    if (document.getElementById("lblImg")!=null)
+    {
+        if (document.getElementById("imgSelector")!=null)
+        {
+            document.getElementById("imgSelector").style.display = "none";
+        }
+    }
     var out = JSON.parse(atob(getCookie("SSINCAP_GEN")));
     console.log(out);
     unclickBox("BEER");
@@ -62,6 +69,13 @@ function __fillForm_SUB()
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);
+        }
+        else if (k=="appStatus")
+        {
+            if (document.getElementById(k)!=null)
+            {
+                document.getElementById(k).textContent = out[k];
+            }
         }
         else if (k=="NEW" || k=="DISTINCT" || k=="EXEMPT" || k=="RESUBMIT")
         {
@@ -87,6 +101,11 @@ function __fillForm_SUB()
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);
+        }
+        else if (k=="appStatus")
+        {
+            if (document.getElementById(k)!=null)
+                document.getElementById(k).innerHtml = out[k];
         }
         else
         {

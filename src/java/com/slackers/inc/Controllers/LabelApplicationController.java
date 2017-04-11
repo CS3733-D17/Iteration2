@@ -20,8 +20,9 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.WineLabel;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -35,9 +36,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -72,13 +75,13 @@ public class LabelApplicationController {
         return this.application;
     }
     
-    public LabelApplication createApplicationFromRequest(HttpServletRequest request)
+    public LabelApplication createApplicationFromRequest(ServletContext context, HttpServletRequest request)
     {
         User pageUser = AccountController.getPageUser(request);
         if (!(pageUser instanceof Manufacturer))
             return null;
         
-        Label l = this.createLabelFromRequest(request);
+        Label l = this.createLabelFromRequest(context, request);
         if (l==null)
             return null;
         this.application.setLabel(l);
@@ -113,7 +116,7 @@ public class LabelApplicationController {
         return this.application;
     }
     
-    public Label createLabelFromRequest(HttpServletRequest request)
+    public Label createLabelFromRequest(ServletContext context,  HttpServletRequest request)
     {
         Label label = new Label();
         
@@ -129,6 +132,7 @@ public class LabelApplicationController {
         label.setRepresentativeIdNumber(request.getParameter("representativeId"));
         try
         {
+            
             label.setProductSource(Label.BeverageSource.valueOf(request.getParameter("source")));     
             label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent").replace("%", "")));
             BeverageType type = BeverageType.valueOf(request.getParameter("type"));
@@ -137,13 +141,13 @@ public class LabelApplicationController {
             {
                 BeerLabel newLabel = new BeerLabel();
                 newLabel.setEntityValues(label.getEntityValues());
-                return newLabel;
+                label = newLabel;
             }
             if (type == BeverageType.DISTILLED)
             {
                 DistilledLabel newLabel = new DistilledLabel();
                 newLabel.setEntityValues(label.getEntityValues());
-                return newLabel;
+                label = newLabel;
             }
             if (type == BeverageType.WINE)
             {
@@ -153,8 +157,24 @@ public class LabelApplicationController {
                 newLabel.setVintage(Integer.parseInt(request.getParameter("vintage")));
                 newLabel.setGrapeVarietal(request.getParameter("grapeVarietal"));
                 newLabel.setWineAppelation(request.getParameter("wineAppelation"));
-                return newLabel;
+                label = newLabel;
             }
+            Part img = request.getPart("labelImageUpload");
+            if (img!=null)
+            {
+                label.setLabelImageType(context.getMimeType(img.getSubmittedFileName()));
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                int nRead=0;
+                byte[] data = new byte[1024];
+                InputStream in = img.getInputStream();
+                while ((nRead = in.read(data, 0, data.length)) != -1) {
+                  buffer.write(data, 0, nRead);
+                }
+                buffer.flush();
+                label.setLabelImage(buffer.toByteArray());
+                System.out.println(label);
+            }
+            return label;
         } catch (Exception e){
         e.printStackTrace();
         }        
@@ -259,6 +279,10 @@ public class LabelApplicationController {
                 return "Grape varietal is invalid";
             }
         }
+        if (l.getLabelImage()==null || l.getLabelImageType()==null || l.getLabelImageType().length()<3)
+        {
+            return "Label image is invalid";
+        }
         return null;
     }
     
@@ -290,6 +314,7 @@ public class LabelApplicationController {
             generalObj.add("address", this.application.getApplicantAddress().toString());
         if (this.application.getMailingAddress()!=null)
             generalObj.add("mailAddress", this.application.getMailingAddress().toString());
+        generalObj.add("appStatus", this.application.getStatus().name());
         
         for (Entry<ApplicationType,String> e : this.application.getApplicationTypes().entrySet())
         {
@@ -368,10 +393,7 @@ public class LabelApplicationController {
     
     public String renderComment(HttpServletRequest request, LabelComment comment)
     {
-        if (comment==null)
-            return null;
-        User usr = AccountController.getPageUser(request);
-        
+        User usr = comment.getSubmitter();
         StringBuilder b = new StringBuilder();
         b.append("<div class=\"panel panel-info\">").append("<div class=\"panel-heading\">");
         if (usr==null)
@@ -380,7 +402,7 @@ public class LabelApplicationController {
         }
         else
         {
-            b.append(usr.getFirstName()+" "+usr.getLastName());
+            b.append(usr.getFirstName()+" "+usr.getLastName() + " ("+usr.getEmail()+")");
         }
         b.append("<div style=\"float:right;\">").append(comment.getDate()).append("</div>");
         b.append("</div>").append("<div class=\"panel-body\">");
@@ -389,6 +411,18 @@ public class LabelApplicationController {
         return b.toString();
     }
     
+    public Label getLabelImage(long applicationId)
+    {
+        try {
+            this.loadApplication(applicationId);            
+            Label l = this.application.getLabel();            
+            l.setPullImageOut(true);            
+            this.db.getEntity(l, l.getPrimaryKeyName());
+            return l;            
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
     
     public boolean setNewReviewer(UsEmployee employee) throws SQLException
     {
@@ -471,7 +505,12 @@ public class LabelApplicationController {
         this.application.setApplicationApproval(approval);
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
-        this.application.getComments().add(new LabelComment(submitter, "<span style=\"color:green;\">Application Approved</span>"));
+        
+        this.application.getComments().add(new LabelComment(submitter, "<span style=\"color:green;\">Application Approved</span><br><br>Expires: "+experationDate.toString()));
+        for (LabelComment l :  this.application.getComments())
+        {
+            System.out.println(l);
+        }
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
     
