@@ -5,12 +5,17 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.Controllers.Filters.*;
 import com.slackers.inc.Controllers.SearchController;
 import com.slackers.inc.database.entities.Label;
+import com.slackers.inc.database.entities.Label.BeverageSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -77,18 +82,58 @@ public class ManufacturerSearchServlet extends HttpServlet {
         
         SearchController search = new SearchController();
         Label label = new Label();
-        label.setBrandName(request.getParameter("keywords"));
-        //label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent")));
-        //label.setProductType(Label.BeverageType.valueOf(request.getParameter("type")));
-        //label.setProductSource(Label.BeverageSource.valueOf(request.getParameter("source")));
+        
+        Map<String, String[]> param = request.getParameterMap();
+        for (String parameter: param.keySet()){
+            switch(parameter){
+                case "keywords":
+                    if(!(request.getParameter("keywords").equals(""))){
+                        Filter brand = new BrandNameFilter(request.getParameter("keywords"));
+                        search.addFilter(brand);
+                    }
+                    break;
+                case "alcoholContent":
+                    if(!(request.getParameter("alcoholContent").equals(""))){
+                        Filter alcoholContent = new AlcoholFilter(Double.parseDouble(request.getParameter("alcoholContent")));
+                        search.addFilter(alcoholContent);
+                    }
+                    break;
+                case "originLocation": //Dont have a filter for origin location
+//                    if(!(request.getParameter("originLocation").equals(""))){
+//                        Filter alcoholContent = new AlcoholFilter(Integer.parseInt(request.getParameter("originLocation")));
+//                        search.addFilter(alcoholContent);
+//                    }
+                    break;
+                case "source":
+                    if(!(request.getParameter("source").equals("na"))){
+                        Filter source;
+                        switch(request.getParameter("source")){
+                            case "Domestic":
+                                source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC);
+                                break;
+                            case "Imported":
+                                source = new ProductSourceFilter(Label.BeverageSource.IMPORTED);
+                                break;
+                    }
+                }
+                    break;
+                case "pHLevel":
+                    break;
+                case "vintageYear":
+                    break;
+                
+            }
+        }    
+        
+        System.out.println(label);
         try (PrintWriter out = response.getWriter()) {  
             
-            List<Label> drinkList = search.runSearch(label);
-            
+            List<Label> drinkList = new LinkedList<Label>();
+            drinkList = search.runSearch(label);
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "results");
             String results = WebComponentProvider.loadPartialPage(this, "Results-partial.html");
             
-            /*StringBuilder b = new StringBuilder();
+            StringBuilder b = new StringBuilder();
             for(int i = 0; i < drinkList.size(); i++){
                 b.append("<div class=\"panel panel-default\">\n" +
 "                           <div class=\"panel-heading\">\n" +
@@ -106,7 +151,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
 "                           </div>\n" +
 "                       </div>");
             }
-            */
+            
             results = results.replace("##Drinks", "");
             pg.setBody(results);
             out.println(WebComponentProvider.buildPage(pg, request));
