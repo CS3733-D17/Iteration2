@@ -5,6 +5,8 @@
  */
 package com.slackers.inc.database;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -13,23 +15,24 @@ import java.io.IOException;
  * @author Fabio Borges
  */
 public class RealLabelImage implements ILabelImage {
-    private FileInputStream fileName;
+    private String fileName;
+    private BufferedImage image;
     
-    public RealLabelImage(FileInputStream fileName) {
+    public RealLabelImage(String fileName) throws IOException {
         this.fileName = fileName;
         loadImage(fileName);
     }
     
-    public String getFileName() throws IOException{
-        return fileName.getFD().toString();
+    public String getFileName(){
+        return fileName;
     }
 
     @Override
-    public void display() {
-        
+    public BufferedImage display() {
+        return image;
     }
     
-    private void loadImage(FileInputStream fileName) {
-        
+    private void loadImage(String fileName) throws IOException {
+        image = ImageIO.read(new java.io.File("/images/" + fileName));
     }
 }

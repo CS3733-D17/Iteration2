@@ -7,6 +7,9 @@ package com.slackers.inc.database.entities;
 
 import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.IEntity;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -51,6 +54,7 @@ public class Label implements IEntity{
     private String fancifulName;
     private String formula;
     private String generalInfo;
+    private String labelImage;
     
     private ApplicationApproval approval;
     
@@ -69,6 +73,7 @@ public class Label implements IEntity{
         this.fancifulName = "";
         this.formula = "";
         this.generalInfo = "";
+        this.labelImage = "";
     }
 
     public ApplicationApproval getApproval() {
@@ -95,8 +100,6 @@ public class Label implements IEntity{
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
-    
-    
 
     public double getAlcoholContent() {
         return alcoholContent;
@@ -185,7 +188,14 @@ public class Label implements IEntity{
     public void setGeneralInfo(String generalInfo) {
         this.generalInfo = generalInfo;
     }
-    
+
+    public void setLabelImage(String labelImage){
+        this.labelImage = labelImage;
+    }
+
+    public String getLabelImage(){
+        return this.labelImage;
+    }
 
     @Override
     public String getTableName() {
@@ -205,10 +215,10 @@ public class Label implements IEntity{
         values.put("brandName", this.brandName);
         values.put("approval", this.approval.getPrimaryKeyValue());  
         values.put("serialNumber", this.serialNumber);
-        
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
+        values.put("labelImage", this.labelImage);
         return values;
     }
 
@@ -224,10 +234,10 @@ public class Label implements IEntity{
         values.put("brandName", this.brandName);
         values.put("approval", this.approval.getPrimaryKeyValue()); 
         values.put("serialNumber", this.serialNumber);
-        
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
+        values.put("labelImage", this.labelImage);
         return values;
     }
 
@@ -270,7 +280,6 @@ public class Label implements IEntity{
         {
             this.serialNumber = (String) values.get("serialNumber");
         }
-        
         if (values.containsKey("fancifulName"))
         {
             this.fancifulName = (String) values.get("fancifulName");
@@ -279,12 +288,10 @@ public class Label implements IEntity{
         {
             this.formula = (String) values.get("formula");
         }
-        
         if (values.containsKey("generalInfo"))
         {
             this.generalInfo = (String) values.get("generalInfo");
         }
-        
         if(values.containsKey("approval")){
             long val = (long)values.get("approval");
             if (val==0)
@@ -300,6 +307,9 @@ public class Label implements IEntity{
                     Logger.getLogger(Label.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        }
+        if (values.containsKey("labelImage")){
+            this.labelImage = (String) values.get("labelImage");
         }
         
     }
@@ -320,6 +330,7 @@ public class Label implements IEntity{
         pairs.put("fancifulName", String.class);
         pairs.put("formula", String.class);
         pairs.put("generalInfo", String.class);
+        pairs.put("labelImage", String.class);
         return pairs;
     }
 
@@ -343,6 +354,7 @@ public class Label implements IEntity{
         cols.add("serialNumber varchar(64)");
         cols.add("phLevel float");
         cols.add("vintage int");
+        cols.add("labelImage varchar(64)");
         return cols;
     }
 
@@ -370,7 +382,9 @@ public class Label implements IEntity{
 
     @Override
     public String toString() {
-        return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource=" + productSource + ", productType=" + productType + ", brandName=" + brandName + '}';
+        return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted
+                + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource="
+                + productSource + ", productType=" + productType + ", brandName=" + brandName + " ,labelImage=" + labelImage + '}';
     }
     
 }

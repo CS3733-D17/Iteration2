@@ -5,6 +5,8 @@
  */
 package com.slackers.inc.database;
 
+import java.awt.image.BufferedImage;
+
 /**
  *
  * @author Fabio Borges 
@@ -12,6 +14,6 @@ package com.slackers.inc.database;
  */
 public interface ILabelImage {
 
-    public void display();
+    public BufferedImage display();
 
 }

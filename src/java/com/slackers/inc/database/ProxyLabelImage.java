@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.database;
 
-import java.io.FileInputStream;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
@@ -14,23 +14,25 @@ import java.io.IOException;
  */
 public class ProxyLabelImage implements ILabelImage {
     private RealLabelImage realLabel;
-    private FileInputStream fileName;
+    private String fileName;
 
-    public ProxyLabelImage(FileInputStream fileName) {
-
+    public ProxyLabelImage(String fileName) {
         this.fileName = fileName;
     }
 
     public String getFileName() throws IOException{
-        return fileName.getFD().toString();
+        return fileName;
     }
 
-    // Load the real image if it has not been loaded and display that image
     @Override
-    public void display() {
+    public BufferedImage display() {
         if(realLabel == null)
-            realLabel = new RealLabelImage(fileName);
-        realLabel.display();
+            try {
+                realLabel = new RealLabelImage(fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        return realLabel.display();
     }
 
 }
