@@ -5,18 +5,17 @@
  */
 package com.slackers.inc.ui.web;
 
-import com.slackers.inc.Controllers.Filters.AlcoholFilter;
-import com.slackers.inc.Controllers.Filters.BrandNameFilter;
-import com.slackers.inc.Controllers.Filters.Filter;
-import com.slackers.inc.Controllers.Filters.ProductSourceFilter;
+import com.slackers.inc.Controllers.Filters.*;
 import com.slackers.inc.Controllers.SearchController;
 import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.Label.BeverageSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -83,35 +82,54 @@ public class ManufacturerSearchServlet extends HttpServlet {
         
         SearchController search = new SearchController();
         Label label = new Label();
-        Filter brand = new BrandNameFilter(request.getParameter("keywords"));
-        search.addFilter(brand);
         
-        label.setBrandName(request.getParameter("keywords"));
-        if(!(request.getParameter("alcoholContent").equals(""))){
-            Filter alcoholContent = new AlcoholFilter(Double.parseDouble(request.getParameter("alcoholContent")));
-            search.addFilter(alcoholContent);
-        }
-        
-        //label.setProductType(Label.BeverageType.valueOf(request.getParameter("type")));
-        
-        if(!(request.getParameter("source").equals("na"))){
-            Filter source;
-            switch(request.getParameter("source")){
-                case "Domestic":
-                    source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC);
+        Map<String, String[]> param = request.getParameterMap();
+        for (String parameter: param.keySet()){
+            switch(parameter){
+                case "keywords":
+                    if(!(request.getParameter("keywords").equals(""))){
+                        Filter brand = new BrandNameFilter(request.getParameter("keywords"));
+                        search.addFilter(brand);
+                    }
                     break;
-                case "Imported":
-                    source = new ProductSourceFilter(Label.BeverageSource.IMPORTED);
+                case "alcoholContent":
+                    if(!(request.getParameter("alcoholContent").equals(""))){
+                        Filter alcoholContent = new AlcoholFilter(Double.parseDouble(request.getParameter("alcoholContent")));
+                        search.addFilter(alcoholContent);
+                    }
                     break;
+                case "originLocation": //Dont have a filter for origin location
+//                    if(!(request.getParameter("originLocation").equals(""))){
+//                        Filter alcoholContent = new AlcoholFilter(Integer.parseInt(request.getParameter("originLocation")));
+//                        search.addFilter(alcoholContent);
+//                    }
+                    break;
+                case "source":
+                    if(!(request.getParameter("source").equals("na"))){
+                        Filter source;
+                        switch(request.getParameter("source")){
+                            case "Domestic":
+                                source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC);
+                                break;
+                            case "Imported":
+                                source = new ProductSourceFilter(Label.BeverageSource.IMPORTED);
+                                break;
+                    }
+                }
+                    break;
+                case "pHLevel":
+                    break;
+                case "vintageYear":
+                    break;
+                
             }
-        }
+        }    
         
         System.out.println(label);
         try (PrintWriter out = response.getWriter()) {  
             
             List<Label> drinkList = new LinkedList<Label>();
             drinkList = search.runSearch(label);
-            System.out.println(drinkList);
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "results");
             String results = WebComponentProvider.loadPartialPage(this, "Results-partial.html");
             
