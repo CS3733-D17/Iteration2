@@ -82,7 +82,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
         
         SearchController search = new SearchController();
         Label label = new Label();
-        
+        search.reset();
         Map<String, String[]> param = request.getParameterMap();
         for (String parameter: param.keySet()){
             switch(parameter){
@@ -128,8 +128,13 @@ public class ManufacturerSearchServlet extends HttpServlet {
         System.out.println(label);
         try (PrintWriter out = response.getWriter()) {  
             
-            List<Label> drinkList = new LinkedList<Label>();
-            drinkList = search.runSearch(label);
+            List<Label> drinkList = search.runSearch(label);
+            
+            System.out.println("LIST");
+            for (Label l : drinkList)
+            {
+                System.out.println(l);
+            }
             
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "results");
             String results = WebComponentProvider.loadPartialPage(this, "Results-partial.html");
@@ -148,12 +153,16 @@ public class ManufacturerSearchServlet extends HttpServlet {
 "                               </div>\n" +
 "                           </div>\n" +
 "                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
-"                           <div class=\"panel-body\">Drink information</div>\n" +
+"                           <div class=\"panel-body\">\n"+
+                        renderData(request,drinkList.get(i)) +
+                                "\n</div>\n" +
 "                           </div>\n" +
 "                       </div>");
+                
             }
             
             results = results.replace("##Drinks", b);
+            results = results.replace("##BrandName", drinkList.get(0).getBrandName() );
             pg.setBody(results);
             out.println(WebComponentProvider.buildPage(pg, request));
             
@@ -171,5 +180,110 @@ public class ManufacturerSearchServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    public static String renderData(HttpServletRequest request, Label label)
+    {
+        StringBuilder b = new StringBuilder();
+        b.append("<div class = \"row\">\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Representative ID:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>"+label.getRepresentativeIdNumber()+"</p>\n" +
+"		</div>\n" +
+"\n" +
+"\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Application Progress:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>Representative ID</p>\n" +
+"		</div>\n" +
+"	</div>\n" +
+"	<br>\n" +
+"	<div class = \"row\">\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Brand Name:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>"+label.getBrandName()+"</p>\n" +
+"		</div>\n" +
+"\n" +
+"\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Name of Agent:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>"+label.getApproval().getAgent().getFirstName() + " " + label.getApproval().getAgent().getLastName() +"</p>\n" +
+"		</div>\n" +
+"	</div>\n" +
+"\n" +
+"	<br>\n" +
+"	<div class = \"row\">\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Type:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>"+label.getProductType()+"</p>\n" +
+"		</div>\n" +
+"\n" +
+"\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Date of Approval:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>"+label.getApproval().getApprovalDate()+"</p>\n" +
+"		</div>\n" +
+"	</div>\n" +
+"\n" +
+"	<br>\n" +
+"	<div class = \"row\">\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Alcohol Content:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>"+Double.toString(label.getAlcoholContent())+"</p>\n" +
+"		</div>\n" +
+"\n" +
+"\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Expiration:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>"+label.getApproval().getExperationDate()+"</p>\n" +
+"		</div>\n" +
+"	</div>\n" +
+"\n" +
+"	<br>\n" +
+"	<div class = \"row\">\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Source of Product:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>"+label.getProductSource()+"</p>\n" +
+"		</div>\n" +
+"\n" +
+"\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<label>Other Stuff:</label>\n" +
+"		</div>\n" +
+"		\n" +
+"		<div class=\"col-md-2\">\n" +
+"			<p>Representative ID</p>\n" +
+"		</div>\n" +
+"	</div>");
+       
+       
+        return b.toString();
+    }
 
 }
