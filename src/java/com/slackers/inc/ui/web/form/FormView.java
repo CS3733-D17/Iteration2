@@ -49,18 +49,18 @@ public class FormView extends HttpServlet {
             String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
             form = form.replace("##FORM_CONTENT", formTemplate);
-            
+            form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, appControl));
             User usr = AccountController.getPageUser(request);
-            if (usr==null || usr.getUserType() != UserType.MANUFACTURER || usr.getUserType() != UserType.US_EMPLOYEE)
-            { }
-            else if (usr.getUserType() != UserType.MANUFACTURER)
+            if (usr!=null && usr.getUserType() == UserType.MANUFACTURER)
             {
                 form = form.replace("##ACTION_BUTTON", " <a href = \"/SuperSlackers/form/edit?id=##ID\" class=\"btn btn-warning\" style=\"width:100%; margin-top: 30px;\">Edit Label Application</a>");
             }
-            else if (usr.getUserType() != UserType.US_EMPLOYEE)
+            else if (usr!=null && usr.getUserType() == UserType.US_EMPLOYEE)
             {
                 form = form.replace("##ACTION_BUTTON", " <a href = \"/SuperSlackers/form/process?id=##ID\" class=\"btn btn-warning\" style=\"width:100%; margin-top: 30px;\">Process Label Application</a>");
-            }            
+            }      
+            else
+            {form = form.replace("##ACTION_BUTTON",usr.getUserType().name());}
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "View Label Application");
             pg.setBody(form.replace("##ID", Long.toString(appId))+appControl.renderCommentList(request));
             out.println(WebComponentProvider.buildPage(pg, request));

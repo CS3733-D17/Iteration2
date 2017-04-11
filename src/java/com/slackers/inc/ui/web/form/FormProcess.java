@@ -7,12 +7,12 @@ package com.slackers.inc.ui.web.form;
 
 import com.slackers.inc.Controllers.AccountController;
 import com.slackers.inc.Controllers.LabelApplicationController;
-import com.slackers.inc.database.entities.User;
-import com.slackers.inc.database.entities.User.UserType;
+import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.ui.web.IPageFrame;
 import com.slackers.inc.ui.web.WebComponentProvider;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,21 +46,10 @@ public class FormProcess extends HttpServlet {
             appControl.loadApplication(appId);
             appControl.writeApplicationToCookies(response);
             WebComponentProvider.setSuccessMessage(response, null);
-            String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
+            String form = WebComponentProvider.loadPartialPage(this, "process-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
-            form = form.replace("##FORM_CONTENT", formTemplate);
-            
-            User usr = AccountController.getPageUser(request);
-            if (usr==null || usr.getUserType() != UserType.MANUFACTURER || usr.getUserType() != UserType.US_EMPLOYEE)
-            { }
-            else if (usr.getUserType() != UserType.MANUFACTURER)
-            {
-                form = form.replace("##ACTION_BUTTON", " <a href = \"/SuperSlackers/form/edit?id=##ID\" class=\"btn btn-warning\" style=\"width:100%; margin-top: 30px;\">Edit Label Application</a>");
-            }
-            else if (usr.getUserType() != UserType.US_EMPLOYEE)
-            {
-                form = form.replace("##ACTION_BUTTON", " <a href = \"/SuperSlackers/form/process?id=##ID\" class=\"btn btn-warning\" style=\"width:100%; margin-top: 30px;\">Process Label Application</a>");
-            }            
+            form = form.replace("##FORM_CONTENT", formTemplate); 
+            form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, appControl));
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "View Label Application");
             pg.setBody(form.replace("##ID", Long.toString(appId))+appControl.renderCommentList(request));
             out.println(WebComponentProvider.buildPage(pg, request));
@@ -83,7 +72,54 @@ public class FormProcess extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+        
+        
+        String action = request.getParameter("action");
+        String idStr = request.getParameter("id");
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            long id = Long.parseLong(idStr);
+            LabelApplicationController appControl = new LabelApplicationController();
+            appControl.loadApplication(id);
+            UsEmployee emp = (UsEmployee)AccountController.getPageUser(request);
+            if (action!=null)
+            {
+                if (action.equals("accept"))
+                {
+                    appControl.approveApplication(emp, new Date(new java.util.Date().getTime()+63072000000L));
+                    response.sendRedirect(WebComponentProvider.root(request));
+                }
+                else if (action.equals("reject"))
+                {
+                    appControl.rejectApplication(emp);
+                    response.sendRedirect(WebComponentProvider.root(request));
+                }
+                else
+                {
+                    System.out.println("no Action");
+                    response.sendRedirect("/SuperSlacker/form/process?id="+id);
+                }
+            }
+            else
+            {
+                System.out.println("action is null");
+                response.sendRedirect("/SuperSlacker/form/process?id="+id);
+            }           
+        }catch (Exception e){
+            e.printStackTrace();
+            try 
+            {
+                long id = Long.parseLong(idStr);
+                System.out.println("shit");
+                response.sendRedirect("/SuperSlacker/form/process?id="+id);
+            }
+            catch (Exception ex)
+            {
+                response.sendRedirect(WebComponentProvider.root(request));
+            }
+            
+        }
+        
     }
 
     /**
