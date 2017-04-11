@@ -49,7 +49,7 @@ public class FormView extends HttpServlet {
             String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
             form = form.replace("##FORM_CONTENT", formTemplate);
-            
+            form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, appControl));
             User usr = AccountController.getPageUser(request);
             if (usr!=null && usr.getUserType() == UserType.MANUFACTURER)
             {

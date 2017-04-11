@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
 @WebServlet(name = "FormCreate", urlPatterns = {"/form/create"})
+@MultipartConfig
 public class FormCreate extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -66,7 +68,7 @@ public class FormCreate extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             LabelApplicationController appControl = new LabelApplicationController();
-            appControl.createApplicationFromRequest(request);
+            appControl.createApplicationFromRequest(this.getServletContext(), request);
             appControl.writeApplicationToCookies(response);
             String error = appControl.validateApplication();
             if (error==null)

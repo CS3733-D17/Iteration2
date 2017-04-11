@@ -50,6 +50,13 @@ function clickBox(id)
 
 function __fillForm_SUB()
 {
+    if (document.getElementById("lblImg")!=null)
+    {
+        if (document.getElementById("imgSelector")!=null)
+        {
+            document.getElementById("imgSelector").style.display = "none";
+        }
+    }
     var out = JSON.parse(atob(getCookie("SSINCAP_GEN")));
     console.log(out);
     unclickBox("BEER");

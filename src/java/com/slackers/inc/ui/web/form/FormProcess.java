@@ -48,7 +48,8 @@ public class FormProcess extends HttpServlet {
             WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "process-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
-            form = form.replace("##FORM_CONTENT", formTemplate);          
+            form = form.replace("##FORM_CONTENT", formTemplate); 
+            form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, appControl));
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "View Label Application");
             pg.setBody(form.replace("##ID", Long.toString(appId))+appControl.renderCommentList(request));
             out.println(WebComponentProvider.buildPage(pg, request));

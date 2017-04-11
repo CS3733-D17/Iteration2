@@ -128,7 +128,7 @@ public class DerbyConnection {
         int i = 1;
         for (Object o : vals)
         {
-            DerbyConnection.setStatementValue(call, i, o);
+            DerbyConnection.setStatementValue(con, call, i, o);
             i++;
         }
         boolean res = call.execute();
@@ -144,6 +144,7 @@ public class DerbyConnection {
                 entity.setPrimaryKeyValue(results.getLong(1));
         }
         con.commit();
+        results.close();        
         return res;
     }
     
@@ -180,11 +181,12 @@ public class DerbyConnection {
         int i = 1;
         for (Object o : vals)
         {
-            DerbyConnection.setStatementValue(call, i, o);
+            DerbyConnection.setStatementValue(con, call, i, o);
             i++;
         }
         boolean res = call.execute();
         con.commit();
+        call.close();
         return res;
     }
     
@@ -240,16 +242,17 @@ public class DerbyConnection {
         int i = 1;
         for (Object o : setvals)
         {
-            DerbyConnection.setStatementValue(call, i, o);
+            DerbyConnection.setStatementValue(con, call, i, o);
             i++;
         }
         for (Object o : condvals)
         {
-            DerbyConnection.setStatementValue(call, i, o);
+            DerbyConnection.setStatementValue(con, call, i, o);
             i++;
         }        
         boolean res = call.execute();
         con.commit();
+        call.close();
         return res;
     }
     
@@ -286,14 +289,16 @@ public class DerbyConnection {
         int i = 1;
         for (Object o : vals)
         {
-            DerbyConnection.setStatementValue(call, i, o);
+            DerbyConnection.setStatementValue(con, call, i, o);
             i++;
         }        
         ResultSet results = call.executeQuery();
         while (results.next())
         {
+            results.close();
             return true;
         }
+        results.close();
         return false;
     }
     
@@ -330,7 +335,7 @@ public class DerbyConnection {
         int i = 1;
         for (Object o : vals)
         {
-            DerbyConnection.setStatementValue(call, i, o);
+            DerbyConnection.setStatementValue(con, call, i, o);
             i++;
         }
         ResultSet results = call.executeQuery();
@@ -344,10 +349,11 @@ public class DerbyConnection {
                 return;
             for (String s : entity.getEntityNameTypePairs().keySet())
             {
-                DerbyConnection.getStatementValue(results, s, entity, valMap);
+                DerbyConnection.getStatementValue(con, results, s, entity, valMap);
             }
             entity.setEntityValues(valMap);
         }
+        results.close();
     }
     
     public List<IEntity> getAllEntites(IEntity entity, String... searchColumns) throws SQLException
@@ -383,7 +389,7 @@ public class DerbyConnection {
         int i = 1;
         for (Object o : vals)
         {
-            DerbyConnection.setStatementValue(call, i, o);
+            DerbyConnection.setStatementValue(con, call, i, o);
             i++;
         }
         ResultSet results = call.executeQuery();
@@ -397,11 +403,12 @@ public class DerbyConnection {
             c++;
             for (String s : entity.getEntityNameTypePairs().keySet())
             {
-                DerbyConnection.getStatementValue(results, s, entity, valMap);
+                DerbyConnection.getStatementValue(con, results, s, entity, valMap);
             }
             entity.setEntityValues(valMap);
             entites.add(entity.deepCopy());
         }
+        results.close();
         return entites;
     }
     
@@ -438,7 +445,7 @@ public class DerbyConnection {
         int i = 1;
         for (Object o : vals)
         {
-            DerbyConnection.setStatementValue(call, i, o);
+            DerbyConnection.setStatementValue(con, call, i, o);
             i++;
         }
         ResultSet results = call.executeQuery();
@@ -454,7 +461,7 @@ public class DerbyConnection {
                 T ent = (T) entity.getClass().newInstance();
                 for (String s : entity.getEntityNameTypePairs().keySet())
                 {
-                    DerbyConnection.getStatementValue(results, s, entity, valMap);
+                    DerbyConnection.getStatementValue(con, results, s, entity, valMap);
                 }
                 ent.setEntityValues(valMap);
                 entites.add(ent);
@@ -462,6 +469,7 @@ public class DerbyConnection {
                 Logger.getLogger(DerbyConnection.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        results.close();
         return entites;
     }
 
@@ -473,7 +481,7 @@ public class DerbyConnection {
             return this.createEntity(entity);
     }
     
-    private static void setStatementValue(PreparedStatement stmt, int index, Object obj) throws SQLException
+    private static void setStatementValue(Connection con, PreparedStatement stmt, int index, Object obj) throws SQLException
     {
         if (obj == null)
         {
@@ -507,6 +515,12 @@ public class DerbyConnection {
         {
             stmt.setDouble(index, (Double)obj);
         }
+        else if (obj instanceof byte[])
+        {
+            Blob b = con.createBlob();
+            b.setBytes(1, (byte[])obj);
+            stmt.setBlob(index, b);
+        }
         else if (obj instanceof Serializable)
         {
             try {
@@ -517,7 +531,7 @@ public class DerbyConnection {
         }
     }
     
-    private static void getStatementValue(ResultSet result, String colTitle, IEntity entity, Map<String,Object> valueCollection) throws SQLException
+    private static void getStatementValue(Connection con, ResultSet result, String colTitle, IEntity entity, Map<String,Object> valueCollection) throws SQLException
     {
         Class target = entity.getEntityNameTypePairs().get(colTitle);
         if (target == null)
@@ -549,6 +563,12 @@ public class DerbyConnection {
         else if (Double.class.isAssignableFrom(target))
         {
             valueCollection.put(colTitle, result.getDouble(colTitle));
+        }
+        else if (byte[].class.isAssignableFrom(target))
+        {
+            Blob b = result.getBlob(colTitle);
+            valueCollection.put(colTitle, b.getBytes(1, (int) b.length()));
+            b.free();
         }
         else if (Serializable.class.isAssignableFrom(target))
         {
