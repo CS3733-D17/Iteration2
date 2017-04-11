@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jason
  */
-@WebServlet(name = "ApplicationsPageServlet", urlPatterns = {"/All"})
+@WebServlet(name = "ApplicationsPageServlet", urlPatterns = {"/myApplications"})
 public class ApplicationsPageServlet extends HttpServlet {
 
     IPageFrame pg;

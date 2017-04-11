@@ -78,7 +78,7 @@ public class ManufacturerPage implements IPageFrame{
 "          <li><a href=\"Working\">Working</a></li>\n" +
 "          <li><a href=\"UnderReview\">Under Review</a></li>\n" +
 "          <li><a href=\"Accepted\">Accepted</a></li>\n" +
-"          <li><a href=\""+WebComponentProvider.root(request)+"All\">All</a></li>\n" +
+"          <li><a href=\""+WebComponentProvider.root(request)+"myApplications\">All</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
