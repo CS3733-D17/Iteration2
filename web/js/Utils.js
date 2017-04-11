@@ -63,6 +63,13 @@ function __fillForm_SUB()
         {
             clickBox(out[k]);
         }
+        else if (k=="appStatus")
+        {
+            if (document.getElementById(k)!=null)
+            {
+                document.getElementById(k).textContent = out[k];
+            }
+        }
         else if (k=="NEW" || k=="DISTINCT" || k=="EXEMPT" || k=="RESUBMIT")
         {
             console.log("Check "+k);
@@ -87,6 +94,11 @@ function __fillForm_SUB()
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);
+        }
+        else if (k=="appStatus")
+        {
+            if (document.getElementById(k)!=null)
+                document.getElementById(k).innerHtml = out[k];
         }
         else
         {

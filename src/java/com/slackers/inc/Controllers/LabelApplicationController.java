@@ -290,6 +290,7 @@ public class LabelApplicationController {
             generalObj.add("address", this.application.getApplicantAddress().toString());
         if (this.application.getMailingAddress()!=null)
             generalObj.add("mailAddress", this.application.getMailingAddress().toString());
+        generalObj.add("appStatus", this.application.getStatus().name());
         
         for (Entry<ApplicationType,String> e : this.application.getApplicationTypes().entrySet())
         {
@@ -368,10 +369,7 @@ public class LabelApplicationController {
     
     public String renderComment(HttpServletRequest request, LabelComment comment)
     {
-        if (comment==null)
-            return null;
-        User usr = AccountController.getPageUser(request);
-        
+        User usr = comment.getSubmitter();
         StringBuilder b = new StringBuilder();
         b.append("<div class=\"panel panel-info\">").append("<div class=\"panel-heading\">");
         if (usr==null)
@@ -380,7 +378,7 @@ public class LabelApplicationController {
         }
         else
         {
-            b.append(usr.getFirstName()+" "+usr.getLastName());
+            b.append(usr.getFirstName()+" "+usr.getLastName() + " ("+usr.getEmail()+")");
         }
         b.append("<div style=\"float:right;\">").append(comment.getDate()).append("</div>");
         b.append("</div>").append("<div class=\"panel-body\">");
@@ -471,7 +469,12 @@ public class LabelApplicationController {
         this.application.setApplicationApproval(approval);
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
-        this.application.getComments().add(new LabelComment(submitter, "<span style=\"color:green;\">Application Approved</span>"));
+        
+        this.application.getComments().add(new LabelComment(submitter, "<span style=\"color:green;\">Application Approved</span><br><br>Expires: "+experationDate.toString()));
+        for (LabelComment l :  this.application.getComments())
+        {
+            System.out.println(l);
+        }
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
     

@@ -5,7 +5,12 @@
             ##FORM_CONTENT
             </fieldset>
         </form>
-        <a href = "/SuperSlackers/form/edit?id=##ID" class="btn btn-success" style="width:100%; margin-top: 30px;">Accept</a>
+        <form action="/SuperSlackers/form/process?id=##ID&action=accept" method="POST">
+            <button class="btn btn-success" style="width:100%; margin-top: 30px;">Accept</button>
+        </form>
+        <form action="/SuperSlackers/form/process?id=##ID&action=reject" method="POST">
+            <button class="btn btn-danger" style="width:100%; margin-top: 30px;">Reject</button>
+        </form>
     </div>
     <script>
         fillForm();
