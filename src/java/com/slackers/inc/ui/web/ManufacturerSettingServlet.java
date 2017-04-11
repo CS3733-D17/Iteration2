@@ -78,8 +78,6 @@ public class ManufacturerSettingServlet extends HttpServlet {
             pg.setBody(settings);
             out.println(WebComponentProvider.buildPage(pg, request));
             
-            
-            
         }
     }
 
@@ -95,8 +93,19 @@ public class ManufacturerSettingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-    }
+        try (PrintWriter out = response.getWriter()) {
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "settings");
 
+            pg.getUser().setFirstName(request.getParameter("firstName"));
+            pg.getUser().setLastName(request.getParameter("lastName"));
+            pg.getUser().setEmail(request.getParameter("email"));
+            
+
+            pg.setBody(WebComponentProvider.loadPartialPage(this, "settings-partial.html"));
+            out.println(WebComponentProvider.buildPage(pg, request));
+        }
+    }
+    
     /**
      * Returns a short description of the servlet.
      *
