@@ -5,6 +5,7 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.database.entities.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ManufacturerSettingServlet", urlPatterns = {"/account/settings"})
 public class ManufacturerSettingServlet extends HttpServlet {
 
+    IPageFrame pg;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,19 +33,7 @@ public class ManufacturerSettingServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ManufacturerSettingServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ManufacturerSettingServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -59,10 +49,24 @@ public class ManufacturerSettingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            ManufacturerPage pg = new ManufacturerPage("Settings");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "settings-partial.html"));
+         try (PrintWriter out = response.getWriter()) {
+            pg = WebComponentProvider.getCorrectFrame(request, "settings");
+            String settings = WebComponentProvider.loadPartialPage(this, "settings-partial.html");
+            User.UserType type = pg.getUser().getUserType();
+            
+            if(type == User.UserType.MANUFACTURER){
+                StringBuilder b = new StringBuilder();
+                String manufacturerSettings = WebComponentProvider.loadPartialPage(this, "manufacturerSettings.html");
+                settings = settings.replace("##Manufacturer", manufacturerSettings);
+            }
+            else{
+                settings = settings.replace("##Manufacturer", "");
+            }
+            pg.setBody(settings);
             out.println(WebComponentProvider.buildPage(pg, request));
+            
+            
+            
         }
     }
 

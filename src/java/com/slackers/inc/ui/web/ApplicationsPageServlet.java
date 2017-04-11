@@ -53,8 +53,7 @@ public class ApplicationsPageServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             pg = WebComponentProvider.getCorrectFrame(request, "applicationPage");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "applicationList-partial.html"));
-            out.println(WebComponentProvider.buildPage(pg, request));
+            String applications = WebComponentProvider.loadPartialPage(this, "applicationList-partial.html");
             
             Manufacturer manufacturer = (Manufacturer) (pg.getUser());
             StringBuilder b = new StringBuilder();
@@ -75,13 +74,12 @@ public class ApplicationsPageServlet extends HttpServlet {
 "                           </div>\n" +
 "                       </div>");
             }
-            /*
-            pg = WebComponentProvider.getCorrectFrame(request, "applicationPage");
-            String applications = WebComponentProvider.loadPartialPage(this, "applicationList-partial.html");
+            
             applications = applications.replace("##Applications", b);
             pg.setBody(applications);
             out.println(WebComponentProvider.buildPage(pg, request));
-            */
+            
+           
         }    
   
     }
