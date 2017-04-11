@@ -63,8 +63,8 @@ public class ManufacturerSearchServlet extends HttpServlet {
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "searchPage");
             pg.setBody(WebComponentProvider.loadPartialPage(this, "search-partial.html"));
             out.println(WebComponentProvider.buildPage(pg, request));
-            
-        }       
+
+        }
     }
 
     /**
@@ -79,7 +79,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         SearchController search = new SearchController();
         Label label = new Label();
         search.reset();
@@ -110,22 +110,25 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         switch(request.getParameter("source")){
                             case "Domestic":
                                 source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC);
+                                search.addFilter(source);
                                 break;
                             case "Imported":
                                 source = new ProductSourceFilter(Label.BeverageSource.IMPORTED);
+                                search.addFilter(source);
                                 break;
+                        }
                     }
-                }
                     break;
                 case "pHLevel":
                     break;
                 case "vintageYear":
                     break;
-                
+
             }
-        }    
-        
+        }
+
         System.out.println(label);
+
         try (PrintWriter out = response.getWriter()) {  
             
             List<Label> drinkList = search.runSearch(label);
@@ -136,12 +139,14 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 System.out.println(l);
             }
             
+
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "results");
             String results = WebComponentProvider.loadPartialPage(this, "Results-partial.html");
-            
+
             StringBuilder b = new StringBuilder();
             for(int i = 0; i < drinkList.size(); i++){
                 b.append("<div class=\"panel panel-default\">\n" +
+
 "                           <div class=\"panel-heading\">\n" +
 "                               <div class=\"row\">\n" +
 "                                   <div class=\"col-md-10\">\n" +
@@ -158,15 +163,15 @@ public class ManufacturerSearchServlet extends HttpServlet {
                                 "\n</div>\n" +
 "                           </div>\n" +
 "                       </div>");
-                
+
             }
-            
+
             results = results.replace("##Drinks", b);
             results = results.replace("##BrandName", drinkList.get(0).getBrandName() );
             pg.setBody(results);
             out.println(WebComponentProvider.buildPage(pg, request));
-            
-            
+
+
         } catch (SQLException ex) {
             Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
         }    }
