@@ -98,7 +98,6 @@ public class ManufacturerSettingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        System.out.println("Posting like a mother fucker");
         AccountController account = null;
        
         try (PrintWriter out = response.getWriter()) {
@@ -114,15 +113,15 @@ public class ManufacturerSettingServlet extends HttpServlet {
                 
                 
                 if (account.editAccount()){
-                 System.out.println("SHIT WORKS BRO");   
+                 System.out.println("Works");   
                 } else {
-                    System.out.println("SHIT DONT WORK BRO");   
+                    System.out.println("Dont work");   
                 }
                 pg.setUser(user);
                 System.out.println(user);
             } catch (SQLException ex) {
                 Logger.getLogger(ManufacturerSettingServlet.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("Shit went down");
+                
             }
             
             pg.setBody(WebComponentProvider.loadPartialPage(this, "settings-partial.html"));

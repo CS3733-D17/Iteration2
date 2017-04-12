@@ -198,7 +198,7 @@ public class DerbyConnection {
         }
         
         if (searchColumns.length<=0){
-             System.out.println("Broke point 1");
+             
             return false; // avoid table deletion
         }
         Set<String> cols = new HashSet<>(Arrays.asList(searchColumns));
