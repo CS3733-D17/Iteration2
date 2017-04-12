@@ -98,8 +98,6 @@ public class User implements IEntity{
         temp.put("password", this.password);
         temp.put("email", this.email);
         temp.put("userType", this.userType.name());
-        temp.put("firstName", this.firstName);
-        temp.put("lastName", this.lastName);
         return temp;
     }
 
@@ -109,11 +107,7 @@ public class User implements IEntity{
         temp.put("firstName", this.firstName);
         temp.put("lastName", this.lastName);
         temp.put("password", this.password);
-        temp.put("email", this.email);
         temp.put("userType", this.userType.name());
-        temp.put("lastName", this.lastName);
-        temp.put("firstName", this.firstName);
-        temp.put("userType", this.userType);
         return temp;
     }
 
@@ -129,10 +123,6 @@ public class User implements IEntity{
             this.email = (String)values.get("email");
         if (values.containsKey("userType"))
             this.userType = UserType.valueOf((String)values.get("userType"));
-        if (values.containsKey("firstName"))
-            this.firstName = (String)values.get("firstName");
-        if (values.containsKey("lastName"))
-            this.lastName = (String)values.get("lastName");
     }
 
     @Override

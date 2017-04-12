@@ -50,6 +50,7 @@ function clickBox(id)
 
 function __fillForm_SUB()
 {
+    handleRevisionDisplays();
     if (document.getElementById("lblImg")!=null)
     {
         if (document.getElementById("imgSelector")!=null)
@@ -58,14 +59,12 @@ function __fillForm_SUB()
         }
     }
     var out = JSON.parse(atob(getCookie("SSINCAP_GEN")));
-    console.log(out);
     unclickBox("BEER");
     unclickBox("WINE");
     unclickBox("DISTILLED");
     unclickBox("IMPORTED");
     unclickBox("DOMESTIC");
     Object.keys(out).forEach(function(k){
-        console.log("Set "+k+ " to "+out[k]);
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);
@@ -79,7 +78,6 @@ function __fillForm_SUB()
         }
         else if (k=="NEW" || k=="DISTINCT" || k=="EXEMPT" || k=="RESUBMIT")
         {
-            console.log("Check "+k);
             if (document.getElementById(k)!=null)
                 document.getElementById(k).checked = true;
         }
@@ -89,15 +87,14 @@ function __fillForm_SUB()
             {
                 document.getElementById(k).value = out[k];
             }
-            else
+            if (document.getElementById(k+"-new")!=null)
             {
-                console.log("WAS NULL");
+                document.getElementById(k+"-new").value = out[k];
             }
         }
     });
     out = JSON.parse(atob(getCookie("SSINCAP_DATA")));
     Object.keys(out).forEach(function(k){
-        console.log("Set "+k+ " to "+out[k]);
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);
@@ -113,11 +110,14 @@ function __fillForm_SUB()
             {
                 document.getElementById(k).value = out[k];
             }
+            if (document.getElementById(k+"-new")!=null)
+            {
+                document.getElementById(k+"-new").value = out[k];
+            }
         }
     });
     out = JSON.parse(atob(getCookie("SSINCAP_LBL")));
     Object.keys(out).forEach(function(k){
-        console.log("Set "+k+ " to "+out[k]);
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);
@@ -127,6 +127,10 @@ function __fillForm_SUB()
             if (document.getElementById(k)!=null)
             {
                 document.getElementById(k).value = out[k];
+            }
+            if (document.getElementById(k+"-new")!=null)
+            {
+                document.getElementById(k+"-new").value = out[k];
             }
         }
     });
@@ -142,4 +146,88 @@ function fillForm()
     
 }
 
+function handleRevOptDisp(className)
+{
+    var lst = document.getElementsByClassName(className);
+    if (document.getElementById(className+"-div")!=null)
+        document.getElementById(className+"-div").style.display = "none"; 
+    var lst2 = document.getElementsByClassName(className+"-div-input");
+    for (var i = 0; i<lst2.length; i++)
+    {
+        lst2[i].required = false;
+    }
+    for (var i = 0; i<lst.length; i++)
+    {
+        if (lst[i].checked)
+        {
+            if (document.getElementById(className+"-div")!=null)
+                document.getElementById(className+"-div").style.display = "block";
+            for (var i = 0; i<lst2.length; i++)
+            {
+                lst2[i].required = true;
+            }
+            return true;
+        }
+    }
+    return false;
+}
 
+function handleRevisionDisplays()
+{
+    out = JSON.parse(atob(getCookie("SSINCAP_LBL")));
+    var type = out["type"];
+    var wineOpts = document.getElementsByClassName("tag-wine");
+    for (var i = 0; i<wineOpts.length; i++)
+    {
+        wineOpts[i].style.display = "none";
+    }
+    var distilledOpts = document.getElementsByClassName("tag-distilled");
+    for (var i = 0; i<distilledOpts.length; i++)
+    {
+        distilledOpts[i].style.display = "none";
+    }
+    var beerOpts = document.getElementsByClassName("tag-beer");
+    for (var i = 0; i<beerOpts.length; i++)
+    {
+        beerOpts[i].style.display = "none";
+    }
+    if (type=="WINE")
+    {
+        for (var i = 0; i<wineOpts.length; i++)
+        {
+            wineOpts[i].style.display = "block";
+        }
+    }
+    if (type=="BEER")
+    {
+        for (var i = 0; i<beerOpts.length; i++)
+        {
+            beerOpts[i].style.display = "block";
+        }
+    }
+    if (type=="DISTILLED")
+    {
+        for (var i = 0; i<distilledOpts.length; i++)
+        {
+            distilledOpts[i].style.display = "block";
+        }
+    }
+    var res = handleRevOptDisp("tag-alcohol");
+    res |= handleRevOptDisp("tag-wine-vintage");
+    res |= handleRevOptDisp("tag-wine-ph");
+    res |= handleRevOptDisp("tag-wine-blend");
+    res |= handleRevOptDisp("tag-formula");
+    res |= handleRevOptDisp("tag-general");
+    res |= handleRevOptDisp("tag-new-label");
+    
+    if (res)
+    {
+        if (document.getElementById("submitRevisions")!=null)
+                document.getElementById("submitRevisions").style.display = "block";
+    }
+    else
+    {
+        if (document.getElementById("submitRevisions")!=null)
+                document.getElementById("submitRevisions").style.display = "none";
+    }
+}

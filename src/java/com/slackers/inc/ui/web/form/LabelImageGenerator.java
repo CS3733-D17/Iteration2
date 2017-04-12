@@ -31,11 +31,28 @@ public class LabelImageGenerator extends HttpServlet {
 
     public static String getAccessStringForApplication(HttpServletRequest request, LabelApplication app)
     {
-        return WebComponentProvider.root(request)+"image/label?id="+Long.toString(app.getApplicationId());
+        return WebComponentProvider.root(request)+"image/label?id="+Long.toString(app.getLabel().getLabelId());
     }
     public static String getAccessStringForApplication(HttpServletRequest request, LabelApplicationController app)
     {
-        return WebComponentProvider.root(request)+"image/label?id="+Long.toString(app.getApplicationId());
+        return WebComponentProvider.root(request)+"image/label?id="+Long.toString(app.getLabel().getLabelId());
+    }
+    public static String getAccessStringForApplication(HttpServletRequest request, Label l)
+    {
+        return WebComponentProvider.root(request)+"image/label?id="+Long.toString(l.getLabelId());
+    }
+    public static String getAccessStringForApplication(HttpServletRequest request, long id)
+    {
+        return WebComponentProvider.root(request)+"image/label?id="+Long.toString(id);
+    }
+    
+    public static String getAccessStringForApplication(Label l)
+    {
+        return WebComponentProvider.WEB_ROOT+"image/label?id="+Long.toString(l.getLabelId());
+    }
+    public static String getAccessStringForApplication(long id)
+    {
+        return WebComponentProvider.WEB_ROOT+"image/label?id="+Long.toString(id);
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

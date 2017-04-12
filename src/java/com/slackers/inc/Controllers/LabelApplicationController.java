@@ -20,18 +20,22 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.WineLabel;
+import com.slackers.inc.ui.web.form.LabelImageGenerator;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -47,11 +51,11 @@ import javax.servlet.http.Part;
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
 public class LabelApplicationController {
-    
+
     public static final String APPLICATION_GENERAL_COOKIE_NAME = "SSINCAP_GEN";
     public static final String APPLICATION_DATA_COOKIE_NAME = "SSINCAP_DATA";
     public static final String APPLICATION_LABEL_COOKIE_NAME = "SSINCAP_LBL";
-    
+
     private DerbyConnection db;
     private LabelApplication application;
 
@@ -59,98 +63,88 @@ public class LabelApplicationController {
         db = DerbyConnection.getInstance();
         this.application = application;
     }
-    
+
     public LabelApplicationController() throws SQLException {
         this(new LabelApplication());
     }
-    
+
     public LabelApplicationController(long applicationId) throws SQLException {
         this.application = new LabelApplication(applicationId);
         db = DerbyConnection.getInstance();
         db.getEntity(application, application.getPrimaryKeyName());
     }
-    
-    public LabelApplication getLabelApplication()
-    {
+
+    public LabelApplication getLabelApplication() {
         return this.application;
     }
-    
-    public LabelApplication createApplicationFromRequest(ServletContext context, HttpServletRequest request)
-    {
+
+    public LabelApplication createApplicationFromRequest(ServletContext context, HttpServletRequest request) {
         User pageUser = AccountController.getPageUser(request);
-        if (!(pageUser instanceof Manufacturer))
+        if (!(pageUser instanceof Manufacturer)) {
             return null;
-        
+        }
+
         Label l = this.createLabelFromRequest(context, request);
-        if (l==null)
+        if (l == null) {
             return null;
+        }
         this.application.setLabel(l);
-        
+
         this.application.setEmailAddress(request.getParameter("email"));
         this.application.setApplicant((Manufacturer) pageUser);
         this.application.setPhoneNumber(request.getParameter("phone"));
         this.application.setRepresentativeId(request.getParameter("representativeId"));
-        if (request.getParameter("NEW")!=null)
-        {
+        if (request.getParameter("NEW") != null) {
             this.application.addApplicationType(LabelApplication.ApplicationType.NEW, null);
         }
-        if (request.getParameter("DISTINCT")!=null)
-        {
+        if (request.getParameter("DISTINCT") != null) {
             this.application.addApplicationType(LabelApplication.ApplicationType.DISTINCT, request.getParameter("capacity"));
         }
-        if (request.getParameter("EXEMPT")!=null)
-        {
+        if (request.getParameter("EXEMPT") != null) {
             this.application.addApplicationType(LabelApplication.ApplicationType.EXEMPT, request.getParameter("state"));
         }
-        if (request.getParameter("RESUBMIT")!=null)
-        {
+        if (request.getParameter("RESUBMIT") != null) {
             this.application.addApplicationType(LabelApplication.ApplicationType.RESUBMIT, request.getParameter("tbbid"));
         }
-        try
-        {            
+        try {
             this.application.setApplicantAddress(Address.tryParse(request.getParameter("address")));
             this.application.setMailingAddress(Address.tryParse(request.getParameter("mailAddress")));
         } catch (Exception e) {
         }
-        
+
         return this.application;
     }
-    
-    public Label createLabelFromRequest(ServletContext context,  HttpServletRequest request)
-    {
+
+    public Label createLabelFromRequest(ServletContext context, HttpServletRequest request) {
         Label label = new Label();
-        
+
         label.setIsAccepted(false);
         label.setPlantNumber(request.getParameter("plantNumber"));
         label.setBrandName(request.getParameter("brandName"));
-        
+
         label.setFancifulName(request.getParameter("fancifulName"));
         label.setGeneralInfo(request.getParameter("generalInfo"));
         label.setSerialNumber(request.getParameter("serialNumber"));
         label.setFormula(request.getParameter("formula"));
-        
+
         label.setRepresentativeIdNumber(request.getParameter("representativeId"));
-        try
-        {
-            
-            label.setProductSource(Label.BeverageSource.valueOf(request.getParameter("source")));     
+        try {
+
+            label.setProductSource(Label.BeverageSource.valueOf(request.getParameter("source")));
             label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent").replace("%", "")));
             BeverageType type = BeverageType.valueOf(request.getParameter("type"));
             label.setProductType(type);
-            if (type == BeverageType.BEER)
-            {
+            if (type == BeverageType.BEER) {
                 BeerLabel newLabel = new BeerLabel();
                 newLabel.setEntityValues(label.getEntityValues());
                 label = newLabel;
             }
-            if (type == BeverageType.DISTILLED)
-            {
+            if (type == BeverageType.DISTILLED) {
                 DistilledLabel newLabel = new DistilledLabel();
                 newLabel.setEntityValues(label.getEntityValues());
                 label = newLabel;
             }
-            if (type == BeverageType.WINE)
-            {
+            if (type == BeverageType.WINE) {
                 WineLabel newLabel = new WineLabel();
                 newLabel.setEntityValues(label.getEntityValues());
                 newLabel.setPhLevel(Double.parseDouble(request.getParameter("pH")));
@@ -160,249 +154,370 @@ public class LabelApplicationController {
                 label = newLabel;
             }
             Part img = request.getPart("labelImageUpload");
-            if (img!=null)
-            {
+            if (img != null) {
                 label.setLabelImageType(context.getMimeType(img.getSubmittedFileName()));
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                int nRead=0;
+                int nRead = 0;
                 byte[] data = new byte[1024];
                 InputStream in = img.getInputStream();
                 while ((nRead = in.read(data, 0, data.length)) != -1) {
-                  buffer.write(data, 0, nRead);
+                    buffer.write(data, 0, nRead);
                 }
                 buffer.flush();
                 label.setLabelImage(buffer.toByteArray());
-                System.out.println(label);
             }
             return label;
-        } catch (Exception e){
-        e.printStackTrace();
-        }        
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return label;
     }
-    
-    public String validateApplication()
-    {
-        if (this.application.getEmailAddress() == null || this.application.getEmailAddress().length()<3)
+
+    public LabelApplication editApplicationFromRequest(ServletContext context, HttpServletRequest request) {
+        User pageUser = AccountController.getPageUser(request);
+        if (!(pageUser instanceof Manufacturer)) {
+            return null;
+        }
+
+        String idStr = request.getParameter("id");
+        if (idStr == null) {
+            return null;
+        }
+
+        try {
+            long id = Long.parseLong(idStr);
+
+            this.loadApplication(id);
+            Label l = this.editLabelFromRequest(context, request);
+            DerbyConnection.getInstance().createEntity(l);
+            this.application.setLabel(l);
+            DerbyConnection.getInstance().writeEntity(this.application, this.application.getPrimaryKeyName());
+        } catch (Exception e) {
+
+        }
+
+        return this.application;
+    }
+
+    public Label editLabelFromRequest(ServletContext context, HttpServletRequest request) {
+
+        Label label = this.application.getLabel();
+
+        List<String> revisions = new LinkedList<>();
+        
+        long prevId = label.getLabelId();
+        Set<String> revTypes = new HashSet<>();
+        
+        if (request.getParameter("rev1")!=null)
+            revTypes.add("image");
+        if (request.getParameter("rev2")!=null)
+            revTypes.add("image");
+        if (request.getParameter("rev3")!=null)
+            revTypes.add("image");
+        if (request.getParameter("rev4")!=null)
         {
+            revTypes.add("image");
+            revTypes.add("blend");
+        }
+        if (request.getParameter("rev5")!=null)
+        {
+            revTypes.add("image");
+            revTypes.add("vintage");
+        }
+        if (request.getParameter("rev6")!=null)
+            revTypes.add("image");
+        if (request.getParameter("rev7")!=null)
+        {
+            revTypes.add("image");
+            revTypes.add("ph");
+        }
+        if (request.getParameter("rev8")!=null)
+        {
+            revTypes.add("image");
+            revTypes.add("general");
+        }
+        if (request.getParameter("rev9")!=null)
+        {
+            revTypes.add("image");
+        }
+        if (request.getParameter("rev10")!=null)
+        {
+            revTypes.add("image");
+            revTypes.add("formula");
+        }
+        if (request.getParameter("rev11")!=null)
+        {
+            revTypes.add("image");
+            revTypes.add("alcohol");
+        }
+        if (request.getParameter("rev12")!=null)
+        {
+            revTypes.add("image");
+        }
+        
+        if (revTypes.contains("alcohol")) {
+            try {
+                label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent-new")));
+                revisions.add("Changed alcohol content");
+            } catch (Exception e){}
+        }
+        if (revTypes.contains("vintage")) {
+            try {                
+                ((WineLabel)label).setVintage(Integer.parseInt(request.getParameter("vintage-new")));
+                revisions.add("Changed vintage");
+            } catch (Exception e){}
+        }
+        if (revTypes.contains("ph")) {
+            try {
+                ((WineLabel)label).setPhLevel(Double.parseDouble(request.getParameter("pH-new")));
+                revisions.add("Changed vintage");
+            } catch (Exception e){}
+        }
+        if (revTypes.contains("blend")) {
+            try {
+                ((WineLabel)label).setGrapeVarietal(request.getParameter("grapeVarietal-new"));
+                ((WineLabel)label).setWineAppelation(request.getParameter("wineAppelation-new"));
+                revisions.add("Changed grape varietal");
+                revisions.add("Changed wine appelation");
+            } catch (Exception e){}
+        }
+        if (revTypes.contains("general")) {
+            try {
+                label.setGeneralInfo(request.getParameter("generalInfo-new"));
+                revisions.add("Changed info");
+            } catch (Exception e){}
+        }
+        if (revTypes.contains("formula")) {
+            try {
+                label.setFormula(request.getParameter("formula-new"));
+                revisions.add("Changed formula");
+            } catch (Exception e){}
+        }
+        
+        if (revTypes.contains("image")) {
+            try {
+                revisions.add("Changed label image");
+                Part img = request.getPart("labelImageUpload-new");
+                if (img != null) {
+                    label.setLabelImageType(context.getMimeType(img.getSubmittedFileName()));
+                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                    int nRead = 0;
+                    byte[] data = new byte[1024];
+                    InputStream in = img.getInputStream();
+                    while ((nRead = in.read(data, 0, data.length)) != -1) {
+                        buffer.write(data, 0, nRead);
+                    }
+                    buffer.flush();
+                    label.setLabelImage(buffer.toByteArray());
+                    System.out.println(label);
+                }
+
+            } catch (Exception e) {
+            }
+        }
+        
+        User usr = AccountController.getPageUser(request);
+        if (usr!=null)
+            this.application.getComments().add(new LabelComment(usr, this.buildChangeComment(this.application.getApplicationId(), prevId, revisions)));
+
+        return label;
+    }
+
+    public String validateApplication() {
+        if (this.application.getEmailAddress() == null || this.application.getEmailAddress().length() < 3) {
             return "Invalid email address";
         }
         if (this.application.getApplicant() == null || this.application.getApplicant().getEmail().equals(Manufacturer.NULL_MANUFACTURER.getEmail())
-                || !(this.application.getApplicant() instanceof Manufacturer))
-        {
+                || !(this.application.getApplicant() instanceof Manufacturer)) {
             return "Invalid applicant";
         }
-        if (this.application.getApplicantAddress()== null || this.application.getApplicantAddress().getZipCode()==-1)
-        {
+        if (this.application.getApplicantAddress() == null || this.application.getApplicantAddress().getZipCode() == -1) {
             return "Invalid applicant address";
         }
-        if (this.application.getMailingAddress() == null)
-        {
+        if (this.application.getMailingAddress() == null) {
             this.application.setMailingAddress(this.application.getApplicantAddress());//use mailing address as default
         }
-        if (this.application.getMailingAddress() == null || this.application.getMailingAddress().getZipCode()==-1)
-        {            
+        if (this.application.getMailingAddress() == null || this.application.getMailingAddress().getZipCode() == -1) {
             return "Invalid mailing address";
         }
-        if (this.application.getPhoneNumber() == null || this.application.getPhoneNumber().length()<10 || this.application.getPhoneNumber().length()>21)
-        {
+        if (this.application.getPhoneNumber() == null || this.application.getPhoneNumber().length() < 10 || this.application.getPhoneNumber().length() > 21) {
             return "Invalid phone number";
         }
-        for (Entry<ApplicationType,String> e : this.application.getApplicationTypes().entrySet())
-        {
-            if (e.getKey() == ApplicationType.DISTINCT)
-            {
-                if (e.getValue()==null || e.getValue().length()<1)
+        for (Entry<ApplicationType, String> e : this.application.getApplicationTypes().entrySet()) {
+            if (e.getKey() == ApplicationType.DISTINCT) {
+                if (e.getValue() == null || e.getValue().length() < 1) {
                     return "Invalid bottle capacity before closure";
+                }
             }
-            if (e.getKey() == ApplicationType.EXEMPT)
-            {
-                if (e.getValue()==null || e.getValue().length()!=2)
+            if (e.getKey() == ApplicationType.EXEMPT) {
+                if (e.getValue() == null || e.getValue().length() != 2) {
                     return "Invalid state for exemption";
+                }
             }
-            if (e.getKey() == ApplicationType.RESUBMIT)
-            {
-                if (e.getValue()==null || e.getValue().length()<1)
+            if (e.getKey() == ApplicationType.RESUBMIT) {
+                if (e.getValue() == null || e.getValue().length() < 1) {
                     return "Invalid TBB id for resubmission";
+                }
             }
         }
         return this.validateLabel();
     }
-   
-    public String validateLabel()
-    {
+
+    public String validateLabel() {
         Label l = this.application.getLabel();
-        if (l == null)
-        {
+        if (l == null) {
             return "Invalid label information";
         }
-        if (l.getBrandName() == null || l.getBrandName().length()<2)
-        {
+        if (l.getBrandName() == null || l.getBrandName().length() < 2) {
             return "Invalid brand name";
         }
-        if (l.getPlantNumber()== null || l.getPlantNumber().length()<2)
-        {
+        if (l.getPlantNumber() == null || l.getPlantNumber().length() < 2) {
             return "Invalid plant number";
         }
-        if (l.getSerialNumber()== null || l.getSerialNumber().length()<5 || l.getSerialNumber().length()>10)
-        {
+        if (l.getSerialNumber() == null || l.getSerialNumber().length() < 5 || l.getSerialNumber().length() > 10) {
             return "Invalid serial number";
         }
-        if (l.getProductSource() == null || l.getProductSource()==BeverageSource.UNKNOWN)
-        {
+        if (l.getProductSource() == null || l.getProductSource() == BeverageSource.UNKNOWN) {
             return "Invalid beverage source";
         }
-        if (l.getProductType()== null || l.getProductType()==BeverageType.UNKNOWN)
-        {
+        if (l.getProductType() == null || l.getProductType() == BeverageType.UNKNOWN) {
             return "Invalid beverage type";
         }
-        if (l.getProductType()== null || l.getProductType()==BeverageType.UNKNOWN)
-        {
+        if (l.getProductType() == null || l.getProductType() == BeverageType.UNKNOWN) {
             return "Invalid beverage type";
-        }       
-        if (l.getAlcoholContent()<0 || l.getAlcoholContent()>100)
-        {
+        }
+        if (l.getAlcoholContent() < 0 || l.getAlcoholContent() > 100) {
             return "Invalid alchohol content";
-        }        
-        if (l.getFormula()== null || l.getFormula().length()<5)
-        {
+        }
+        if (l.getFormula() == null || l.getFormula().length() < 5) {
             return "Formula is invalid";
         }
-        if (l instanceof WineLabel)
-        {
-            if (((WineLabel)l).getPhLevel()<0||((WineLabel)l).getPhLevel()>14)
-            {
+        if (l instanceof WineLabel) {
+            if (((WineLabel) l).getPhLevel() < 0 || ((WineLabel) l).getPhLevel() > 14) {
                 return "Invalid pH level";
             }
-            if (((WineLabel)l).getGrapeVarietal()== null||((WineLabel)l).getGrapeVarietal().length()<5)
-            {
+            if (((WineLabel) l).getGrapeVarietal() == null || ((WineLabel) l).getGrapeVarietal().length() < 5) {
                 return "Grape varietal is invalid";
             }
         }
-        if (l.getLabelImage()==null || l.getLabelImageType()==null || l.getLabelImageType().length()<3)
-        {
+        if (l.getLabelImage() == null || l.getLabelImageType() == null || l.getLabelImageType().length() < 3) {
             return "Label image is invalid";
         }
         return null;
     }
-    
-    public void removeApplicationFromCookies(HttpServletResponse response)
-    {
+
+    public void removeApplicationFromCookies(HttpServletResponse response) {
         Cookie data = new Cookie(APPLICATION_DATA_COOKIE_NAME, null);
         Cookie gen = new Cookie(APPLICATION_GENERAL_COOKIE_NAME, null);
         Cookie lbl = new Cookie(APPLICATION_LABEL_COOKIE_NAME, null);
-        
+
         data.setMaxAge(0);
         gen.setMaxAge(0);
         lbl.setMaxAge(0);
-        
+
         data.setPath("/");
         gen.setPath("/");
         lbl.setPath("/");
-        
+
         response.addCookie(data);
         response.addCookie(gen);
         response.addCookie(lbl);
     }
     
-    public void writeApplicationToCookies(HttpServletResponse response)
-    {
+    public void writeApplicationToCookies(HttpServletResponse response) {
         JsonObjectBuilder generalObj = Json.createObjectBuilder().add("email", this.application.getEmailAddress())
                 .add("phone", this.application.getPhoneNumber())
                 .add("representativeId", this.application.getRepresentativeId());
-        if (this.application.getApplicantAddress()!=null)
+        if (this.application.getApplicantAddress() != null) {
             generalObj.add("address", this.application.getApplicantAddress().toString());
-        if (this.application.getMailingAddress()!=null)
+        }
+        if (this.application.getMailingAddress() != null) {
             generalObj.add("mailAddress", this.application.getMailingAddress().toString());
+        }
         generalObj.add("appStatus", this.application.getStatus().name());
-        
-        for (Entry<ApplicationType,String> e : this.application.getApplicationTypes().entrySet())
-        {
-            if (e.getKey() == ApplicationType.NEW)
-            {
+
+        for (Entry<ApplicationType, String> e : this.application.getApplicationTypes().entrySet()) {
+            if (e.getKey() == ApplicationType.NEW) {
                 generalObj.add("NEW", "checked");
             }
-            if (e.getKey() == ApplicationType.DISTINCT)
-            {
+            if (e.getKey() == ApplicationType.DISTINCT) {
                 generalObj.add("DISTINCT", "checked");
                 generalObj.add("capacity", e.getValue());
             }
-            if (e.getKey() == ApplicationType.EXEMPT)
-            {
+            if (e.getKey() == ApplicationType.EXEMPT) {
                 generalObj.add("EXEMPT", "checked");
                 generalObj.add("state", e.getValue());
             }
-            if (e.getKey() == ApplicationType.RESUBMIT)
-            {
+            if (e.getKey() == ApplicationType.RESUBMIT) {
                 generalObj.add("RESUBMIT", "checked");
                 generalObj.add("tbbid", e.getValue());
             }
         }
-                
+
         Label l = this.application.getLabel();
-        JsonObjectBuilder labelObj = Json.createObjectBuilder().add("plantNumber",l.getPlantNumber())
+
+        Cookie gen = new Cookie(APPLICATION_GENERAL_COOKIE_NAME, Base64.getEncoder().encodeToString(generalObj.build().toString().getBytes(StandardCharsets.UTF_8)));
+
+        gen.setMaxAge(3600);
+        gen.setPath("/");
+        response.addCookie(gen);
+        this.writeLabelToCookies(response, l);
+    }
+    
+    public void writeLabelToCookies(HttpServletResponse response, Label l)
+    {
+        JsonObjectBuilder labelObj = Json.createObjectBuilder().add("plantNumber", l.getPlantNumber())
                 .add("brandName", l.getBrandName())
                 .add("fancifulName", l.getFancifulName())
                 .add("serialNumber", l.getSerialNumber())
                 .add("type", l.getProductType().name())
                 .add("source", l.getProductSource().name())
                 .add("alcoholContent", Double.toString(l.getAlcoholContent()));
-        
-        if (l instanceof WineLabel)
-        {
-            labelObj.add("pH", Double.toString(((WineLabel)l).getPhLevel()));
-            if (((WineLabel)l).getGrapeVarietal() != null)
-                    labelObj.add("grapeVarietal", ((WineLabel)l).getGrapeVarietal());
-            if (((WineLabel)l).getWineAppelation() != null)
-                    labelObj.add("wineAppelation", ((WineLabel)l).getWineAppelation());
+
+        if (l instanceof WineLabel) {
+            labelObj.add("pH", Double.toString(((WineLabel) l).getPhLevel()));
+            if (((WineLabel) l).getGrapeVarietal() != null) {
+                labelObj.add("grapeVarietal", ((WineLabel) l).getGrapeVarietal());
+            }
+            if (((WineLabel) l).getWineAppelation() != null) {
+                labelObj.add("wineAppelation", ((WineLabel) l).getWineAppelation());
+            }
         }
-        
-        JsonObjectBuilder dataObj = Json.createObjectBuilder().add("formula",l.getFormula())
+
+        JsonObjectBuilder dataObj = Json.createObjectBuilder().add("formula", l.getFormula())
                 .add("gereralInfo", l.getGeneralInfo());
         
         Cookie data = new Cookie(APPLICATION_DATA_COOKIE_NAME, Base64.getEncoder().encodeToString(dataObj.build().toString().getBytes(StandardCharsets.UTF_8)));
-        Cookie gen = new Cookie(APPLICATION_GENERAL_COOKIE_NAME, Base64.getEncoder().encodeToString(generalObj.build().toString().getBytes(StandardCharsets.UTF_8)));
         Cookie lbl = new Cookie(APPLICATION_LABEL_COOKIE_NAME, Base64.getEncoder().encodeToString(labelObj.build().toString().getBytes(StandardCharsets.UTF_8)));
-        
+
         data.setMaxAge(3600);
-        gen.setMaxAge(3600);
         lbl.setMaxAge(3600);
-        
         data.setPath("/");
-        gen.setPath("/");
         lbl.setPath("/");
-        
-        response.addCookie(data);
-        response.addCookie(gen);
         response.addCookie(lbl);
+        response.addCookie(data);
     }
-    
-    public String renderCommentList(HttpServletRequest request)
-    {
+
+    public String renderCommentList(HttpServletRequest request) {
         StringBuilder b = new StringBuilder();
         b.append("<div class=\"row\">").append("<div class=\"col-sm-1 col-md-2\"></div>");
         b.append("<div class=\"col-sm-10 col-md-8\">");
-        for (LabelComment comment : this.application.getComments())
-        {
+        for (LabelComment comment : this.application.getComments()) {
             b.append(this.renderComment(request, comment));
         }
         b.append("</div>");
         b.append("<div class=\"col-sm-1 col-md-2\"></div>").append("</div>");
         return b.toString();
     }
-    
-    public String renderComment(HttpServletRequest request, LabelComment comment)
-    {
+
+    public String renderComment(HttpServletRequest request, LabelComment comment) {
         User usr = comment.getSubmitter();
         StringBuilder b = new StringBuilder();
         b.append("<div class=\"panel panel-info\">").append("<div class=\"panel-heading\">");
-        if (usr==null)
-        {
+        if (usr == null) {
             b.append("Unknown");
-        }
-        else
-        {
-            b.append(usr.getFirstName()+" "+usr.getLastName() + " ("+usr.getEmail()+")");
+        } else {
+            b.append(usr.getFirstName()).append(" ").append(usr.getLastName()).append(" (").append(usr.getEmail()).append(")");
         }
         b.append("<div style=\"float:right;\">").append(comment.getDate()).append("</div>");
         b.append("</div>").append("<div class=\"panel-body\">");
@@ -411,135 +526,139 @@ public class LabelApplicationController {
         return b.toString();
     }
     
-    public Label getLabelImage(long applicationId)
-    {
+    public String buildChangeComment(long applicationId, long prevLabelId, List<String> revisions) {
+        
+        StringBuilder b = new StringBuilder();
+        
+        b.append("<h4>Made the Following Label Revisions:</h4>");
+        b.append("<ul>");
+        
+        for (String s : revisions)
+        {
+            b.append("<li>");
+            b.append(s);
+            b.append("</li>");
+        }
+        b.append("</ul>");
+        b.append("<a class=\"btn btn-primary\" style=\"float:right;\" ");
+        b.append("href=\"").append("/SuperSlacker/form/view?type=previous&id=").append(applicationId).append("&labelId=").append(prevLabelId).append("\">");
+        b.append("View Previous Label");
+        b.append("</a>");
+        return b.toString();
+    }
+
+    public Label getLabelImage(long labelId) {
         try {
-            this.loadApplication(applicationId);            
-            Label l = this.application.getLabel();            
-            l.setPullImageOut(true);            
+            Label l = new Label();
+            l.setLabelId(labelId);
+            l.setPullImageOut(true);
             this.db.getEntity(l, l.getPrimaryKeyName());
-            return l;            
+            return l;
         } catch (SQLException ex) {
             return null;
         }
     }
-    
-    public boolean setNewReviewer(UsEmployee employee) throws SQLException
-    {
+
+    public boolean setNewReviewer(UsEmployee employee) throws SQLException {
         this.application.setSubmitter(this.application.getReviewer());
-        this.application.setReviewer(employee);      
+        this.application.setReviewer(employee);
         this.application.setStatus(LabelApplication.ApplicationStatus.UNDER_REVIEW);
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
-    
-    public boolean attachComment(LabelComment coment) throws SQLException
-    {
+
+    public boolean attachComment(LabelComment coment) throws SQLException {
         this.application.getComments().add(coment);
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
-    
-    public boolean attachApproval(ApplicationApproval approval) throws SQLException
-    {
+
+    public boolean attachApproval(ApplicationApproval approval) throws SQLException {
         this.application.setApplicationApproval(approval);
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
-    
-    public boolean saveApplication() throws SQLException
-    {
+
+    public boolean saveApplication() throws SQLException {
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
-    
-    public boolean editApplication() throws SQLException
-    {
+
+    public boolean editApplication() throws SQLException {
         this.application.updateLabel();
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
 
-    public boolean deleteApplication() throws SQLException
-    {
+    public boolean deleteApplication() throws SQLException {
         return db.deleteEntity(this.application, this.application.getPrimaryKeyName());
     }
 
-    public boolean createApplication() throws SQLException
-    {
+    public boolean createApplication() throws SQLException {
         this.application.setStatus(LabelApplication.ApplicationStatus.NOT_COMPLETE);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
         this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
         db.createEntity(this.application);
         return true;
     }
-    
-    public boolean loadApplication(long id) throws SQLException
-    {
-        this.application.setApplicationId(id); 
+
+    public boolean loadApplication(long id) throws SQLException {
+        this.application.setApplicationId(id);
         db.getEntity(this.application, this.application.getPrimaryKeyName());
         return true;
     }
-    
-    public boolean createApplication(LabelApplication application) throws SQLException
-    {
+
+    public boolean createApplication(LabelApplication application) throws SQLException {
         this.application = application;
         return this.createApplication();
-    }  
-    
-    public boolean submitApplication(Manufacturer submitter) throws SQLException
-    {
+    }
+
+    public boolean submitApplication(Manufacturer submitter) throws SQLException {
         this.application.setApplicant(submitter);
         this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED);
         this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
         this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
         this.application.setApplicationApproval(null);
-        this.application.getComments().add(new LabelComment(submitter, "Submitted the application"));
+        this.application.getComments().add(new LabelComment(submitter, "<h4>Submitted the application</h4>"));
         boolean res = db.writeEntity(this.application, this.application.getPrimaryKeyName());
         submitter.addApplications(this.application);
-        this.db.writeEntity(submitter, submitter.getPrimaryKeyName());        
+        this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         //this.autoSelectReviewer();
         return res;
     }
-    
-    public boolean approveApplication(UsEmployee submitter, Date experationDate) throws SQLException
-    {
+
+    public boolean approveApplication(UsEmployee submitter, Date experationDate) throws SQLException {
         ApplicationApproval approval = new ApplicationApproval(submitter, experationDate);
         this.application.setStatus(LabelApplication.ApplicationStatus.APPROVED);
         this.application.setApplicationApproval(approval);
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
-        
-        this.application.getComments().add(new LabelComment(submitter, "<span style=\"color:green;\">Application Approved</span><br><br>Expires: "+experationDate.toString()));
-        for (LabelComment l :  this.application.getComments())
-        {
+
+        this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()));
+        for (LabelComment l : this.application.getComments()) {
             System.out.println(l);
         }
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
-    
-    public boolean rejectApplication(UsEmployee submitter) throws SQLException
-    {
+
+    public boolean rejectApplication(UsEmployee submitter) throws SQLException {
         this.application.setStatus(LabelApplication.ApplicationStatus.REJECTED);
         this.application.setApplicationApproval(null);
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
-        this.application.getComments().add(new LabelComment(submitter, "<span style=\"color:red;\">Application Rejected</span>"));
+        this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:red;\">Application Rejected</span></h4>"));
         return this.saveApplication();
     }
-    
-    public boolean sendForCorrections() throws SQLException
-    {
+
+    public boolean sendForCorrections() throws SQLException {
         this.application.setStatus(LabelApplication.ApplicationStatus.SENT_FOR_CORRECTIONS);
         return this.saveApplication();
     }
-    
-    public boolean autoSelectReviewer()
-    {
+
+    public boolean autoSelectReviewer() {
         UsEmployee target = new UsEmployee();
         target.setUserType(User.UserType.US_EMPLOYEE);
         try {
-            List<UsEmployee> employees = DerbyConnection.getInstance().getAllEntites_Typed(target,"userType");
-            if (!employees.isEmpty())
-            {
-                
-                employees.sort(new Comparator<UsEmployee>(){
+            List<UsEmployee> employees = DerbyConnection.getInstance().getAllEntites_Typed(target, "userType");
+            if (!employees.isEmpty()) {
+
+                employees.sort(new Comparator<UsEmployee>() {
                     @Override
                     public int compare(UsEmployee o1, UsEmployee o2) {
                         return o1.getApplications().size() - o2.getApplications().size();
@@ -548,16 +667,13 @@ public class LabelApplicationController {
                 UsEmployee reviewer = employees.get(0);
                 reviewer.removeApplication(application);
                 boolean add = true;
-                for (LabelApplication a : reviewer.getApplications())
-                {
-                    if (a.getApplicationId() == this.application.getApplicationId())
-                    {
+                for (LabelApplication a : reviewer.getApplications()) {
+                    if (a.getApplicationId() == this.application.getApplicationId()) {
                         add = false;
                         break;
                     }
                 }
-                if (add)
-                {
+                if (add) {
                     reviewer.getApplications().add(this.application);
                     this.application.setReviewer(reviewer);
                     this.application.setStatus(LabelApplication.ApplicationStatus.UNDER_REVIEW);
@@ -565,17 +681,16 @@ public class LabelApplicationController {
                     this.saveApplication();
                 }
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(LabelApplicationController.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
-        
+
         return false;
     }
-    
-    public static List<LabelApplication> getNextBatch()
-    {
+
+    public static List<LabelApplication> getNextBatch() {
         List<LabelApplication> out = new LinkedList<>();
         return out;
     }
@@ -715,6 +830,5 @@ public class LabelApplicationController {
     public Map<ApplicationType, String> getApplicationTypes() {
         return application.getApplicationTypes();
     }
-    
-    
+
 }

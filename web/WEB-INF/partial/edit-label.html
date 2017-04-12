@@ -1,0 +1,124 @@
+<div class="container">
+    <div class="well">
+        <form action="/SuperSlackers/form/edit" method="post">
+            <fieldset id="appForm" disabled>
+                ##FORM_CONTENT
+            </fieldset>
+        </form>  
+        <div class="row">
+            <div class="col-sm-1 col-md-2">
+            </div>
+            <div class="col-sm-10 col-md-8">
+                <img id="lblImg" src="##LABEL_IMAGE_PATH" class="img-responsive" alt="Label Image">
+            </div>
+            <div class="col-sm-1 col-md-2">
+            </div>                
+        </div>
+    </div>
+    <div class="well">
+        <form>
+            <h3>Allowed Revisions</h3><br>
+            <div class="funkyradio">
+                <div class="funkyradio-success">
+                    <input class="tag-new-label" type="checkbox" name="rev1" id="rev1" onclick="handleRevisionDisplays()"/>
+                    <label for="rev1">Delete any non mandatory label information, including text, illustrations, graphics, etc.</label>
+                </div>
+                <div class="funkyradio-success">
+                    <input class="tag-new-label" type="checkbox" name="rev2" id="rev2" onclick="handleRevisionDisplays()"/>
+                    <label for="rev2">Reposition any label information including text, illustrations, graphics, etc.</label>
+                </div>
+                <div class="funkyradio-success">
+                    <input class="tag-new-label" type="checkbox" name="rev3" id="rev3" onclick="handleRevisionDisplays()"/>
+                    <label for="rev3">Change the colors, shapes, sizes, etc. of the label to make it easier to read.</label>
+                </div>
+                <div class="funkyradio-success tag-wine">
+                    <input class="tag-wine-blend tag-new-label" type="checkbox" name="rev4" id="rev4" onclick="handleRevisionDisplays()"/>
+                    <label for="rev4">Change the stated percentages for blends of grape varietals and appelations of origin.</label>
+                </div>
+                <div class="funkyradio-success tag-wine">
+                    <input class="tag-wine-vintage tag-new-label" type="checkbox" name="rev5" id="rev5" onclick="handleRevisionDisplays()"/>
+                    <label for="rev5">Add, change or delete a vintage date.</label>
+                </div>
+                <div class="funkyradio-success tag-wine">
+                    <input class="tag-new-label" type="checkbox" name="rev6" id="rev6" onclick="handleRevisionDisplays()"/>
+                    <label for="rev6">Change the optional "produced" or "made" by statements to "blended", "vinted", "cellared" or "prepared" by statements</label>
+                </div>
+                <div class="funkyradio-success tag-wine">
+                    <input class="tag-wine-ph tag-new-label" type="checkbox" name="rev7" id="rev7" onclick="handleRevisionDisplays()"/>
+                    <label for="rev7">Add, change or delete the stated amount of acid or the pH level.</label>
+                </div>
+                <div class="funkyradio-success tag-wine">
+                    <input class="tag-general tag-new-label" type="checkbox" name="rev8" id="rev8" onclick="handleRevisionDisplays()"/>
+                    <label for="rev8">Change the stated amounts of sugar at harvest or residual sugar.</label>
+                </div>
+                <div class="funkyradio-success tag-wine">
+                    <input class="tag-new-label" type="checkbox" name="rev9" id="rev9" onclick="handleRevisionDisplays()"/>
+                    <label for="rev9">Add or delete bonded winery or taxpaid wine bottling house numbers on label.</label>
+                </div>
+                <div class="funkyradio-success">
+                    <input class="tag-formula tag-new-label" type="checkbox" name="rev10" id="rev10" onclick="handleRevisionDisplays()"/>
+                    <label for="rev10">Change the net contents statement.</label>
+                </div>
+                <div class="funkyradio-success">
+                    <input class="tag-alcohol tag-new-label" type="checkbox" name="rev11" id="rev11" onclick="handleRevisionDisplays()"/>
+                    <label for="rev11">Change the mandatory alcohol content as permitted in the labeled type and class designation.</label>
+                </div>
+                <div class="funkyradio-success tag-beer">
+                    <input class="tag-new-label" type="checkbox" name="rev12" id="rev12" onclick="handleRevisionDisplays()"/>
+                    <label for="rev12">Add, change or delete an optional statement of alcohol content.</label>
+                </div>
+            </div>
+            
+            <br><br>
+            <div id="tag-alcohol-div">
+                <div class="form-group">
+                    <label>Alcohol Content</label>
+                    <input id="alcoholContent-new" name="alcoholContent-new" class="form-control tag-alcohol-div-input" placeholder="0-100%" type="text">
+                </div>
+            </div>
+            <div id="tag-wine-vintage-div">
+                <div class="form-group">
+                    <label>Vintage</label>
+                    <input id="vintage-new" name="vintage-new" class="form-control tag-wine-vingage-div-input" placeholder="year" type="text">
+                </div>
+            </div>
+            <div id="tag-wine-ph-div">
+                <div class="form-group">
+                    <label>pH Level</label>
+                    <input id="ph-new" name="ph-new" class="form-control tag-wine-ph-div-input" placeholder="pH" type="text">
+                </div>
+            </div>
+            <div id="tag-wine-blend-div">
+                <div class="form-group">
+                    <label>Grape Varietal</label>
+                    <input id="grapeVarietal-new" name="grapeVarietal-new" class="form-control tag-wine-blend-div-input" placeholder="Grape Varietal" type="text">
+                </div>
+                <div class="form-group">
+                    <label>Wine Appelation</label>
+                    <input id="wineAppelation-new" name="wineAppelation-new" class="form-control tag-wine-blend-div-input" placeholder="Wine Appelation" type="text">
+                </div>
+            </div>
+            <div id="tag-formula-div">
+                <div class="form-group">
+                    <label>Formula</label>
+                    <textarea id="formula-new" name="formula-new" class="form-control tag-formula-div-input" rows="4" required></textarea>
+                </div>
+            </div>
+            <div id="tag-general-div">
+                <div class="form-group">
+                    <label>Write any information below, not on the label that is on the container.</label>
+                    <textarea id="generalInfo-new" name="generalInfo-new" class="form-control tag-general-div-input" rows="4"></textarea>
+                </div>
+            </div>
+            <div id="tag-new-label-div"> 
+                <label for="imgSelector-new">Label Image</label>
+                <input id="imgSelector-new" class="tag-new-label-div-input" type="file" name="labelImageUpload-new" accept=".png,.jpg,.jpeg,image/png,image/jpeg">
+            </div>
+            <button id="submitRevisions" class="btn btn-success" style="width:100%; margin-top: 30px;">Submit Revisions</button>
+        </form>
+        
+    </div>
+    <script>
+        fillForm();
+    </script>
+</div>

@@ -1,77 +1,75 @@
+<div class="container">
+    <h2>Label Search</h2>
+    <div>
+        <form action="/SuperSlackers/search" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input name ="keywords" type="text" class="form-control" placeholder="Search" id="keywords">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit" value="">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#advanced">Advanced</button>
+
+                    <div id="advanced" class="collapse">
+                        <ul class = "pagination">
+                            <li class="active"><a href="#Wine" data-toggle="tab">Wine</a></li>
+                            <li><a href="#Beer" data-toggle="tab">Beer</a></li>
+                        </ul>
+                        <div class="form-group">
+                            <label>Alcohol Content</label>
+                            <input class="form-control" placeholder="Values between 0.0 - 100.0" type="text" id="alcoholContent" name="alcoholContent">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Origin Location</label>
+                            <input class="form-control" placeholder="Origin Location" type="text" id="originLocation" name="originLocation">
+                        </div>
+                        <div class="form-group">
+                            <label>Source of Product</label>
+                            <select class="form-control" id="source" name="source">
+                                <option selected value="na">
+                                    Choose One:
+                                </option>
+                                <option value="Domestic">
+                                    DOMESTIC
+                                </option>
+                                <option value="Imported">
+                                    IMPORTED
+                                </option>
+                            </select>
+                        </div>
+                        <div class="tab-content" id="type">
+                            <div id = "Beer" class="tab-pane fade in active">
 
 
-	<div class="container">
-		<h2>Label Search</h2>
-		<div>
-			<form action="/SuperSlackers/search" method="post">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="input-group">
-							<input name ="keywords" type="text" class="form-control" placeholder="Search" id="keywords">
-							<div class="input-group-btn">
-								<button class="btn btn-default" type="submit" value="">
-									<i class="glyphicon glyphicon-search"></i>
-								</button>
-							</div>
-						</div>
-                                            <br>
-						<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#advanced">Advanced</button>
+                            </div>
 
-						<div id="advanced" class="collapse">
-							<ul class = "pagination">
-								<li class="active"><a href="#Wine" data-toggle="tab">Wine</a></li>
-								<li><a href="#Beer" data-toggle="tab">Beer</a></li>
-							</ul>
-							<div class="form-group">
-								<label>Alcohol Content</label>
-								<input class="form-control" placeholder="Values between 0.0 - 100.0" type="text" id="alcoholContent" name="alcoholContent">
-							</div>
+                            <div id = "Wine" class="tab-pane fade in active">
 
-							<div class="form-group">
-								<label>Origin Location</label>
-								<input class="form-control" placeholder="Origin Location" type="text" id="originLocation" name="originLocation">
-							</div>
-							<div class="form-group">
-								<label>Source of Product</label>
-								<select class="form-control" id="source" name="source">
-									<option selected value="na">
-										Choose One:
-									</option>
-									<option value="Domestic">
-										DOMESTIC
-									</option>
-									<option value="Imported">
-										IMPORTED
-									</option>
-								</select>
-							</div>
-							<div class="tab-content" id="type">
-								<div id = "Beer" class="tab-pane fade in active">
+                                <div class="form-group">
+                                    <label>pH Level</label>
+                                    <input class="form-control" placeholder="PH Level" type="text" name = "pHLevel" id="pHLevel">
+                                </div>
 
+                                <div class="form-group">
+                                    <label>Vintage Year</label>
+                                    <input class="form-control" placeholder="Vintage Year" type="text" name="vintageYear" id="vintageYear">
+                                </div>
 
-								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
 
-								<div id = "Wine" class="tab-pane fade in active">
+    </div>
 
-									<div class="form-group">
-										<label>pH Level</label>
-										<input class="form-control" placeholder="PH Level" type="text" name = "pHLevel" id="pHLevel">
-									</div>
-
-									<div class="form-group">
-										<label>Vintage Year</label>
-										<input class="form-control" placeholder="Vintage Year" type="text" name="vintageYear" id="vintageYear">
-									</div>
-
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
-
-		</div>
-
-	</div>
+</div>
 
 
