@@ -67,15 +67,13 @@ public class EmployeePage implements IPageFrame{
 "      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\">COLA Search Registry</a>\n" +
 "    </div>\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
-"      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"\">Home</a></li>\n" +
+"      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"search\">Search</a></li>\n" +
 "      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">Page 1 <span class=\"caret\"></span></a>\n" +
 "        <ul class=\"dropdown-menu\">\n" +
 "          <li><a href=\"processPage1\">Page 1-1</a></li>\n" +
-"          <li><a href=\"#\">Page 1-2</a></li>\n" +
-"          <li><a href=\"#\">Page 1-3</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +
-"      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
+//"      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
 "    </ul>\n" +
 "    <ul class=\"nav navbar-nav navbar-right\">\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"account/settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " Welcome "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +

@@ -349,7 +349,7 @@ public class AccountController {
     
     public boolean editAccount() throws SQLException
     {
-        return db.writeEntity(user);
+        return db.writeEntity(this.user);
     }
     
     public boolean reload()

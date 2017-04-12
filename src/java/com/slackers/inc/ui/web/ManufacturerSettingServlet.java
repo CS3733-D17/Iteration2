@@ -5,11 +5,16 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.Controllers.AccountController;
+import static com.slackers.inc.Controllers.AccountController.getPageUser;
 import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -55,7 +60,7 @@ public class ManufacturerSettingServlet extends HttpServlet {
             pg = WebComponentProvider.getCorrectFrame(request, "settings");
             String settings = WebComponentProvider.loadPartialPage(this, "settings-partial.html");
             User.UserType type = pg.getUser().getUserType();
-            
+            System.out.println(pg.getUser());
             if(type == User.UserType.MANUFACTURER){
                 StringBuilder b = new StringBuilder();
                 String manufacturerSettings = WebComponentProvider.loadPartialPage(this, "manufacturerSettings.html");
@@ -93,14 +98,33 @@ public class ManufacturerSettingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        System.out.println("Posting like a mother fucker");
+        AccountController account = null;
+       
         try (PrintWriter out = response.getWriter()) {
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "settings");
-
-            pg.getUser().setFirstName(request.getParameter("firstName"));
-            pg.getUser().setLastName(request.getParameter("lastName"));
-            pg.getUser().setEmail(request.getParameter("email"));
+            try {
+                User user = getPageUser(request);
+                System.out.println(user);
+                user.setFirstName(request.getParameter("firstName"));
+                user.setLastName(request.getParameter("lastName"));
+                user.setEmail(pg.getUser().getEmail());
+                account = new AccountController(user);
+                
+                
+                
+                if (account.editAccount()){
+                 System.out.println("SHIT WORKS BRO");   
+                } else {
+                    System.out.println("SHIT DONT WORK BRO");   
+                }
+                pg.setUser(user);
+                System.out.println(user);
+            } catch (SQLException ex) {
+                Logger.getLogger(ManufacturerSettingServlet.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Shit went down");
+            }
             
-
             pg.setBody(WebComponentProvider.loadPartialPage(this, "settings-partial.html"));
             out.println(WebComponentProvider.buildPage(pg, request));
         }
