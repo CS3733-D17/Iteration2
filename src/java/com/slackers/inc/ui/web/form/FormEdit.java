@@ -83,37 +83,20 @@ public class FormEdit extends HttpServlet {
             long id = Long.parseLong(idStr);
             LabelApplicationController appControl = new LabelApplicationController();
             appControl.loadApplication(id);
-            UsEmployee emp = (UsEmployee)AccountController.getPageUser(request);
-            if (action!=null)
+            if (appControl.editApplicationFromRequest(this.getServletContext(), request)==null)
             {
-                if (action.equals("accept"))
-                {
-                    appControl.approveApplication(emp, new Date(new java.util.Date().getTime()+63072000000L));
-                    response.sendRedirect(WebComponentProvider.root(request));
-                }
-                else if (action.equals("reject"))
-                {
-                    appControl.rejectApplication(emp);
-                    response.sendRedirect(WebComponentProvider.root(request));
-                }
-                else
-                {
-                    System.out.println("no Action");
-                    response.sendRedirect("/SuperSlacker/form/process?id="+id);
-                }
+                    response.sendRedirect("/SuperSlackers/form/edit?id="+id);
             }
             else
             {
-                System.out.println("action is null");
-                response.sendRedirect("/SuperSlacker/form/process?id="+id);
+                response.sendRedirect("/SuperSlackers/form/view?id="+id);
             }           
         }catch (Exception e){
             e.printStackTrace();
             try 
             {
                 long id = Long.parseLong(idStr);
-                System.out.println("shit");
-                response.sendRedirect("/SuperSlacker/form/process?id="+id);
+                response.sendRedirect("/SuperSlackers/form/edit?id="+id);
             }
             catch (Exception ex)
             {

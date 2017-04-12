@@ -20,14 +20,15 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.WineLabel;
-import com.slackers.inc.ui.web.form.LabelImageGenerator;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -189,8 +190,9 @@ public class LabelApplicationController {
 
             this.loadApplication(id);
             Label l = this.editLabelFromRequest(context, request);
-            DerbyConnection.getInstance().createEntity(l);
+            //DerbyConnection.getInstance().createEntity(l);
             this.application.setLabel(l);
+            System.out.println(l);
             DerbyConnection.getInstance().writeEntity(this.application, this.application.getPrimaryKeyName());
         } catch (Exception e) {
 
@@ -255,6 +257,8 @@ public class LabelApplicationController {
             revTypes.add("image");
         }
         
+        System.out.println(String.join(", ",revTypes));
+        
         if (revTypes.contains("alcohol")) {
             try {
                 label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent-new")));
@@ -264,6 +268,7 @@ public class LabelApplicationController {
         if (revTypes.contains("vintage")) {
             try {                
                 ((WineLabel)label).setVintage(Integer.parseInt(request.getParameter("vintage-new")));
+                System.out.println("Vintage: "+Integer.parseInt(request.getParameter("vintage-new")));
                 revisions.add("Changed vintage");
             } catch (Exception e){}
         }
@@ -285,6 +290,7 @@ public class LabelApplicationController {
             try {
                 label.setGeneralInfo(request.getParameter("generalInfo-new"));
                 revisions.add("Changed info");
+                System.out.println("Genral: "+request.getParameter("generalInfo-new"));
             } catch (Exception e){}
         }
         if (revTypes.contains("formula")) {
@@ -315,7 +321,11 @@ public class LabelApplicationController {
             } catch (Exception e) {
             }
         }
-        
+        try {
+            DerbyConnection.getInstance().createEntity(label);
+        } catch (SQLException ex) {
+            Logger.getLogger(LabelApplicationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         User usr = AccountController.getPageUser(request);
         if (usr!=null)
             this.application.getComments().add(new LabelComment(usr, this.buildChangeComment(this.application.getApplicationId(), prevId, revisions)));
@@ -476,6 +486,7 @@ public class LabelApplicationController {
 
         if (l instanceof WineLabel) {
             labelObj.add("pH", Double.toString(((WineLabel) l).getPhLevel()));
+            labelObj.add("vintage", Integer.toString(((WineLabel) l).getVintage()));
             if (((WineLabel) l).getGrapeVarietal() != null) {
                 labelObj.add("grapeVarietal", ((WineLabel) l).getGrapeVarietal());
             }
@@ -485,7 +496,7 @@ public class LabelApplicationController {
         }
 
         JsonObjectBuilder dataObj = Json.createObjectBuilder().add("formula", l.getFormula())
-                .add("gereralInfo", l.getGeneralInfo());
+                .add("generalInfo", l.getGeneralInfo());
         
         Cookie data = new Cookie(APPLICATION_DATA_COOKIE_NAME, Base64.getEncoder().encodeToString(dataObj.build().toString().getBytes(StandardCharsets.UTF_8)));
         Cookie lbl = new Cookie(APPLICATION_LABEL_COOKIE_NAME, Base64.getEncoder().encodeToString(labelObj.build().toString().getBytes(StandardCharsets.UTF_8)));
@@ -541,17 +552,47 @@ public class LabelApplicationController {
         }
         b.append("</ul>");
         b.append("<a class=\"btn btn-primary\" style=\"float:right;\" ");
-        b.append("href=\"").append("/SuperSlacker/form/view?type=previous&id=").append(applicationId).append("&labelId=").append(prevLabelId).append("\">");
+        b.append("href=\"").append("/SuperSlackers/form/view?type=previous&id=").append(applicationId).append("&labelId=").append(prevLabelId).append("\">");
         b.append("View Previous Label");
         b.append("</a>");
         return b.toString();
     }
 
     public Label getLabelImage(long labelId) {
+        return this.getLabelImage(labelId, true);
+    }
+    
+    public Label getLabelImage(long labelId, boolean getImage) {
         try {
             Label l = new Label();
+            Label l2;
             l.setLabelId(labelId);
-            l.setPullImageOut(true);
+            this.db.getEntity(l, l.getPrimaryKeyName());
+            if (l.getProductType()==BeverageType.BEER)
+            {
+                l2 = new BeerLabel();
+                l2.setEntityValues(l.getEntityValues());
+                l2.setPullImageOut(getImage);
+                this.db.getEntity(l2, l2.getPrimaryKeyName());
+                return l2;
+            }
+            else if (l.getProductType()==BeverageType.WINE)
+            {
+                l2 = new WineLabel();
+                l2.setEntityValues(l.getEntityValues());
+                l2.setPullImageOut(getImage);
+                this.db.getEntity(l2, l2.getPrimaryKeyName());
+                return l2;
+            }
+            else if (l.getProductType()==BeverageType.DISTILLED)
+            {
+                l2 = new DistilledLabel();
+                l2.setEntityValues(l.getEntityValues());
+                l2.setPullImageOut(getImage);
+                this.db.getEntity(l2, l2.getPrimaryKeyName());
+                return l2;
+            }            
+            l.setPullImageOut(getImage);
             this.db.getEntity(l, l.getPrimaryKeyName());
             return l;
         } catch (SQLException ex) {
@@ -611,7 +652,7 @@ public class LabelApplicationController {
     public boolean submitApplication(Manufacturer submitter) throws SQLException {
         this.application.setApplicant(submitter);
         this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED);
-        this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
+        this.application.setApplicationDate(new Date(Date.from(Instant.now()).getTime()));
         this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
         this.application.setApplicationApproval(null);

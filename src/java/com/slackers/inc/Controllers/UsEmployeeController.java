@@ -102,40 +102,47 @@ public class UsEmployeeController {
 
     public static void fillApplicationList(UsEmployee employee)
     {
-        LabelApplication target = new LabelApplication();
-        LabelApplication target2 = new LabelApplication();
-        target.setStatus(LabelApplication.ApplicationStatus.SUBMITTED);
-        target2.setStatus(LabelApplication.ApplicationStatus.SUBMITTED_FOR_REVIEW);
-        target2.setReviewer(employee);
-        try {
-            List<LabelApplication> forms = DerbyConnection.getInstance().getAllEntites_Typed(target, "status");
-            forms.addAll(DerbyConnection.getInstance().getAllEntites_Typed(target, "status", "reviewer"));
-            
-            //forms = forms.stream().filter((e) -> {return e.getLabel().getProductType()==bevType && e.getReceiver().equals(receiver);}).collect(Collectors.toList());
-        
-            // sort by date older is first
-            forms.sort((LabelApplication o1, LabelApplication o2) -> o1.getApplicationDate().compareTo(o2.getApplicationDate()));
+        if (employee.getApplications().isEmpty())
+        {
+            System.out.println("getting new");
+            LabelApplication target = new LabelApplication();
+            LabelApplication target2 = new LabelApplication();
+            target.setStatus(LabelApplication.ApplicationStatus.SUBMITTED);
+            target2.setStatus(LabelApplication.ApplicationStatus.SUBMITTED_FOR_REVIEW);
+            target2.setReviewer(employee);
+            try {
+                List<LabelApplication> forms = DerbyConnection.getInstance().getAllEntites_Typed(target, "status");
+                forms.addAll(DerbyConnection.getInstance().getAllEntites_Typed(target, "status", "reviewer"));
 
-            List<LabelApplication> newforms = new LinkedList<>();
-            
-            // collect by oldest -> all from same person until no submissions left or the collected list contains 10 or more elements
-            while (!forms.isEmpty() && newforms.size()<10)
-            {
-                LabelApplication entry = forms.get(0);
-                // collect all entries from the oldest submitter
-                List<LabelApplication> temp = forms.stream().filter((e) -> {return e.getSubmitter().equals(entry.getSubmitter());}).collect(Collectors.toList());
-                newforms.addAll(temp);
-                forms.removeAll(temp);
-            }
-            
-            for (LabelApplication l : newforms)
-            {
-                employee.addApplication(l);
+                //forms = forms.stream().filter((e) -> {return e.getLabel().getProductType()==bevType && e.getReceiver().equals(receiver);}).collect(Collectors.toList());
+
+                // sort by date older is first
+                forms.sort((LabelApplication o1, LabelApplication o2) -> o1.getApplicationDate().compareTo(o2.getApplicationDate()));
+
+                List<LabelApplication> newforms = new LinkedList<>();
+
+                // collect by oldest -> all from same person until no submissions left or the collected list contains 10 or more elements
+                while (!forms.isEmpty() && newforms.size()<10)
+                {
+                    LabelApplication entry = forms.get(0);
+                    // collect all entries from the oldest submitter
+                    List<LabelApplication> temp = forms.stream().filter((e) -> {return e.getSubmitter().equals(entry.getSubmitter());}).collect(Collectors.toList());
+                    newforms.addAll(temp);
+                    forms.removeAll(temp);
+                }
+
+                for (LabelApplication l : newforms)
+                {
+                    employee.addApplication(l);
+                    l.setStatus(LabelApplication.ApplicationStatus.UNDER_REVIEW);
+                    DerbyConnection.getInstance().writeEntity(l, l.getPrimaryKeyName());
+                    System.out.println("Adding: "+l);
+                }
                 DerbyConnection.getInstance().writeEntity(employee, employee.getPrimaryKeyName());
+                System.out.println("Wrote");
+            } catch (SQLException ex) {
+                Logger.getLogger(UsEmployeeController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(UsEmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

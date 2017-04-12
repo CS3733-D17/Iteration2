@@ -33,6 +33,7 @@ public class User implements IEntity{
     private UserType userType;
     private String firstName;
     private String lastName;
+    private boolean isUpdate;
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -40,6 +41,7 @@ public class User implements IEntity{
         this.password = password;
         this.email = email;
         this.userType = UserType.UNKNOWN;
+        this.isUpdate = false;
     }
     
     public User(String email) {
@@ -89,6 +91,11 @@ public class User implements IEntity{
     public void setEmail(String email) {
         this.email = email;
     }    
+    
+    public void setUpdateMode(boolean updateMode)
+    {
+        this.isUpdate = updateMode;
+    }
 
     @Override
     public Map<String, Object> getEntityValues() {
@@ -107,6 +114,8 @@ public class User implements IEntity{
         temp.put("firstName", this.firstName);
         temp.put("lastName", this.lastName);
         temp.put("password", this.password);
+        if (!this.isUpdate)
+            temp.put("email", this.email);
         temp.put("userType", this.userType.name());
         return temp;
     }

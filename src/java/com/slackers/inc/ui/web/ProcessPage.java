@@ -5,7 +5,8 @@
  */
 package com.slackers.inc.ui.web;
 
-import com.slackers.inc.database.entities.Manufacturer;
+import com.slackers.inc.Controllers.UsEmployeeController;
+import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.database.entities.UsEmployee;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,22 +20,31 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jason
  */
-@WebServlet(name = "ProcessPageServlet", urlPatterns = {"/processPage1"})
+@WebServlet(name = "ProcessPageServlet", urlPatterns = {"/employee/applicationList"})
 public class ProcessPage extends HttpServlet {
 
-    IPageFrame pg;
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-      
+    private String renderApplication(LabelApplication app)
+    {
+        String fancy = "";
+        if (app.getLabel().getFancifulName()!=null && app.getLabel().getFancifulName().length()>2)
+            fancy = " ("+app.getLabel().getFancifulName()+")";
+        StringBuilder b = new StringBuilder();
+        b.append("<div class=\"panel panel-default\">");
+        b.append("<div class=\"panel-heading\"><h3>").append(app.getLabel().getBrandName()).append(fancy)
+                .append("</h3><a style=\"float:right; position:relative; top:-35px;\" class=\"btn btn-primary\" href=\"/SuperSlackers/form/process?id=")
+                .append(app.getApplicationId()).append("\">Review Application</a></div>");
+        b.append("<div class=\"panel-body\">");
+        
+        b.append("<div class=\"row\">");
+        b.append("<div class=\"col-sm-4\">");
+        b.append("<strong>Application Type </strong>").append(app.getLabel().getProductType());
+        b.append("</div>").append("<div class=\"col-sm-4\">");
+        b.append("<strong>Application Source </strong>").append(app.getLabel().getProductSource());
+        b.append("</div>").append("<div class=\"col-sm-4\">");
+        
+        b.append("</div></div></div></div>");
+        
+        return b.toString();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -52,31 +62,24 @@ public class ProcessPage extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
-            pg = WebComponentProvider.getCorrectFrame(request, "applicationProcessPage");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "ApplicationProccessList-partial.html"));
-            out.println(WebComponentProvider.buildPage(pg, request));
-            
-        }    
-        UsEmployee employee = (UsEmployee) (pg.getUser());
-        for(int i = 0; i < employee.getApplications().size(); i++){
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Process Applications");
+            UsEmployee employee = (UsEmployee) (pg.getUser());
+            UsEmployeeController.fillApplicationList(employee);
             StringBuilder b = new StringBuilder();
-            b.append("<div class=\"panel panel-default\">\n" +
-"                       <div class=\"panel-heading\">\n" +
-"                           <div class=\"row\">\n" +
-"                               <div class=\"col-md-10\">\n" +
-"                                   <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + employee.getApplications().get(i).getLabel().getBrandName() + "</a>\n" +
-"                               </div>\n" +
-"                               <div class=\"col-md-1 pull-right\">\n" +
-"                                   <button class='btn btn-primary btn-block'>Edit</button>\n" +
-"                               </div>\n" +
-"                           </div>\n" +
-"                       </div>\n" +
-"                   <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
-"                       <div class=\"panel-body\"> information</div>\n" +
-"                       </div>\n" +
-"                   </div>");
-            b.append(pg.getBody());
-        }
+            if (employee.getApplications().isEmpty())
+            {
+                b.append("<h4>No applications to review at this time</h4>");
+            }
+            else
+            {
+                for(int i = 0; i < employee.getApplications().size(); i++){
+                    b.append(this.renderApplication(employee.getApplications().get(i)));
+                }
+            }
+            String page = WebComponentProvider.loadPartialPage(this, "employee-applist-partial.html");
+            pg.setBody(page.replace("##APPLICATION_LIST", b.toString()));
+            out.println(WebComponentProvider.buildPage(pg, request));
+        }   
     }
 
     /**

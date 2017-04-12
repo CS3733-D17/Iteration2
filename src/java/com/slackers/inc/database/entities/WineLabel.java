@@ -120,6 +120,11 @@ public class WineLabel extends Label{
         values.put("wineAppelation", this.wineAppelation);
         return values;
     }
+
+    @Override
+    public String toString() {
+        return "WineLabel{" + super.toString()+ ", vintage=" + vintage + ", phLevel=" + phLevel + ", grapeVarietal=" + grapeVarietal + ", wineAppelation=" + wineAppelation + '}';
+    }
     
     
     

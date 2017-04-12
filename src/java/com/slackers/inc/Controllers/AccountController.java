@@ -294,6 +294,7 @@ public class AccountController {
         
         if (firstName == null || lastName == null || email == null || password == null || type == null)
         {
+            System.out.println("not filled");
             return false;
         }
         try
@@ -303,6 +304,7 @@ public class AccountController {
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             return false;
         }
     }
@@ -329,6 +331,7 @@ public class AccountController {
         try {
             return db.createEntity(this.user);
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new IllegalStateException("User already exists!");
         }
     }
@@ -349,6 +352,7 @@ public class AccountController {
     
     public boolean editAccount() throws SQLException
     {
+        System.out.println("Writting: "+this.user);
         return db.writeEntity(user);
     }
     

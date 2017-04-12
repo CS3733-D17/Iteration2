@@ -10,6 +10,7 @@ import com.slackers.inc.database.IEntity;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class LabelComment implements IEntity{
         this.comment = comment;
         this.commenter = submitter;
         this.commentId = 0;
-        date = new Date(new java.util.Date().getTime());
+        date = new Date(Date.from(Instant.now()).getTime());
     }
 
     public LabelComment()

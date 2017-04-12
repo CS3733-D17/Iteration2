@@ -7,6 +7,7 @@ package com.slackers.inc.ui.web.form;
 
 import com.slackers.inc.Controllers.AccountController;
 import com.slackers.inc.Controllers.LabelApplicationController;
+import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.User.UserType;
 import com.slackers.inc.ui.web.IPageFrame;
@@ -42,25 +43,44 @@ public class FormView extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             LabelApplicationController appControl = new LabelApplicationController();
             Long appId = Long.parseLong(request.getParameter("id"));
-            
             appControl.loadApplication(appId);
-            appControl.writeApplicationToCookies(response);
+            appControl.writeApplicationToCookies(response); 
             WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
             form = form.replace("##FORM_CONTENT", formTemplate);
-            form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, appControl));
+            boolean prev = false;
+            if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("previous") && request.getParameter("labelId")!=null)
+            {
+                try
+                {
+                    long prevId = Long.parseLong(request.getParameter("labelId"));
+                    Label l = appControl.getLabelImage(prevId,false);
+                    if (l!=null)
+                    {
+                        appControl.writeLabelToCookies(response, appControl.getLabelImage(prevId,false));
+                        form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, prevId));
+                    }                    
+                    prev = true;
+                }
+                catch (Exception e){}
+            }
+            if (!prev)
+            {
+                form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, appControl));
+            }            
+            
             User usr = AccountController.getPageUser(request);
             if (usr!=null && usr.getUserType() == UserType.MANUFACTURER)
             {
                 form = form.replace("##ACTION_BUTTON", " <a href = \"/SuperSlackers/form/edit?id=##ID\" class=\"btn btn-warning\" style=\"width:100%; margin-top: 30px;\">Edit Label Application</a>");
             }
-            else if (usr!=null && usr.getUserType() == UserType.US_EMPLOYEE)
+            else if (usr!=null && usr.getUserType() == UserType.US_EMPLOYEE && !prev)
             {
                 form = form.replace("##ACTION_BUTTON", " <a href = \"/SuperSlackers/form/process?id=##ID\" class=\"btn btn-warning\" style=\"width:100%; margin-top: 30px;\">Process Label Application</a>");
             }      
             else
-            {form = form.replace("##ACTION_BUTTON",usr.getUserType().name());}
+            {form = form.replace("##ACTION_BUTTON","");}
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "View Label Application");
             pg.setBody(form.replace("##ID", Long.toString(appId))+appControl.renderCommentList(request));
             out.println(WebComponentProvider.buildPage(pg, request));

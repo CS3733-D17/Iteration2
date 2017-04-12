@@ -5,11 +5,15 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.Controllers.AccountController;
 import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,7 +56,7 @@ public class ManufacturerSettingServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
          try (PrintWriter out = response.getWriter()) {
-            pg = WebComponentProvider.getCorrectFrame(request, "settings");
+            pg = WebComponentProvider.getCorrectFrame(request, "Account Settings");
             String settings = WebComponentProvider.loadPartialPage(this, "settings-partial.html");
             User.UserType type = pg.getUser().getUserType();
             
@@ -94,15 +98,21 @@ public class ManufacturerSettingServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "settings");
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Account Settings");
 
             pg.getUser().setFirstName(request.getParameter("firstName"));
             pg.getUser().setLastName(request.getParameter("lastName"));
             pg.getUser().setEmail(request.getParameter("email"));
+            pg.getUser().setUpdateMode(true);
             
-
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "settings-partial.html"));
-            out.println(WebComponentProvider.buildPage(pg, request));
+            try {
+                AccountController c = new AccountController(pg.getUser());
+                c.editAccount();
+                c.loginUser(request, response);
+            } catch (SQLException ex) {
+                Logger.getLogger(ManufacturerSettingServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            response.sendRedirect("/SuperSlackers/account/settings");
         }
     }
     

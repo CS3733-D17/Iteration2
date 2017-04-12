@@ -425,7 +425,7 @@ public class Label implements IEntity{
 
     @Override
     public String toString() {
-        return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource=" + productSource + ", productType=" + productType + ", brandName=" + brandName + ", labelimage=" + labelImageType +": "+ (labelImage!=null) + '}';
+        return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource=" + productSource + ", productType=" + productType + ", brandName=" + brandName + ", general=" + generalInfo+ ", labelimage=" + labelImageType +": "+ (labelImage!=null) + '}';
     }
     
 }

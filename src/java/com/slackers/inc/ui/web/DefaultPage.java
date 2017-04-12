@@ -62,7 +62,7 @@ public class DefaultPage implements IPageFrame{
 "      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\">COLA Search Registry</a>\n" +
 "    </div>\n<div class=\"collapse navbar-collapse\" id=\"colaNav\">" +
 "    <ul class=\"nav navbar-nav\">\n" +
-"      <li class=\"active\"><a href=\""+WebComponentProvider.root(request)+"search\">Search</a></li>\n" +
+"      <li><a href=\""+WebComponentProvider.root(request)+"search\">Search</a></li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
 "    </ul>\n" +
 "    <ul class=\"nav navbar-nav navbar-right\">\n" +
