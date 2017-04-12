@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Application Review</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<div class="container">
+    <h2>SÜP∃R SLӒCK3RS INC.</h2>
+    
+    <img src="home_page_wines_and_beers.jpg" alt="Wines and Beers" style="width:304px;height:228px;">
+    
+    <p></p>
+    
+    
+        <div class="btn-group" data-toggle="buttons" style="width:100%;">            
+            <label  id = "how-it-works-lbl" class="btn btn-default active">
+                <input name="type"  id = "how-it-works-input" value="how-it-works" type="radio"
+                       onclick="document.getElementById('how-it-works').style.display = 'block';
+                                document.getElementById('FAQ').style.display = 'none';
+                                document.getElementById('companies').style.display = 'none';">
+                How Does This Process Work? </label>
+            <label id = "FAQ-lbl" class="btn btn-default">
+                <input name="type"  id = "FAQ-input" value="FAQ" type="radio"
+                       onclick="document.getElementById('how-it-works').style.display = 'none';
+                                document.getElementById('FAQ').style.display = 'block';
+                                document.getElementById('companies').style.display = 'none';">
+                FAQ </label>
+            <label id = "companies-lbl" class="btn btn-default">
+                <input name="type"  id = "companies-input" value="companies" type="radio"
+                       onclick="document.getElementById('how-it-works').style.display = 'none';
+                                document.getElementById('FAQ').style.display = 'none';
+                                document.getElementById('companies').style.display = 'block';">
+                Companies We Have Serviced </label>
+        </div>
+    
+    <div id="how-it-works" style="display:none;">
+        <hr>
+        <p>what</p><br>
+    </div>
+    
+    <div id="FAQ" style="display:none;">   
+        <hr>
+        <h4>I submitted a label application a week ago. Did it not go through?</h4>
+        <p>It may take several weeks to process your application, but we will get it done. If 
+        you are worried that it did not get through the system, go to our help page.</p>
+        
+        <h4>There were errors in my label application. Can I edit it?</h4>
+        <p>Yes. You can revise your application. It's easy lmao</p>
+        
+        <h4>Is there a way to make sure my label was approved?</h4>
+        <p>You should be able to see if your application was approved or rejected. However, if
+        you are unsure, you can use the COLA search to look up your label.</p>
+        
+        <h4>I'm having trouble submitting an application. What do I do?</h4>
+        <p>You can go to our help page. Follow the instructions on that page from there.</p>
+        
+    </div>
+    
+    <div id="companies" style="display:none;">
+        
+        <h1>List of companies go here</h1>
+        
+    </div>
+    
+</div>  
