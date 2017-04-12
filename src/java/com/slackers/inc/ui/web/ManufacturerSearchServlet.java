@@ -84,6 +84,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
         Label label = new Label();
         search.reset();
         Map<String, String[]> param = request.getParameterMap();
+        System.out.println(request.getParameter("type"));
         for (String parameter: param.keySet()){
             switch(parameter){
                 case "keywords":
@@ -94,10 +95,30 @@ public class ManufacturerSearchServlet extends HttpServlet {
                     break;
                 case "alcoholContent":
                     if(!(request.getParameter("alcoholContent").equals(""))){
+                        System.out.println("Give me alcohol" + request.getParameter("alcoholContent"));
                         Filter alcoholContent = new AlcoholFilter(Double.parseDouble(request.getParameter("alcoholContent")));
                         search.addFilter(alcoholContent);
                     }
                     break;
+//                case "type":
+//                    if(!(request.getParameter("type") == null)){
+//                        Filter type;
+//                        switch(request.getParameter("type")){
+//                            case "Beer":
+//                                type = new TypeFilter(Label.BeverageType.BEER);
+//                                search.addFilter(type);
+//                                break;
+//                            case "Wine":
+//                                type = new TypeFilter(Label.BeverageType.WINE);
+//                                search.addFilter(type);
+//                                break;
+//                            case "Distilled":
+//                                type = new TypeFilter(Label.BeverageType.DISTILLED);
+//                                search.addFilter(type);
+//                                break;
+//                        }
+//                    }
+//                    break;
                 case "originLocation": //Dont have a filter for origin location
 //                    if(!(request.getParameter("originLocation").equals(""))){
 //                        Filter alcoholContent = new AlcoholFilter(Integer.parseInt(request.getParameter("originLocation")));

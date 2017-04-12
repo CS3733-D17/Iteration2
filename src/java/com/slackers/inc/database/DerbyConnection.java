@@ -192,11 +192,15 @@ public class DerbyConnection {
     
     public boolean updateEntity(IEntity entity, String... searchColumns) throws SQLException
     {
-        if (!checkForTable(entity)) // create table if non existant
+        if (!checkForTable(entity)){ // create table if non existant
+           
             return false;
+        }
         
-        if (searchColumns.length<=0)
+        if (searchColumns.length<=0){
+             
             return false; // avoid table deletion
+        }
         Set<String> cols = new HashSet<>(Arrays.asList(searchColumns));
         StringBuilder conds = new StringBuilder();
         

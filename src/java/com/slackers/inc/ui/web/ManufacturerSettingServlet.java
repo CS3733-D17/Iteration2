@@ -59,7 +59,7 @@ public class ManufacturerSettingServlet extends HttpServlet {
             pg = WebComponentProvider.getCorrectFrame(request, "Account Settings");
             String settings = WebComponentProvider.loadPartialPage(this, "settings-partial.html");
             User.UserType type = pg.getUser().getUserType();
-            
+            System.out.println(pg.getUser());
             if(type == User.UserType.MANUFACTURER){
                 StringBuilder b = new StringBuilder();
                 String manufacturerSettings = WebComponentProvider.loadPartialPage(this, "manufacturerSettings.html");
@@ -97,6 +97,8 @@ public class ManufacturerSettingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        AccountController account = null;
+       
         try (PrintWriter out = response.getWriter()) {
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Account Settings");
 
