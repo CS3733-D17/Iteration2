@@ -204,6 +204,13 @@ public class LabelApplicationController {
     public Label editLabelFromRequest(ServletContext context, HttpServletRequest request) {
 
         Label label = this.application.getLabel();
+        boolean isAccepted = label.isIsAccepted();
+        label.setIsAccepted(false);
+        try {
+            DerbyConnection.getInstance().writeEntity(label, label.getPrimaryKeyName());
+        } catch (SQLException ex) {
+            Logger.getLogger(LabelApplicationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         List<String> revisions = new LinkedList<>();
         
@@ -322,6 +329,7 @@ public class LabelApplicationController {
             }
         }
         try {
+            label.setIsAccepted(isAccepted);
             DerbyConnection.getInstance().createEntity(label);
         } catch (SQLException ex) {
             Logger.getLogger(LabelApplicationController.class.getName()).log(Level.SEVERE, null, ex);

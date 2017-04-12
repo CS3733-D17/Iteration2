@@ -69,23 +69,25 @@ public class ManufacturerPage implements IPageFrame{
 "        <span class=\"icon-bar\"></span>\n" +
 "        <span class=\"icon-bar\"></span>\n" +
 "      </button>"+
-"      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"home\">COLA Search Registry</a>\n" +
+"      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\">COLA Search Registry</a>\n" +
 "    </div><div class=\"collapse navbar-collapse\" id=\"colaNav\">\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"search\">Search</a></li>\n" +
-"      <li><a href=\"/SuperSlackers/form/create\">Submit a New Application</a></li>\n" +
+"      <li><a href=\"/SuperSlackers/form?action=create\">New Application</a></li>\n" +
 "      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"\">Applications <span class=\"caret\"></span></a>\n" +
 "        <ul class=\"dropdown-menu\">\n" +
 "          <li><a href=\""+WebComponentProvider.root(request)+"myApplications\">All</a></li>\n" +
-"          <li><a href=\"WorkingApplications\">Working</a></li>\n" +
-"          <li><a href=\"UnderReviewApplications\">Under Review</a></li>\n" +
-"          <li><a href=\"AcceptedApplications\">Accepted</a></li>\n" +
+"          <li><a href=\"myApplications?subset=working\">Working</a></li>\n" +
+"          <li><a href=\"myApplications?subset=submitted\">Submitted</a></li>\n" +
+"          <li><a href=\"myApplications?subset=underReview\">Under Review</a></li>\n" +
+"          <li><a href=\"myApplications?subset=accepted\">Accepted</a></li>\n" +
+"          <li><a href=\"myApplications?subset=rejected\">Rejected</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +
 //"      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
 "    </ul>\n" +
 "    <ul class=\"nav navbar-nav navbar-right\">\n" +
-"      <li><a href=\""+WebComponentProvider.root(request)+"account/settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " Welcome "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +
+"      <li><a href=\""+WebComponentProvider.root(request)+"account/settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"account/logout\"><span class=\"glyphicon glyphicon-log-out\"></span> Logout</a></li>\n" +
 "    </ul>\n" +
 "  </div></div>\n" +

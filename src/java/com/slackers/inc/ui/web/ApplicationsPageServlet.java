@@ -5,12 +5,13 @@
  */
 package com.slackers.inc.ui.web;
 
-import com.slackers.inc.Controllers.AccountController;
+import com.slackers.inc.database.entities.LabelApplication;
+import com.slackers.inc.database.entities.LabelApplication.ApplicationStatus;
 import com.slackers.inc.database.entities.Manufacturer;
-import static com.slackers.inc.ui.web.WebComponentProvider.WEB_ROOT;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,27 +53,56 @@ public class ApplicationsPageServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
-            pg = WebComponentProvider.getCorrectFrame(request, "applicationPage");
+            pg = WebComponentProvider.getCorrectFrame(request, "Application Page");
             String applications = WebComponentProvider.loadPartialPage(this, "applicationList-partial.html");
             
             Manufacturer manufacturer = (Manufacturer) (pg.getUser());
             StringBuilder b = new StringBuilder();
-            for(int i = 0; i < manufacturer.getApplications().size(); i++){
+            List<LabelApplication> apps = manufacturer.getApplications();
+            ApplicationStatus targetStatus = ApplicationStatus.UNKNOWN;
+            if (request.getParameter("subset")!=null)
+            {
+                if (request.getParameter("subset").equalsIgnoreCase("working"))
+                {
+                    targetStatus = ApplicationStatus.NOT_COMPLETE;
+                }
+                if (request.getParameter("subset").equalsIgnoreCase("submitted"))
+                {
+                    targetStatus = ApplicationStatus.SUBMITTED;
+                }
+                if (request.getParameter("subset").equalsIgnoreCase("underReview"))
+                {
+                    targetStatus = ApplicationStatus.UNDER_REVIEW;
+                }
+                if (request.getParameter("subset").equalsIgnoreCase("accepted"))
+                {
+                    targetStatus = ApplicationStatus.APPROVED;
+                }
+                if (request.getParameter("subset").equalsIgnoreCase("rejected"))
+                {
+                    targetStatus = ApplicationStatus.REJECTED;
+                }
+            }
+            
+            for(int i = 0; i < apps.size(); i++){
+                if (targetStatus == ApplicationStatus.UNKNOWN || apps.get(i).getStatus()== targetStatus)
+                {
                 b.append("<div class=\"panel panel-default\">\n" +
 "                           <div class=\"panel-heading\">\n" +
 "                               <div class=\"row\">\n" +
 "                                   <div class=\"col-md-10\">\n" +
 "                                       <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + manufacturer.getApplications().get(i).getLabel().getBrandName() + "</a>\n" +
 "                                   </div>\n" +
-"                                   <div class=\"col-md-1 pull-right\">\n" +
-"                                       <button class='btn btn-primary btn-block'>Edit</button>\n" +
+"                                   <div style=\"float:right;\">\n" +
+"                                       <a href=\"/SuperSlackers/form?action=edit&id="+Long.toString(apps.get(i).getApplicationId())+"\"class='btn btn-primary btn-block'>Edit</a>\n" +
 "                                   </div>\n" +
 "                               </div>\n" +
 "                           </div>\n" +
 "                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
-"                           <div class=\"panel-body\">Drink information</div>\n" +
+"                           <div class=\"panel-body\">"+ManufacturerSearchServlet.renderLabel(this, request, apps.get(i).getLabel())+"</div>\n" +
 "                           </div>\n" +
 "                       </div>");
+                }
             }
             
             applications = applications.replace("##Applications", b);

@@ -64,10 +64,15 @@ public class EmployeePage implements IPageFrame{
 "<nav class=\"navbar navbar-default\">\n" +
 "  <div class=\"container-fluid\">\n" +
 "    <div class=\"navbar-header\">\n" +
-"      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"home\">COLA Search Registry</a>\n" +
-"    </div>\n" +
+"       <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#colaNav\">\n" +
+"        <span class=\"icon-bar\"></span>\n" +
+"        <span class=\"icon-bar\"></span>\n" +
+"        <span class=\"icon-bar\"></span>\n" +
+"      </button>"+
+"      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\">COLA Search Registry</a>\n" +
+"    </div><div class=\"collapse navbar-collapse\" id=\"colaNav\">\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
-"      <li><a href=\""+WebComponentProvider.root(request)+"\">Home</a></li>\n" +
+"      <li><a href=\""+WebComponentProvider.root(request)+"search\">Search</a></li>\n" +
 "      <li><a href=\"/SuperSlackers/employee/applicationList\">Process Applications</a></li>\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
 "    </ul>\n" +

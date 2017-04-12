@@ -14,12 +14,13 @@
                     </div>
                     <br>
                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#advanced">Advanced</button>
-
+                    <input id="bType" type="hidden" value="ALL" name="type">
                     <div id="advanced" class="collapse">
                         <ul class = "pagination">
-                            <li class="active"><a href="#Wine" data-toggle="tab">Wine</a></li>
-                            <li><a href="#Beer" data-toggle="tab">Beer</a></li>
-                            <li><a href="#Distilled" data-toggle="tab">Distilled</a></li>
+                            <li class="active"><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value='ALL'">All</a></li>
+                            <li><a href="#Wine" data-toggle="tab" onclick="document.getElementById('bType').value='WINE'">Wine</a></li>
+                            <li><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value='BEER'">Beer</a></li>
+                            <li><a href="#Distilled" data-toggle="tab" onclick="document.getElementById('bType').value='DISTILLED'">Distilled</a></li>
                         </ul>
                         <div class="form-group">
                             <label>Alcohol Content</label>

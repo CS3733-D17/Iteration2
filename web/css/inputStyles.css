@@ -1,3 +1,10 @@
+.bottom_aligner {
+    display: inline-block;
+    height: 100%;
+    vertical-align: bottom;
+    width: 0px;
+}
+
 .funkyradio div {
   clear: both;
   overflow: hidden;

@@ -7,6 +7,7 @@ package com.slackers.inc.ui.web;
 
 import com.slackers.inc.Controllers.AccountController;
 import com.slackers.inc.Controllers.LabelApplicationController;
+import com.slackers.inc.database.entities.Manufacturer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -47,7 +48,19 @@ public class FormActionDispatchServlet extends HttpServlet {
                 if (action!=null) // id already validated as a number because didn't throw exception
                 {
                     if (action.equalsIgnoreCase("create"))
+                    {
+                        try
+                        {
+                            Manufacturer m = (Manufacturer)AccountController.getPageUser(request);
+                            if (!m.getApplications().isEmpty())
+                            {
+                                LabelApplicationController con = new LabelApplicationController(m.getApplications().get(m.getApplications().size()-1));
+                                con.writeApplicationToCookies(response);
+                            }
+                        }catch (Exception e)
+                        {}
                         this.getServletContext().getRequestDispatcher("/form/create").forward(request, response);
+                    }
                     if (action.equalsIgnoreCase("edit"))
                         this.getServletContext().getRequestDispatcher("/form/edit").forward(request, response);
                     if (action.equalsIgnoreCase("view"))

@@ -21,7 +21,7 @@ public class AlcoholFilter implements Filter {
 
     @Override
     public String getColumn() {
-        return "alcoholContent";
+        return "alchoholContent";
     }
 
 }
