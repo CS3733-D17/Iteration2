@@ -48,6 +48,7 @@ public class FormCreate extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String form = WebComponentProvider.loadPartialPage(this, "submit-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            formTemplate = formTemplate.replace("##LABEL_IMAGE_PATH","");
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Create Label Application");
             pg.setBody(form.replace("##FORM_CONTENT", formTemplate));
             out.println(WebComponentProvider.buildPage(pg, request));

@@ -3,7 +3,14 @@
         <span>Results</span>
         </h1>
         <form  action="##SEARCH_URL" method="POST" target="_blank">
-            <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download</button>
+            <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Csv</button>
+        </form>
+        <form  action="##SEARCH_URL&type=tsv" method="POST" target="_blank">
+            <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Tsv</button>
+        </form>
+        <form  action="##SEARCH_URL&type=delimiter" method="POST" target="_blank">
+            <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Custom</button>
+            <input type="text" name="delimiter">
         </form>
     </div>
         

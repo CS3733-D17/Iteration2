@@ -74,17 +74,23 @@ public class LabelImageGenerator extends HttpServlet {
                 long id = Long.parseLong(request.getParameter("id"));
                 LabelApplicationController appControl = new LabelApplicationController();
                 Label label = appControl.getLabelImage(id);
-                
-                response.setContentType(label.getLabelImageType());
-                ByteArrayInputStream bis = new ByteArrayInputStream(label.getLabelImage());
-                int len = 0;
-                byte[] buffer = new byte[1024];
-                while ((len = bis.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
+                String mimeType = label.getLabelImageType();
+                if (mimeType==null)
+                {
+                    mimeType = "image/png";
+                }
+                response.setContentType(mimeType);
+                try(ByteArrayInputStream bis = new ByteArrayInputStream(label.getLabelImage()))
+                {
+                    int len = 0;
+                    byte[] buffer = new byte[1024];
+                    while ((len = bis.read(buffer)) != -1) {
+                        out.write(buffer, 0, len);
+                    }
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(LabelImageGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
     }
 

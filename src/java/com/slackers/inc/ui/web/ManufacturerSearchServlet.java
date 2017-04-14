@@ -5,7 +5,9 @@
  */
 package com.slackers.inc.ui.web;
 
-import com.slackers.inc.Boundary.BoundaryControllers.CsvWriter;
+import com.slackers.inc.Controllers.Csv.CsvFormat;
+import com.slackers.inc.Controllers.Csv.DelimitedWriter;
+import com.slackers.inc.Controllers.Csv.IDelimiterFormat;
 import com.slackers.inc.Controllers.Filters.*;
 import com.slackers.inc.Controllers.SearchController;
 import com.slackers.inc.database.entities.BeerLabel;
@@ -198,10 +200,19 @@ public class ManufacturerSearchServlet extends HttpServlet {
         }
 
         if (request.getParameter("action") != null && request.getParameter("action").equals("download")) {
-            System.out.println("download");
-            response.setContentType("text/csv;");
+            IDelimiterFormat format = new CsvFormat(); 
+            if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("tsv"))
+            {
+                //format = new TsvFormat();
+            }
+            if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("delimiter") && request.getParameter("delimiter")!=null)
+            {
+                //format = new CharFormat(request.getParameter("delimiter"));
+            }
+            
+            response.setContentType(format.getMimeType());
             try (OutputStream outStream = response.getOutputStream()) {
-                CsvWriter out = new CsvWriter(outStream);
+                DelimitedWriter out = new DelimitedWriter(outStream,format);
         
                 out.init(com.slackers.inc.database.entities.Label.class);
                 out.initSubtype(com.slackers.inc.database.entities.BeerLabel.class);
