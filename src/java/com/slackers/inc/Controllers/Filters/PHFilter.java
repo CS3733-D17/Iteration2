@@ -7,7 +7,7 @@ import com.slackers.inc.database.entities.WineLabel;
 /**
  * Created by jestrada on 4/2/17.
  */
-public class PHFilter implements Filter {
+public class PHFilter implements ExactFilter_old {
 
     double id;
 

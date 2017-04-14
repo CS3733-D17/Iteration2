@@ -6,7 +6,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by jestrada on 4/2/17.
  */
-public class AcceptedFilter implements Filter {
+public class AcceptedFilter implements ExactFilter_old {
 
     boolean value;
 

@@ -9,6 +9,6 @@ package com.slackers.inc.Controllers.Filters;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-public interface Filter {
-    public String getColumn();
+public interface ExactFilter {
+    public Object getValue();
 }

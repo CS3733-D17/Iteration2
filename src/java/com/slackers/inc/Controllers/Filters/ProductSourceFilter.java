@@ -5,7 +5,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by Matt on 4/2/2017.
  */
-public class ProductSourceFilter  implements Filter {
+public class ProductSourceFilter  implements ExactFilter_old {
 
     Label.BeverageSource source;
 

@@ -5,7 +5,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by Matt on 4/2/2017.
  */
-public class BrandNameFilter implements Filter {
+public class BrandNameFilter implements ExactFilter_old {
 
     String name;
 

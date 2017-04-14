@@ -5,7 +5,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by Matt on 4/2/2017.
  */
-public class RepresentativeIdNumberFilter implements Filter {
+public class RepresentativeIdNumberFilter implements ExactFilter_old {
 
     String id;
 

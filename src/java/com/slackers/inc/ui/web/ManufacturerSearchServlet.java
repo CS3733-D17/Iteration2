@@ -91,7 +91,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
             switch (parameter) {
                 case "keywords":
                     if (!(request.getParameter("keywords").equals(""))) {
-                        Filter brand = new BrandNameFilter(request.getParameter("keywords"));
+                        ExactFilter_old brand = new BrandNameFilter(request.getParameter("keywords"));
                         search.addFilter(brand);
                     }
                     break;
@@ -129,7 +129,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                     break;
                 case "source":
                     if (!(request.getParameter("source").equals("na"))) {
-                        Filter source;
+                        ExactFilter_old source;
                         
                         switch (request.getParameter("source")) {
                             case "Domestic":
@@ -147,7 +147,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                     break;
                 case "type":
                     if (!(request.getParameter("type").equals("ALL"))) {
-                        Filter source;                        
+                        ExactFilter_old source;                        
                         switch (request.getParameter("type")) {
                             case "WINE":
                                 label = new WineLabel();
