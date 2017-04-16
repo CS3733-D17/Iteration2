@@ -38,11 +38,8 @@ public class SearchController {
 
     public List<Label> runSearch(Label target) throws SQLException {
         
-        List<String> columns = new LinkedList<>();
-       
-        System.out.println(target);
-        System.out.println(String.join(", ", columns));
-        return db.getAllEntites_Typed(target, columns.toArray(new String[columns.size()]));
+        
+        return db.search(target,filters);
     }
 
 
