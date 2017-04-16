@@ -6,6 +6,7 @@
 package com.slackers.inc.ui.web;
 
 import com.slackers.inc.Controllers.Csv.CsvFormat;
+import com.slackers.inc.Controllers.Csv.TsvFormat;
 import com.slackers.inc.Controllers.Csv.DelimitedWriter;
 import com.slackers.inc.Controllers.Csv.IDelimiterFormat;
 import com.slackers.inc.Controllers.Filters.*;
@@ -203,7 +204,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
             IDelimiterFormat format = new CsvFormat(); 
             if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("tsv"))
             {
-                //format = new TsvFormat();
+                format = new TsvFormat();
             }
             if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("delimiter") && request.getParameter("delimiter")!=null)
             {
