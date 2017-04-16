@@ -407,7 +407,7 @@ public class LabelApplicationController {
         if (l.getAlcoholContent() < 0 || l.getAlcoholContent() > 100) {
             return "Invalid alchohol content";
         }
-        if (l.getFormula() == null || l.getFormula().length() < 5) {
+        if (l.getFormula() == null || l.getFormula().length() < 2) {
             return "Formula is invalid";
         }
         if (l instanceof WineLabel) {

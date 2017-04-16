@@ -6,7 +6,7 @@ import com.slackers.inc.database.entities.WineLabel;
 /**
  * Created by Matt on 4/2/2017.
  */
-public class VintageFilter implements Filter {
+public class VintageFilter implements ExactFilter_old {
 
     int vintage;
 

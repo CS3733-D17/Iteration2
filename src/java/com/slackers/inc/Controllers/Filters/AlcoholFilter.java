@@ -5,7 +5,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by jestrada on 4/2/17.
  */
-public class AlcoholFilter implements Filter {
+public class AlcoholFilter implements ExactFilter_old {
 
     double percent;
 

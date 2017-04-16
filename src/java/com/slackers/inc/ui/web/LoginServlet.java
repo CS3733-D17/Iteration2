@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet {
                 AccountController c = new AccountController();
                 if (c.loginUser(request, response))
                 {
-                    response.sendRedirect(WebComponentProvider.WEB_ROOT);
+                    response.sendRedirect("/SuperSlackers");
                     return;
                 }
                 response.sendRedirect("login");

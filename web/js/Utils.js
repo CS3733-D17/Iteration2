@@ -51,7 +51,7 @@ function clickBox(id)
 function __fillForm_SUB()
 {
     handleRevisionDisplays();
-    if (document.getElementById("lblImg")!=null)
+    if (document.getElementById("hideUpload")!=null)
     {
         if (document.getElementById("imgSelector")!=null)
         {

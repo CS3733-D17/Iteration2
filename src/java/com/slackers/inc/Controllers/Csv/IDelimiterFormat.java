@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.slackers.inc.Controllers.Filters;
+package com.slackers.inc.Controllers.Csv;
 
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-public interface Filter {
-    public String getColumn();
+public interface IDelimiterFormat {
+    public String getDelimiter();
+    public String getMimeType();
 }

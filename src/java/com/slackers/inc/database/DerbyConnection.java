@@ -476,6 +476,36 @@ public class DerbyConnection {
         results.close();
         return entites;
     }
+    
+    public <T extends IEntity> List<T> getAllEntites_Typed(T entity) throws SQLException
+    {
+        if (!checkForTable(entity)) // create table if non existant
+            return null;
+        String stmt = String.format("SELECT * FROM %s", entity.getTableName());
+        PreparedStatement call = con.prepareStatement(stmt);
+        ResultSet results = call.executeQuery();
+        int c=0;
+        Map<String,Object> valMap = new HashMap<>();
+        List<T> entites = new LinkedList<>();
+        while (results.next())
+        {
+            valMap.clear();
+            c++;
+            try {
+                T ent = (T) entity.getClass().newInstance();
+                for (String s : entity.getEntityNameTypePairs().keySet())
+                {
+                    DerbyConnection.getStatementValue(con, results, s, entity, valMap);
+                }
+                ent.setEntityValues(valMap);
+                entites.add(ent);
+            } catch (Exception ex) {
+                Logger.getLogger(DerbyConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        results.close();
+        return entites;
+    }
 
     public boolean writeEntity(IEntity entity, String... searchColumns) throws SQLException
     {

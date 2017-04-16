@@ -6,7 +6,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by jestrada on 4/2/17.
  */
-public class PlantFilter implements Filter {
+public class PlantFilter implements ExactFilter_old {
 
     String value;
 

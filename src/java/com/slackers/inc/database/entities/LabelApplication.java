@@ -456,6 +456,11 @@ public class LabelApplication implements IEntity{
 
     public void setLabelType(BeverageType type)
     {
+        this.setLabelType(type, true);
+    }
+    
+    public void setLabelType(BeverageType type, boolean reload)
+    {
         Long labelId = this.label.getLabelId();
         Map<String, Object> entityValues = this.label.getEntityValues();
         if (type == BeverageType.BEER && this.label.getProductType()!= BeverageType.BEER)
@@ -476,10 +481,13 @@ public class LabelApplication implements IEntity{
             this.label.setEntityValues(entityValues);
             this.label.setPrimaryKeyValue(labelId);
         }        
-        try {
-            DerbyConnection.getInstance().getEntity(this.label, this.label.getPrimaryKeyName());
-        } catch (SQLException ex) {
-            Logger.getLogger(LabelApplication.class.getName()).log(Level.SEVERE, null, ex);
+        if (reload)
+        {
+            try {
+                DerbyConnection.getInstance().getEntity(this.label, this.label.getPrimaryKeyName());
+            } catch (SQLException ex) {
+                Logger.getLogger(LabelApplication.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -617,7 +625,7 @@ public class LabelApplication implements IEntity{
     
     @Override
     public String toString() {
-        return "LabelApplication{" + "applicationId=" + applicationId + ", representativeId=" + representativeId + ", applicantAddress=" + applicantAddress + ", mailingAddress=" + mailingAddress + ", phoneNumber=" + phoneNumber + ", emailAddress=" + emailAddress + ", applicationDate=" + applicationDate + ", status=" + status + ", applicant=" + applicant + ", reviewer=" + reviewer + ", submitter=" + submitter + ", label=" + label + ", appType="+this.getAppTypes()+'}';
+        return "LabelApplication{" + "applicationId=" + applicationId + ", representativeId=" + representativeId + ", applicantAddress=" + applicantAddress + ", mailingAddress=" + mailingAddress + ", phoneNumber=" + phoneNumber + ", emailAddress=" + emailAddress + ", applicationDate=" + applicationDate + ", status=" + status + ", applicant=" + applicant + ", reviewer=" + reviewer + ", submitter=" + submitter + ", label=" + label+'}';// + ", appType="+this.getAppTypes()+'}';
     }
     
     

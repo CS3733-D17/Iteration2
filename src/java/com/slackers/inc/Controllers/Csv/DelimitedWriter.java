@@ -1,4 +1,4 @@
-package com.slackers.inc.Boundary.BoundaryControllers;
+package com.slackers.inc.Controllers.Csv;
 
 
 
@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * Created by John's New HP on 3/24/2017.
  */
-public class CsvWriter implements Closeable,Flushable,AutoCloseable {
+public class DelimitedWriter implements Closeable,Flushable,AutoCloseable {
 
     private OutputStream stream;
     private boolean isInitialized;
@@ -25,6 +25,7 @@ public class CsvWriter implements Closeable,Flushable,AutoCloseable {
     private Class type;
     private String emptyValue;
 
+    private IDelimiterFormat format;
 
     /**
      * Constructor for a Csv formatted output writer.
@@ -34,7 +35,7 @@ public class CsvWriter implements Closeable,Flushable,AutoCloseable {
      * The default empty value is the empty string.
      * @param  outputStream  the base stream to output the csv information on
      */
-    public CsvWriter(OutputStream outputStream)
+    public DelimitedWriter(OutputStream outputStream, IDelimiterFormat format)
     {
         this.stream = outputStream;
         this.isInitialized = false;
@@ -44,6 +45,7 @@ public class CsvWriter implements Closeable,Flushable,AutoCloseable {
         this.type = null;
         this.ignored = new HashSet<>();
         this.emptyValue="";
+        this.format = format;
     }
 
     /**
@@ -55,7 +57,7 @@ public class CsvWriter implements Closeable,Flushable,AutoCloseable {
      * @throws FileNotFoundException if the fileoutputstream cannot be created
      * @param  filename  path to a valid file
      */
-    public CsvWriter(String filename) throws FileNotFoundException {
+    public DelimitedWriter(String filename) throws FileNotFoundException {
         this.stream = new FileOutputStream(filename);
         this.isInitialized = false;
         this.foundColumns = new ArrayList<>();
@@ -243,7 +245,7 @@ public class CsvWriter implements Closeable,Flushable,AutoCloseable {
             cols.add(s);
         }
         
-        String header = "\""+String.join("\",\"", cols)+"\"";
+        String header = "\""+String.join("\""+format.getDelimiter()+"\"", cols)+"\"";
 
         header = header + "\n";
 
@@ -323,7 +325,7 @@ public class CsvWriter implements Closeable,Flushable,AutoCloseable {
                 values.add(this.emptyValue);
             }
         }
-        String line = "\""+String.join("\",\"", values) + "\""+"\n";
+        String line = "\""+String.join("\""+format.getDelimiter()+"\"", values) + "\""+"\n";
         this.stream.write(line.getBytes(this.charset));
     }
 
@@ -371,6 +373,11 @@ public class CsvWriter implements Closeable,Flushable,AutoCloseable {
     public void flush() throws IOException {
         if (this.stream!=null)
             this.stream.flush();
+    }
+    
+    public String getMimeType()
+    {
+        return this.format.getMimeType();
     }
 }
 /*

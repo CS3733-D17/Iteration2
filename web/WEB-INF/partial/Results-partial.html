@@ -2,9 +2,28 @@
     <div><h1>
         <span>Results</span>
         </h1>
-        <form  action="##SEARCH_URL" method="POST" target="_blank">
-            <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download</button>
-        </form>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="#"> <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Csv</button>
+                </li>
+                <li>
+                    <a href="#"> <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Tsv</button>
+                </li>
+                <li>
+                    <a href="#"> <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Custom</button>
+                       
+                </li>
+
+                <li>
+                    <input type="text" name="delimiter">
+                </li>
+
+            </ul>
+        </div>
+    </div>
     </div>
         
     

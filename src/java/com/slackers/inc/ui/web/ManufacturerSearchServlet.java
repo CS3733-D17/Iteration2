@@ -5,7 +5,9 @@
  */
 package com.slackers.inc.ui.web;
 
-import com.slackers.inc.Boundary.BoundaryControllers.CsvWriter;
+import com.slackers.inc.Controllers.Csv.CsvFormat;
+import com.slackers.inc.Controllers.Csv.DelimitedWriter;
+import com.slackers.inc.Controllers.Csv.IDelimiterFormat;
 import com.slackers.inc.Controllers.Filters.*;
 import com.slackers.inc.Controllers.SearchController;
 import com.slackers.inc.database.entities.BeerLabel;
@@ -89,7 +91,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
             switch (parameter) {
                 case "keywords":
                     if (!(request.getParameter("keywords").equals(""))) {
-                        Filter brand = new BrandNameFilter(request.getParameter("keywords"));
+                        ExactFilter_old brand = new BrandNameFilter(request.getParameter("keywords"));
                         search.addFilter(brand);
                     }
                     break;
@@ -127,7 +129,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                     break;
                 case "source":
                     if (!(request.getParameter("source").equals("na"))) {
-                        Filter source;
+                        ExactFilter_old source;
                         
                         switch (request.getParameter("source")) {
                             case "Domestic":
@@ -145,7 +147,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                     break;
                 case "type":
                     if (!(request.getParameter("type").equals("ALL"))) {
-                        Filter source;                        
+                        ExactFilter_old source;                        
                         switch (request.getParameter("type")) {
                             case "WINE":
                                 label = new WineLabel();
@@ -198,10 +200,19 @@ public class ManufacturerSearchServlet extends HttpServlet {
         }
 
         if (request.getParameter("action") != null && request.getParameter("action").equals("download")) {
-            System.out.println("download");
-            response.setContentType("text/csv;");
+            IDelimiterFormat format = new CsvFormat(); 
+            if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("tsv"))
+            {
+                //format = new TsvFormat();
+            }
+            if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("delimiter") && request.getParameter("delimiter")!=null)
+            {
+                //format = new CharFormat(request.getParameter("delimiter"));
+            }
+            
+            response.setContentType(format.getMimeType());
             try (OutputStream outStream = response.getOutputStream()) {
-                CsvWriter out = new CsvWriter(outStream);
+                DelimitedWriter out = new DelimitedWriter(outStream,format);
         
                 out.init(com.slackers.inc.database.entities.Label.class);
                 out.initSubtype(com.slackers.inc.database.entities.BeerLabel.class);
