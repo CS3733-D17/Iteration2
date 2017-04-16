@@ -6,3 +6,6 @@
 /dist/
 /nbproject/private/
 /nbproject/
+nbproject/ant-deploy.xml
+nnbproject/project.properties
+

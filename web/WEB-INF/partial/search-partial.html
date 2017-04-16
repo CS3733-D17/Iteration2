@@ -24,7 +24,29 @@
                         </ul>
                         <div class="form-group">
                             <label>Alcohol Content</label>
+
+
+
+
+
+                            <select id="alcohol" name="alcoholSearchType" onchange="alcoholFunction()" >
+                                <option value="equal" >is equal to</option>
+                                <option value="between">is between</option>
+
+                            </select>
+                            <input type="text" name="alcohol_low" id="alcohol_low" placeholder="0.0-100.0" class="as-variable-input" value="">
+                            <span id="alcoholAnd" style="display: none;" >&nbsp;and&nbsp;</span>
+                            <input type="text" name="alcohol_hi" id="alcohol_hi" placeholder="0.0-100.0" class="as-variable-input " value="" style="display: none;">
+
+
+
+
+
+
+
+
                             <input class="form-control" placeholder="Values between 0.0 - 100.0" type="text" id="alcoholContent" name="alcoholContent">
+
                         </div>
 
                         <div class="form-group">
@@ -55,11 +77,36 @@
 
                                 <div class="form-group">
                                     <label>pH Level</label>
+
+
+                                    <select id="ph" name="ph" onchange="phFunction()">
+                                        <option value="equal" >is equal to</option>
+                                        <option value="between">is between</option>
+
+                                    </select>
+                                    <input type="text" name="ph_low" id="ph_low" placeholder="0.0-100.0" class="as-variable-input" value="">
+                                    <span id="phAnd" style="display: none;" >&nbsp;and&nbsp;</span>
+                                    <input type="text" name="ph_hi" id="ph_hi" placeholder="0.0-100.0" class="as-variable-input " value="" style="display: none;">
+
+
+
+
                                     <input class="form-control" placeholder="PH Level" type="text" name = "pHLevel" id="pHLevel">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Vintage Year</label>
+
+                                    <select id="vintage" name="vintage" onchange="vintageFunction()">
+                                        <option value="equal" >is equal to</option>
+                                        <option value="between">is between</option>
+
+                                    </select>
+                                    <input type="text" name="vintage_low" id="vintage_low" placeholder="0.0-100.0" class="as-variable-input" value="">
+                                    <span id="vintageAnd" style="display: none;" >&nbsp;and&nbsp;</span>
+                                    <input type="text" name="vintage_hi" id="vintage_hi" placeholder="0.0-100.0" class="as-variable-input " value="" style="display: none;">
+
+
                                     <input class="form-control" placeholder="Vintage Year" type="text" name="vintageYear" id="vintageYear">
                                 </div>
 
@@ -73,5 +120,51 @@
     </div>
 
 </div>
+
+<script>
+
+
+
+    function alcoholFunction(){               
+        if (document.getElementById("alcohol").value === "equal"){
+            console.log(document.getElementById("alcohol").value);
+            document.getElementById("alcoholAnd").style.display = "none";
+            document.getElementById( "alcohol_hi").style.display = "none";
+
+        } else {
+            document.getElementById("alcoholAnd").style.display = "inline-block";
+            document.getElementById("alcohol_hi").style.display = "inline-block";
+
+        }
+    }
+    function vintageFunction(){               
+        if (document.getElementById("vintage").value === "equal"){
+            document.getElementById("vintageAnd").style.display = "none";
+            document.getElementById( "vintage_hi").style.display = "none";
+
+        } else {
+            document.getElementById("vintageAnd").style.display = "inline-block";
+            document.getElementById("vintage_hi").style.display = "inline-block";
+
+        }
+    }
+    function phFunction(){               
+        if (document.getElementById("ph").value === "equal"){
+            console.log(document.getElementById("ph").value);
+            document.getElementById("phAnd").style.display = "none";
+            document.getElementById( "ph_hi").style.display = "none";
+
+        } else {
+            document.getElementById("phAnd").style.display = "inline-block";
+            document.getElementById("ph_hi").style.display = "inline-block";
+
+        }
+    }
+
+
+        
+
+
+</script>
 
 
