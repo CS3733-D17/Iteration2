@@ -7,18 +7,21 @@
                 <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 <li>
-                    <a href="#"> <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Csv</button>
-                </li>
+                    <a href="#"> <form  action="##SEARCH_URL" method="POST" target="_blank">
+                        <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Csv</button>
+                </form></a></li>
                 <li>
-                    <a href="#"> <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Tsv</button>
-                </li>
+                    <a href="#"> <form  action="##SEARCH_URL&type=tsv" method="POST" target="_blank">
+                        <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Tsv</button>
+                </form></a></li>
                 <li>
-                    <a href="#"> <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Custom</button>
+                    <a href="#"><form  action="##SEARCH_URL&type=delimiter" method="POST" target="_blank">
+                        <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Custom</button>
                        
-                </li>
+                </form></a></li>
 
                 <li>
-                    <input type="text" name="delimiter">
+                    <a href="#"><input type="text" name="delimiter"></a>
                 </li>
 
             </ul>
