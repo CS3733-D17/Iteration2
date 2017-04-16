@@ -5,6 +5,9 @@
  */
 package com.slackers.inc.database;
 
+import com.slackers.inc.Controllers.Filters.ExactFilter;
+import com.slackers.inc.Controllers.Filters.Filter;
+import com.slackers.inc.Controllers.Filters.RangeFilter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -484,6 +487,57 @@ public class DerbyConnection {
         String stmt = String.format("SELECT * FROM %s", entity.getTableName());
         PreparedStatement call = con.prepareStatement(stmt);
         ResultSet results = call.executeQuery();
+        int c=0;
+        Map<String,Object> valMap = new HashMap<>();
+        List<T> entites = new LinkedList<>();
+        while (results.next())
+        {
+            valMap.clear();
+            c++;
+            try {
+                T ent = (T) entity.getClass().newInstance();
+                for (String s : entity.getEntityNameTypePairs().keySet())
+                {
+                    DerbyConnection.getStatementValue(con, results, s, entity, valMap);
+                }
+                ent.setEntityValues(valMap);
+                entites.add(ent);
+            } catch (Exception ex) {
+                Logger.getLogger(DerbyConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        results.close();
+        return entites;
+    }
+    
+    public <T extends IEntity> List<T> search(T entity, List<Filter> filters) throws SQLException
+    {
+        List<String> statements = new LinkedList<>();
+        List<Object> vals = new LinkedList<>();
+        for (Filter f : filters)
+        {
+            if (f instanceof ExactFilter)
+            {
+                statements.add(f.getColumn()+" =(?)");
+                vals.add(((ExactFilter)f).getValue());
+            }
+            if (f instanceof RangeFilter)
+            {
+                statements.add(f.getColumn()+" between (?) and (?)");
+                vals.add(((RangeFilter)f).getValueMin());
+                vals.add(((RangeFilter)f).getValueMax());
+            }
+        }
+        String stmt = String.format("SELECT * FROM %s WHERE %s", entity.getTableName(), String.join(" and ", statements));
+        PreparedStatement call = con.prepareStatement(stmt);
+        int i = 1;
+        for (Object o : vals)
+        {
+            DerbyConnection.setStatementValue(con, call, i, o);
+            i++;
+        }
+        ResultSet results = call.executeQuery();
+        
         int c=0;
         Map<String,Object> valMap = new HashMap<>();
         List<T> entites = new LinkedList<>();
