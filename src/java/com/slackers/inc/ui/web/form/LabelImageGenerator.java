@@ -9,11 +9,14 @@ import com.slackers.inc.Controllers.LabelApplicationController;
 import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.ui.web.WebComponentProvider;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -74,18 +77,40 @@ public class LabelImageGenerator extends HttpServlet {
                 long id = Long.parseLong(request.getParameter("id"));
                 LabelApplicationController appControl = new LabelApplicationController();
                 Label label = appControl.getLabelImage(id);
-                String mimeType = label.getLabelImageType();
+                /*String mimeType = label.getLabelImageType();
                 if (mimeType==null)
                 {
                     mimeType = "image/png";
-                }
-                response.setContentType(mimeType);
-                try(ByteArrayInputStream bis = new ByteArrayInputStream(label.getLabelImage()))
+                }*/
+                response.setContentType("image/png");
+                boolean wrote=false;
+                if (request.getParameter("targetWidth")!=null)
                 {
-                    int len = 0;
-                    byte[] buffer = new byte[1024];
-                    while ((len = bis.read(buffer)) != -1) {
-                        out.write(buffer, 0, len);
+                    try
+                    {
+                        int width = Integer.parseInt(request.getParameter("targetWidth"));
+                        try(ByteArrayInputStream bis = new ByteArrayInputStream(label.getLabelImage()))
+                        {
+                            BufferedImage imgBuffered = ImageIO.read(bis);
+                            Image temp = imgBuffered.getScaledInstance(width, -1, Image.SCALE_DEFAULT);
+                            BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                            toSave.getGraphics().drawImage(temp, 0, 0, null);
+                            ImageIO.write(toSave, "png", response.getOutputStream());
+                            toSave.getGraphics().dispose();
+                            wrote = true;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        
+                    }
+                }
+                if (!wrote)
+                {
+                    try(ByteArrayInputStream bis = new ByteArrayInputStream(label.getLabelImage()))
+                    {
+                        BufferedImage imgBuffered = ImageIO.read(bis);
+                        ImageIO.write(imgBuffered, "png", response.getOutputStream());
                     }
                 }
             }

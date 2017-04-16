@@ -228,9 +228,8 @@ public class Label implements IEntity{
         values.put("productSource", this.productSource.name());
         values.put("productType", this.productType.name());
         values.put("brandName", this.brandName);
-        values.put("approval", this.approval.getPrimaryKeyValue());  
-        values.put("serialNumber", this.serialNumber);
         
+        values.put("serialNumber", this.serialNumber);
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
@@ -240,6 +239,8 @@ public class Label implements IEntity{
             values.put("labelImage", this.labelImage);
             values.put("labelImageType", this.labelImageType);
         }
+        
+        values.putAll(this.approval.getEntityValues()); // approval
         
         return values;
     }
@@ -254,7 +255,6 @@ public class Label implements IEntity{
         values.put("productSource", this.productSource.name());
         values.put("productType", this.productType.name());
         values.put("brandName", this.brandName);
-        values.put("approval", this.approval.getPrimaryKeyValue()); 
         values.put("serialNumber", this.serialNumber);
         
         values.put("fancifulName", this.fancifulName);
@@ -266,7 +266,7 @@ public class Label implements IEntity{
             values.put("labelImage", this.labelImage);
             values.put("labelImageType", this.labelImageType);
         }
-        
+        values.putAll(this.approval.getEntityValues()); // approval
         return values;
     }
 
@@ -333,22 +333,7 @@ public class Label implements IEntity{
             this.generalInfo = (String) values.get("generalInfo");
         }
         
-        if(values.containsKey("approval")){
-            long val = (long)values.get("approval");
-            if (val==0)
-            {
-                this.setApproval(null);
-            }
-            else
-            {
-                this.approval.setApprovalId(val);
-                try {
-                    DerbyConnection.getInstance().getEntity(this.approval, this.approval.getPrimaryKeyName());
-                } catch (SQLException ex) {
-                    Logger.getLogger(Label.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
+        this.approval.setEntityValues(values); // approval
         
     }
 
@@ -363,7 +348,6 @@ public class Label implements IEntity{
         pairs.put("productSource", String.class);
         pairs.put("productType", String.class);
         pairs.put("brandName", String.class);
-        pairs.put("approval", Long.class);
         pairs.put("serialNumber", String.class);
         pairs.put("fancifulName", String.class);
         pairs.put("formula", String.class);
@@ -373,6 +357,7 @@ public class Label implements IEntity{
             pairs.put("labelImage", byte[].class);
             pairs.put("labelImageType", String.class);
         }
+        pairs.putAll(this.approval.getEntityNameTypePairs());
         return pairs;
     }
 
@@ -381,7 +366,6 @@ public class Label implements IEntity{
         List<String> cols = new LinkedList<>();
         cols.add("labelId bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)");
         cols.add("isAccepted boolean");
-        cols.add("approval bigint");
         cols.add("alchoholContent float");        
         cols.add("representativeIdNumber varchar(128)");
         cols.add("plantNumber varchar(128)");
@@ -398,6 +382,7 @@ public class Label implements IEntity{
         cols.add("vintage int");        
         cols.add("labelImage blob");
         cols.add("labelImageType varchar(64)");
+        cols.addAll(this.approval.tableColumnCreationSettings());
         return cols;
     }
 

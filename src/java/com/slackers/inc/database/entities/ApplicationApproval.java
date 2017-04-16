@@ -137,7 +137,7 @@ public class ApplicationApproval implements IEntity{
         }
         if (values.containsKey("agent"))
         {
-            this.agent.setPrimaryKeyValue((Serializable)values.get("agent"));
+            this.agent.setPrimaryKeyValue((String)values.get("agent"));
             try {
                 DerbyConnection.getInstance().getEntity(this.agent, this.agent.getPrimaryKeyName());
             } catch (SQLException ex) {
@@ -155,7 +155,7 @@ public class ApplicationApproval implements IEntity{
         Map<String, Class> pairs = new HashMap<>();
         pairs.put("approvalDate", Date.class);
         pairs.put("experationDate", Date.class);
-        pairs.put("agent", Serializable.class);
+        pairs.put("agent", String.class);
         pairs.put("application", Long.class);
         pairs.put("approvalId", Long.class);
         return pairs;
@@ -164,7 +164,7 @@ public class ApplicationApproval implements IEntity{
     @Override
     public List<String> tableColumnCreationSettings() {
         List<String> cols = new LinkedList<>();
-        cols.add("approvalId bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)");
+        cols.add("approvalId bigint");
         cols.add("approvalDate Date");
         cols.add("experationDate Date");
         cols.add("application bigint");

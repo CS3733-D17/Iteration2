@@ -47,6 +47,7 @@ public class FormEdit extends HttpServlet {
             
             appControl.loadApplication(appId);
             appControl.writeApplicationToCookies(response);
+            appControl.writeLabelToCookies(response);
             WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "edit-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");

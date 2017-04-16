@@ -45,6 +45,7 @@ public class FormView extends HttpServlet {
             Long appId = Long.parseLong(request.getParameter("id"));
             appControl.loadApplication(appId);
             appControl.writeApplicationToCookies(response); 
+            appControl.writeLabelToCookies(response);
             WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");

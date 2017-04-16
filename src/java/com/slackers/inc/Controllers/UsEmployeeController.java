@@ -104,7 +104,6 @@ public class UsEmployeeController {
     {
         if (employee.getApplications().isEmpty())
         {
-            System.out.println("getting new");
             LabelApplication target = new LabelApplication();
             LabelApplication target2 = new LabelApplication();
             target.setStatus(LabelApplication.ApplicationStatus.SUBMITTED);
@@ -135,11 +134,10 @@ public class UsEmployeeController {
                 {
                     employee.addApplication(l);
                     l.setStatus(LabelApplication.ApplicationStatus.UNDER_REVIEW);
+                    l.setReviewer(employee);
                     DerbyConnection.getInstance().writeEntity(l, l.getPrimaryKeyName());
-                    System.out.println("Adding: "+l);
                 }
                 DerbyConnection.getInstance().writeEntity(employee, employee.getPrimaryKeyName());
-                System.out.println("Wrote");
             } catch (SQLException ex) {
                 Logger.getLogger(UsEmployeeController.class.getName()).log(Level.SEVERE, null, ex);
             }

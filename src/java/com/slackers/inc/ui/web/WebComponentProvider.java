@@ -87,6 +87,10 @@ public class WebComponentProvider {
         {
             out = new EmployeePage(title);
         }
+        else if (type == User.UserType.ADMIN)
+        {
+            out = new AdminPage(title);
+        }
         else
         {
             out = new DefaultPage(title);

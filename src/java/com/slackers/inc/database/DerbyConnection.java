@@ -512,23 +512,91 @@ public class DerbyConnection {
     
     public <T extends IEntity> List<T> search(T entity, List<Filter> filters) throws SQLException
     {
+        String stmt;
         List<String> statements = new LinkedList<>();
         List<Object> vals = new LinkedList<>();
-        for (Filter f : filters)
-        {
-            if (f instanceof ExactFilter)
+        if (filters.isEmpty())
+        {      
+            for (Filter f : filters)
             {
-                statements.add(f.getColumn()+" =(?)");
-                vals.add(((ExactFilter)f).getValue());
+                if (f instanceof ExactFilter)
+                {
+                    statements.add(f.getColumn()+" =(?)");
+                    vals.add(((ExactFilter)f).getValue());
+                }
+                if (f instanceof RangeFilter)
+                {
+                    statements.add(f.getColumn()+" between (?) and (?)");
+                    vals.add(((RangeFilter)f).getValueMin());
+                    vals.add(((RangeFilter)f).getValueMax());
+                }
             }
-            if (f instanceof RangeFilter)
-            {
-                statements.add(f.getColumn()+" between (?) and (?)");
-                vals.add(((RangeFilter)f).getValueMin());
-                vals.add(((RangeFilter)f).getValueMax());
+            stmt = String.format("SELECT * FROM %s WHERE %s", entity.getTableName(), String.join(" and ", statements));
+        }
+        else
+        {
+            stmt = String.format("SELECT * FROM %s", entity.getTableName());
+        }
+        PreparedStatement call = con.prepareStatement(stmt);
+        int i = 1;
+        for (Object o : vals)
+        {
+            DerbyConnection.setStatementValue(con, call, i, o);
+            i++;
+        }
+        ResultSet results = call.executeQuery();
+        
+        int c=0;
+        Map<String,Object> valMap = new HashMap<>();
+        List<T> entites = new LinkedList<>();
+        while (results.next())
+        {
+            valMap.clear();
+            c++;
+            try {
+                T ent = (T) entity.getClass().newInstance();
+                for (String s : entity.getEntityNameTypePairs().keySet())
+                {
+                    DerbyConnection.getStatementValue(con, results, s, entity, valMap);
+                }
+                ent.setEntityValues(valMap);
+                entites.add(ent);
+            } catch (Exception ex) {
+                Logger.getLogger(DerbyConnection.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        String stmt = String.format("SELECT * FROM %s WHERE %s", entity.getTableName(), String.join(" and ", statements));
+        results.close();
+        return entites;
+    }
+    
+    public <T extends IEntity> List<T> search(T entity, List<Filter> filters, int numberOfResults, int offset) throws SQLException
+    {
+        String stmt;
+        List<String> statements = new LinkedList<>();
+        List<Object> vals = new LinkedList<>();
+        if (filters.isEmpty())
+        {
+            for (Filter f : filters)
+            {
+                if (f instanceof ExactFilter)
+                {
+                    statements.add(f.getColumn()+" =(?)");
+                    vals.add(((ExactFilter)f).getValue());
+                }
+                if (f instanceof RangeFilter)
+                {
+                    statements.add(f.getColumn()+" between (?) and (?)");
+                    vals.add(((RangeFilter)f).getValueMin());
+                    vals.add(((RangeFilter)f).getValueMax());
+                }
+            }
+            stmt = String.format("SELECT * FROM %s WHERE %s OFFSET %d rows fetch first %d rows only", entity.getTableName(), String.join(" and ", statements), offset, numberOfResults);
+        }
+        else
+        {
+            stmt = String.format("SELECT * FROM %s OFFSET %d rows fetch first %d rows only ", entity.getTableName(), offset, numberOfResults);
+        }
+        System.out.println(stmt);
         PreparedStatement call = con.prepareStatement(stmt);
         int i = 1;
         for (Object o : vals)

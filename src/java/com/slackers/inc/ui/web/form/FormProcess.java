@@ -45,6 +45,7 @@ public class FormProcess extends HttpServlet {
             
             appControl.loadApplication(appId);
             appControl.writeApplicationToCookies(response);
+            appControl.writeLabelToCookies(response);
             WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "process-label.html");
             String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");

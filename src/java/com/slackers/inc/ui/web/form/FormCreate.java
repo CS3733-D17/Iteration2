@@ -71,7 +71,7 @@ public class FormCreate extends HttpServlet {
             LabelApplicationController appControl = new LabelApplicationController();
             appControl.createApplicationFromRequest(this.getServletContext(), request);
             appControl.writeApplicationToCookies(response);
-            
+            appControl.writeLabelToCookies(response);
             String error = appControl.validateApplication();
             if (error==null)
             {

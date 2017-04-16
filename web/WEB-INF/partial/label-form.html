@@ -1,7 +1,15 @@
 <div style="float:right; display:none;"><span id="appStatus" style="color:red; font-size: 20px;"></span></div>
+<div style="float:right;" align="right">
+    <label for="TBB_ID">TBB ID:</label>
+    <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_ID" type="text" size="10" disabled><br>
+    <label for="TBB_CT">CT:</label>
+    <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_CT" type="text" size="4" disabled><br>
+    <label for="TBB_OR">OR:</label>
+    <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_OR" type="text" size="4" disabled><br>
+</div>
 <div class="alert alert-danger" id = "errOut" style="display: none;" align = "center">
 </div>
-<h3>General Information</h3><br>
+<br><h3>General Information</h3><br><br>
 <div class="row">
     <div class="col-sm-6">
 
@@ -54,10 +62,10 @@
     <div class="col-sm-6">
         <label>Product Source</label><br>
         <div class="btn-group" data-toggle="buttons">
-            <label for="DOMESTIC" class="btn btn-default active">
+            <label id = "DOMESTIC-lbl" for="DOMESTIC" class="btn btn-default">
                 <input name="source" id = "DOMESTIC" value="DOMESTIC" type="radio">Domestic
             </label>
-            <label for="IMPORTED" class="btn btn-default">
+            <label id = "IMPORTED-lbl" for="IMPORTED" class="btn btn-default">
                 <input name="source" id = "IMPORTED" value="IMPORTED" type="radio">Imported
             </label>
         </div><br><br>

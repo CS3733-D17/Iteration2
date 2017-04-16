@@ -19,7 +19,8 @@ public class ShutdownCleanup implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        
+        /*System.out.println("-----PERFORMING DB SHUTDOWN------");
+        DerbyConnection.getInstance().shutdownDb();*/
     }
 
     @Override

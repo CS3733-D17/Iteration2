@@ -1,6 +1,7 @@
 package com.slackers.inc.Controllers;
 
 import com.slackers.inc.database.DerbyConnection;
+import com.slackers.inc.database.entities.Admin;
 import com.slackers.inc.database.entities.ColaUser;
 import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
@@ -242,10 +243,12 @@ public class AccountController {
                 response.addCookie(uPass);
                 response.addCookie(prevName);
             }     
+            System.out.println(usr);
             return usr!=null;
         }
         else
         {
+            System.out.println("U/P was null");
             return false;
         }
     }
@@ -265,6 +268,10 @@ public class AccountController {
             else if (this.user.getUserType() == UserType.US_EMPLOYEE)
             {
                 this.user = new UsEmployee(this.user.getFirstName(), this.user.getLastName(), this.user.getEmail(), this.user.getPassword());
+            }
+            else if (this.user.getUserType() == UserType.ADMIN)
+            {
+                this.user = new Admin(this.user.getFirstName(), this.user.getLastName(), this.user.getEmail(), this.user.getPassword());
             }
             else
             {
@@ -291,6 +298,8 @@ public class AccountController {
             type = UserType.MANUFACTURER;
         if (uType != null && uType.equals("employee"))
             type = UserType.US_EMPLOYEE;
+        if (uType != null && uType.equals("admin"))
+            type = UserType.ADMIN;
         
         if (firstName == null || lastName == null || email == null || password == null || type == null)
         {
@@ -300,6 +309,7 @@ public class AccountController {
         try
         {
             boolean res = this.createAccount(firstName, lastName, email, this.getPasswordEnc(password), type);
+            System.out.println(res);
             return this.loginUser(request, response);
         }
         catch (Exception e)
@@ -322,6 +332,10 @@ public class AccountController {
         else if (type == UserType.US_EMPLOYEE)
         {
             this.user = new UsEmployee(firstName, lastName, email, password);
+        }
+        else if (type == UserType.ADMIN)
+        {
+            this.user = new Admin(firstName, lastName, email, password);
         }
         else
         {

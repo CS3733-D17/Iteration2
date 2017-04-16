@@ -65,16 +65,16 @@ public class LabelApplication implements IEntity{
     private String applicant;
     private String reviewer;
     private String submitter;
+    private String TBB_CT;
+    private String TBB_OR;
     private Label label;
     private List<LabelComment> comments;
-    private ApplicationApproval applicationApproval;
     
     public LabelApplication(long applicationId)
     {
         this.applicant = "";
         this.representativeId = "";
         this.applicantAddress = new Address();
-        this.applicationApproval = null;
         this.applicationDate = new java.sql.Date(new java.util.Date().getTime());
         this.applicationId = applicationId;
         this.comments = new LinkedList<>();
@@ -84,6 +84,8 @@ public class LabelApplication implements IEntity{
         this.mailingAddress = new Address();
         this.phoneNumber = "";        
         this.reviewer = "";
+        this.TBB_CT = "";        
+        this.TBB_OR = "";
         this.status = ApplicationStatus.UNKNOWN;
         this.submitter = "";
     }
@@ -109,6 +111,8 @@ public class LabelApplication implements IEntity{
         values.put("emailAddress", this.emailAddress);
         values.put("applicationDate", this.applicationDate);
         values.put("representativeId", this.representativeId);
+        values.put("TBB_CT", this.TBB_CT);
+        values.put("TBB_OR", this.TBB_OR);
         values.put("status", this.status); 
         if (this.applicant!=null)
             values.put("applicant", this.applicant);
@@ -119,8 +123,6 @@ public class LabelApplication implements IEntity{
         if (this.label!=null)
             values.put("label", this.label.getPrimaryKeyValue());
         values.put("comments", LabelComment.commentListToString(this.comments));
-        if (this.applicationApproval!=null)
-            values.put("applicationApproval", (long)this.applicationApproval.getPrimaryKeyValue()); 
         values.put("applicationTypes", this.getAppTypes());
         return values;
     }
@@ -135,6 +137,8 @@ public class LabelApplication implements IEntity{
         values.put("phoneNumber", this.phoneNumber);        
         values.put("emailAddress", this.emailAddress);
         values.put("applicationDate", this.applicationDate);
+        values.put("TBB_CT", this.TBB_CT);
+        values.put("TBB_OR", this.TBB_OR);
         values.put("status", this.status);        
         if (this.applicant!=null)
             values.put("applicant", this.applicant);
@@ -144,9 +148,7 @@ public class LabelApplication implements IEntity{
             values.put("submitter", this.submitter);  
         if (this.label!=null)
             values.put("label", this.label.getPrimaryKeyValue());
-        values.put("comments", LabelComment.commentListToString(this.comments));
-        if (this.applicationApproval!=null)
-            values.put("applicationApproval", (long)this.applicationApproval.getPrimaryKeyValue());    
+        values.put("comments", LabelComment.commentListToString(this.comments)); 
         values.put("applicationTypes", this.getAppTypes());
         return values;
     }
@@ -176,6 +178,14 @@ public class LabelApplication implements IEntity{
         if (values.containsKey("emailAddress"))
         {
             this.emailAddress = (String) values.get("emailAddress");
+        }
+        if (values.containsKey("TBB_CT"))
+        {
+            this.TBB_CT = (String) values.get("TBB_CT");
+        }
+        if (values.containsKey("TBB_OR"))
+        {
+            this.TBB_OR = (String) values.get("TBB_OR");
         }
         if (values.containsKey("applicationDate"))
         {
@@ -230,28 +240,6 @@ public class LabelApplication implements IEntity{
         {
             this.comments = LabelComment.commentListFromString((String) values.get("comments"));
         }
-        if (values.containsKey("applicationApproval"))
-        {
-            if (this.applicationApproval != null && (Long)values.get("applicationApproval")!=0)
-            {                
-                this.applicationApproval.setPrimaryKeyValue((Serializable)values.get("applicationApproval"));
-                try {
-                    DerbyConnection.getInstance().getEntity(this.applicationApproval, this.applicationApproval.getPrimaryKeyName());
-                } catch (SQLException ex) {
-                    Logger.getLogger(LabelApplication.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            else if (this.applicationApproval == null && (Long)values.get("applicationApproval")!=0)
-            {
-                this.applicationApproval = new ApplicationApproval(new UsEmployee(), new Date(new java.util.Date().getTime()));
-                this.applicationApproval.setPrimaryKeyValue((Long)values.get("applicationApproval"));
-                try {
-                    DerbyConnection.getInstance().getEntity(this.applicationApproval, this.applicationApproval.getPrimaryKeyName());
-                } catch (SQLException ex) {
-                    Logger.getLogger(LabelApplication.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
     }
 
     @Override
@@ -270,8 +258,9 @@ public class LabelApplication implements IEntity{
         pairs.put("submitter", String.class);        
         pairs.put("label", Long.class);
         pairs.put("comments", String.class);
-        pairs.put("applicationTypes", String.class);        
-        pairs.put("applicationApproval", Long.class);        
+        pairs.put("applicationTypes", String.class);    
+        pairs.put("TBB_CT", String.class); 
+        pairs.put("TBB_OR", String.class);       
         pairs.put("allowedRevisions", String.class);
         return pairs;
     }
@@ -284,6 +273,8 @@ public class LabelApplication implements IEntity{
         cols.add("representativeId varchar(128)");
         cols.add("mailingAddress varchar(2048)");
         cols.add("phoneNumber varchar(64)");
+        cols.add("TBB_CT varchar(32)");
+        cols.add("TBB_OR varchar(32)");
         cols.add("emailAddress varchar(128)");
         cols.add("applicationDate date");
         cols.add("status varchar(256)");
@@ -293,7 +284,6 @@ public class LabelApplication implements IEntity{
         cols.add("applicationTypes varchar(256)");        
         cols.add("label varchar(4096)");
         cols.add("comments long varchar");
-        cols.add("applicationApproval bigint");
         cols.add("allowedRevisions long varchar");
         return cols;
     }
@@ -377,6 +367,22 @@ public class LabelApplication implements IEntity{
         this.status = status;
     }
 
+    public String getTBB_CT() {
+        return TBB_CT;
+    }
+
+    public void setTBB_CT(String TBB_CT) {
+        this.TBB_CT = TBB_CT;
+    }
+
+    public String getTBB_OR() {
+        return TBB_OR;
+    }
+
+    public void setTBB_OR(String TBB_OR) {
+        this.TBB_OR = TBB_OR;
+    }
+    
     public Manufacturer getApplicant() {
         Manufacturer m = new Manufacturer();
         m.setPrimaryKeyValue(this.applicant);
@@ -436,22 +442,6 @@ public class LabelApplication implements IEntity{
 
     public void setComments(List<LabelComment> comments) {
         this.comments = comments;
-    }
-
-    public ApplicationApproval getApplicationApproval() {
-        return applicationApproval;
-    }
-
-    public void setApplicationApproval(ApplicationApproval applicationApproval) {
-        this.applicationApproval = applicationApproval;
-        this.label.setApproval(this.applicationApproval);
-        try {
-            DerbyConnection.getInstance().writeEntity(this.label, this.label.getPrimaryKeyName());
-        } catch (SQLException ex) {
-            Logger.getLogger(LabelApplication.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (this.applicationApproval!=null)
-            this.applicationApproval.setApplication(this);
     }
 
     public void setLabelType(BeverageType type)

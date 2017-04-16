@@ -50,7 +50,6 @@ function clickBox(id)
 
 function __fillForm_SUB()
 {
-    handleRevisionDisplays();
     if (document.getElementById("hideUpload")!=null)
     {
         if (document.getElementById("imgSelector")!=null)
@@ -58,12 +57,12 @@ function __fillForm_SUB()
             document.getElementById("imgSelector").style.display = "none";
         }
     }
-    var out = JSON.parse(atob(getCookie("SSINCAP_GEN")));
     unclickBox("BEER");
     unclickBox("WINE");
     unclickBox("DISTILLED");
     unclickBox("IMPORTED");
     unclickBox("DOMESTIC");
+    var out = JSON.parse(atob(getCookie("SSINCAP_GEN")));
     Object.keys(out).forEach(function(k){
         if (k=="source" || k=="type")
         {
@@ -83,6 +82,7 @@ function __fillForm_SUB()
         }
         else
         {
+            console.log(k + " -> "+out[k]);
             if (document.getElementById(k)!=null)
             {
                 document.getElementById(k).value = out[k];
@@ -93,6 +93,11 @@ function __fillForm_SUB()
             }
         }
     });
+    if (document.getElementById("appSubmitNew")!=null)
+    {
+        if (document.getElementById("TBB_ID")!=null)
+            document.getElementById("TBB_ID").value = "xxxxxxxxxxxx";
+    }
     out = JSON.parse(atob(getCookie("SSINCAP_DATA")));
     Object.keys(out).forEach(function(k){
         if (k=="source" || k=="type")
@@ -134,6 +139,7 @@ function __fillForm_SUB()
             }
         }
     });
+    handleRevisionDisplays();
 }
 
 function fillForm()
