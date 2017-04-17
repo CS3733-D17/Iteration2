@@ -10,14 +10,13 @@ import com.slackers.inc.Controllers.Filters.Filter;
 import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.LabelApplication;
+import com.slackers.inc.database.entities.LabelApplication.ApplicationStatus;
 import com.slackers.inc.ui.web.form.LabelImageGenerator;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jason
  */
-@WebServlet(name = "ApplicationsPageServlet", urlPatterns = {"/glblApps"})
+@WebServlet(name = "AdminApplicationsPageServlet", urlPatterns = {"/admin/glblApps"})
 public class AdminApplicationViewList extends HttpServlet {
 
     IPageFrame pg;
@@ -57,7 +56,7 @@ public class AdminApplicationViewList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        System.out.println("LIST");
         try (PrintWriter out = response.getWriter()) {
             pg = WebComponentProvider.getCorrectFrame(request, "Application Page");
             String applications = WebComponentProvider.loadPartialPage(this, "adminList-partial.html");
@@ -66,6 +65,7 @@ public class AdminApplicationViewList extends HttpServlet {
             {            
                 if (request.getParameter("subset").equalsIgnoreCase("waiting"))
                 {
+                    System.out.println("WAITING");
                     filters.add(new ExactFilter(){
                         @Override
                         public Object getValue() {
@@ -80,10 +80,41 @@ public class AdminApplicationViewList extends HttpServlet {
                 }
                 if (request.getParameter("subset").equalsIgnoreCase("under"))
                 {
+                    System.out.println("UNDER REVIEW");
                     filters.add(new ExactFilter(){
                         @Override
                         public Object getValue() {
                             return LabelApplication.ApplicationStatus.UNDER_REVIEW;
+                        }
+
+                        @Override
+                        public String getColumn() {
+                            return "status";
+                        }
+                    });
+                }
+                if (request.getParameter("subset").equalsIgnoreCase("accepted"))
+                {
+                    System.out.println("UNDER REVIEW");
+                    filters.add(new ExactFilter(){
+                        @Override
+                        public Object getValue() {
+                            return LabelApplication.ApplicationStatus.APPROVED;
+                        }
+
+                        @Override
+                        public String getColumn() {
+                            return "status";
+                        }
+                    });
+                }
+                if (request.getParameter("subset").equalsIgnoreCase("rejected"))
+                {
+                    System.out.println("UNDER REVIEW");
+                    filters.add(new ExactFilter(){
+                        @Override
+                        public Object getValue() {
+                            return LabelApplication.ApplicationStatus.REJECTED;
                         }
 
                         @Override
@@ -133,8 +164,14 @@ public class AdminApplicationViewList extends HttpServlet {
             }*/
             
             applications = applications.replace("##Applications", b.toString());
-            applications = applications.replace("##NEXT", "/SuperSlackers/glblApps?subset="+request.getParameter("subset")+"&offset="+(offset+10));
-            applications = applications.replace("##PREV", "/SuperSlackers/glblApps?subset="+request.getParameter("subset")+"&offset="+(offset-10));
+            if (apps.isEmpty())
+                applications = applications.replace("##NEXT", "/SuperSlackers/admin/glblApps?subset="+request.getParameter("subset")+"&offset="+(offset));
+            else
+                applications = applications.replace("##NEXT", "/SuperSlackers/admin/glblApps?subset="+request.getParameter("subset")+"&offset="+(offset+10));
+            if (offset<10)
+                applications = applications.replace("##PREV", "/SuperSlackers/admin/glblApps?subset="+request.getParameter("subset")+"&offset="+(0));
+            else
+                applications = applications.replace("##PREV", "/SuperSlackers/admin/glblApps?subset="+request.getParameter("subset")+"&offset="+(offset-10));
             pg.setBody(applications);
             out.println(WebComponentProvider.buildPage(pg, request));
             
@@ -177,21 +214,23 @@ public class AdminApplicationViewList extends HttpServlet {
 "                           <div class=\"panel-heading\">\n" +
 "                               <div class=\"row\">\n" +
 "                                   <div class=\"col-md-10\">\n" +
-"                                       <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + app.getLabel().getBrandName() + "</a>\n" +
+"                                       <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + app.getLabel().getBrandName() +
+                                    (app.getLabel().getFancifulName()!=null&&app.getLabel().getFancifulName().length()>1 ? (" ("+app.getLabel().getFancifulName()+")") : "")
+                                    + "</a>\n" +
 "                                   </div>\n" +
-"                                   <div style=\"float:right;\">\n" +
-"                                       <a href=\"/SuperSlackers/form?action=edit&id="+Long.toString(app.getApplicationId())+"\"class='btn btn-primary btn-block'>Edit</a>\n" +
+"                                   <div class=\"col-md-2\">\n" +
+"                                       <a href=\"/SuperSlackers/form?action=view&id="+Long.toString(app.getApplicationId())+"\"class='btn btn-primary btn-block'>View</a>\n" +
 "                                   </div>\n" +
 "                               </div>\n" +
 "                           </div>\n" +
-"                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
+"                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse\">\n" +
 "                           <div class=\"panel-body\">"+this.renderData(app)+"</div>\n" +
 "                           </div>\n" +
 "                       </div>");
         return b.toString();
     }
 
-    public String renderData(LabelApplication app) {
+    private String renderData(LabelApplication app) {
         Label label = app.getLabel();
         String lbl = WebComponentProvider.loadPartialPage(this, "admin-result-template.html");
 
@@ -202,12 +241,32 @@ public class AdminApplicationViewList extends HttpServlet {
         if (label.getApproval() != null && label.isIsAccepted()) {
             lbl = lbl.replace("##APR_DATE", label.getApproval().getApprovalDate().toString());
             lbl = lbl.replace("##EXP_DATE", label.getApproval().getExperationDate().toString());
+            lbl = lbl.replace("##APR_AGENT", label.getApproval().getAgent().getFirstName()+" "+label.getApproval().getAgent().getLastName());
         } else {
-            lbl = lbl.replace("##APR_DATE", "Not approved yet");
-            lbl = lbl.replace("##EXP_DATE", "Not approved yet");
+            if (app.getStatus()==ApplicationStatus.REJECTED)
+            {
+                lbl = lbl.replace("##APR_DATE", "Rejected");
+                lbl = lbl.replace("##EXP_DATE", "Rejected");
+                lbl = lbl.replace("##APR_AGENT", "Rejected");
+            }
+            else
+            {
+                lbl = lbl.replace("##APR_DATE", "Not approved yet");
+                lbl = lbl.replace("##EXP_DATE", "Not approved yet");
+                lbl = lbl.replace("##APR_AGENT", "Not approved yet");
+            }
         }
         lbl = lbl.replace("##IMGPATH", LabelImageGenerator.getAccessStringForApplication(label));
-        lbl = lbl.replace("##AGENT", app.getReviewer().getEmail());
+        
+        if (app.getReviewer().getEmail()==null || app.getReviewer().getEmail().equalsIgnoreCase("unknown"))
+        {
+            lbl = lbl.replace("##AGENT", "Not yet assigned");
+        }
+        else
+        {
+            lbl = lbl.replace("##AGENT", app.getReviewer().getEmail());
+        }
+        lbl = lbl.replace("##STATUS", app.getStatus().name());
         return lbl;
     }
 }

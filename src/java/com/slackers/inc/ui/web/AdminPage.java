@@ -73,11 +73,13 @@ public class AdminPage implements IPageFrame{
 "    </div><div class=\"collapse navbar-collapse\" id=\"colaNav\">\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"search\">Search</a></li>\n" +
-"      <li><a href=\"/SuperSlackers/form?action=create\">Next Application</a></li>\n" +
 "      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"\">Applications <span class=\"caret\"></span></a>\n" +
 "        <ul class=\"dropdown-menu\">\n" +
-"          <li><a href=\"glblApps?subset=waiting\">Waiting to be reviewed</a></li>\n" +
-"          <li><a href=\"glblApps?subset=under\">Under review</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/admin/glblApps?subset=all\">All</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/admin/glblApps?subset=waiting\">Waiting to be reviewed</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/admin/glblApps?subset=under\">Under review</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/admin/glblApps?subset=accepted\">Accepted</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/admin/glblApps?subset=rejected\">Rejected</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +
 //"      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
