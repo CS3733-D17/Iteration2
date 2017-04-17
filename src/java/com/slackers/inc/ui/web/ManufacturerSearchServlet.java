@@ -97,11 +97,19 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         search.addFilter(brand);
                     }
                     break;
-                case "alcoholContent":
-                    if (!(request.getParameter("alcoholContent").equals(""))) {
-                        AlcoholFilter alcoholContent = new AlcoholFilter(Double.parseDouble(request.getParameter("alcoholContent")));
-                        System.out.println("Give me alcohol " + Double.parseDouble(request.getParameter("alcoholContent")));
-                        search.addFilter(alcoholContent);
+                case "alcohol":
+                    if(request.getParameter("alohol").equals("between")){
+                        if (!(request.getParameter("alcohol_low").equals("")) && !(request.getParameter("alcohol_hi").equals(""))) {
+                            double lo = Double.parseDouble(request.getParameter("alcohol_low"));
+                            double hi = Double.parseDouble(request.getParameter("alcohol_hi"));
+                            search.addFilter(new AlcoholRange(lo, hi));
+                        }
+                    } else {
+                        if (!(request.getParameter("alcohol_low").equals(""))) {
+                            AlcoholFilter alcoholContent = new AlcoholFilter(Double.parseDouble(request.getParameter("alcohol_low")));
+                            System.out.println("Give me alcohol " + Double.parseDouble(request.getParameter("alcohol_low")));
+                            search.addFilter(alcoholContent);
+                        }
                     }
                     break;
 //                case "type":
@@ -132,7 +140,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 case "source":
                     if (!(request.getParameter("source").equals("na"))) {
                         ExactFilter_old source;
-                        
+
                         switch (request.getParameter("source")) {
                             case "Domestic":
                                 source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC);
@@ -149,7 +157,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                     break;
                 case "type":
                     if (!(request.getParameter("type").equals("ALL"))) {
-                        ExactFilter_old source;                        
+                        ExactFilter_old source;
                         switch (request.getParameter("type")) {
                             case "WINE":
                                 label = new WineLabel();
@@ -169,14 +177,30 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         }
                     }
                     break;
-                case "phLevel":
-                    if (!(request.getParameter("alcoholContent").equals(""))) {
-                        search.addFilter(new PHFilter(Double.parseDouble(request.getParameter("phLevel"))));
+                case "ph":
+                    if(request.getParameter("ph").equals("between")){
+                        if (!(request.getParameter("ph_low").equals("")) && !(request.getParameter("ph_hi").equals(""))) {
+                            double lo = Double.parseDouble(request.getParameter("ph_low"));
+                            double hi = Double.parseDouble(request.getParameter("ph_hi"));
+                            search.addFilter(new PHRange(lo, hi));
+                        }
+                    } else {
+                        if (!(request.getParameter("ph_low").equals(""))) {
+                            search.addFilter(new PHFilter(Double.parseDouble(request.getParameter("ph_low"))));
+                        }
                     }
                     break;
-                case "vintageYear":
-                    if (!(request.getParameter("vintageYear").equals(""))) {
-                        search.addFilter(new VintageFilter(Integer.parseInt(request.getParameter("vintageYear"))));
+                case "vintage":
+                    if(request.getParameter("vintage").equals("between")){
+                        if (!(request.getParameter("vintage_low").equals("")) && !(request.getParameter("vintage_hi").equals(""))) {
+                            int lo = Integer.parseInt(request.getParameter("vintage_low"));
+                            int hi = Integer.parseInt(request.getParameter("vintage_hi"));
+                            search.addFilter(new VintageRange(lo, hi));
+                        }
+                    } else {
+                        if (!(request.getParameter("vintage_low").equals(""))) {
+                            search.addFilter(new VintageFilter(Integer.parseInt(request.getParameter("vintage_low"))));
+                        }
                     }
                     break;
 
@@ -202,7 +226,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
         }
 
         if (request.getParameter("action") != null && request.getParameter("action").equals("download")) {
-            IDelimiterFormat format = new CsvFormat(); 
+            IDelimiterFormat format = new CsvFormat();
             if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("tsv"))
             {
                 format = new TsvFormat();
@@ -211,11 +235,11 @@ public class ManufacturerSearchServlet extends HttpServlet {
             {
                 format = new CharFormat(request.getParameter("delimiter"));
             }
-            
+
             response.setContentType(format.getMimeType());
             try (OutputStream outStream = response.getOutputStream()) {
                 DelimitedWriter out = new DelimitedWriter(outStream,format);
-        
+
                 out.init(com.slackers.inc.database.entities.Label.class);
                 out.initSubtype(com.slackers.inc.database.entities.BeerLabel.class);
                 out.initSubtype(com.slackers.inc.database.entities.WineLabel.class);
