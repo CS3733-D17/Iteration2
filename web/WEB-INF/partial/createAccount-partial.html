@@ -1,3 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript">
+            function validateForm() {
+                var firstName = document.forms["createAccount"]["fName"].value;
+                var lastName = document.forms["createAccount"]["lName"].value;
+                if (firstName == "") {
+                    if (lastName == "") {
+                        alert("First Name Required\nLast Name Required");
+                    }else {
+                        alert("First Name Required");
+                    }
+                }else {
+                    if (lastName == "") {
+                        alert("Last Name Required");
+                    }
+                }
+            }
+        </script>
+    </head>
+</html>
 <div class="container">
     <div class="row">
         <div class="col-md-3 hidden-sm">
@@ -10,7 +32,7 @@
                     <br>
                 </div>
                 <div>
-                    <form action="signup" method="post">
+                    <form name="createAccount" action="signup" method="post">
                         <div class="row">
                             <div class="col-md-1">
                             </div>
@@ -56,7 +78,7 @@
                                     <label class="radio-inline"><input type="radio" name="uType" value="manufacturer" checked>Manufacturer</label>
                                     <label class="radio-inline"><input type="radio" name="uType" value="employee">Employee</label>
                                 </div>
-                                <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
+                                <button onclick="validateForm()" type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
                             </div>
                             <div class="col-md-1">
                             </div>
