@@ -5,19 +5,21 @@
             function validateForm() {
                 var firstName = document.forms["createAccount"]["fName"].value;
                 var lastName = document.forms["createAccount"]["lName"].value;
-                if (firstName == "") {
-                    if (lastName == "") {
-                        alert("First Name Required\nLast Name Required");
-                    }else {
-                        alert("First Name Required");
-                    }
-                }else {
-                    if (lastName == "") {
-                        alert("Last Name Required");
-                    }
+                var pass1 = document.forms["createAccount"]["pwd"].value;
+                var pass2 = document.forms["createAccount"]["pwd2"].value;
+                if (firstName == "") {document.getElementById("fName").style="background-color: #ff8888";}
+                else {document.getElementById("fName").style="background-color: #ffffff";}
+                if (lastName == "") {document.getElementById("lName").style="background-color: #ff8888";}
+                else {document.getElementById("lName").style="background-color: #ffffff";}
+                if (pass1 != pass2) {
+                    document.getElement("pwd2").style="background-color: #ff8888";
                 }
             }
         </script>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
 </html>
 <div class="container">
@@ -36,7 +38,7 @@
                         <div class="row">
                             <div class="col-md-1">
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-5" id="FirstName">
                                 <label for="fName">First Name:</label>
                                 <input name="fName" type="text" class="form-control" id="fName" placeholder="First name" required>
                             </div>
@@ -65,6 +67,17 @@
                             <div class="col-md-10">
                                 <label for="pwd">Password:</label>
                                 <input name="password" type="password" class="form-control" id="pwd" placeholder="Enter password" required>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <label for="pwd">Re-type Password:</label>
+                                <input name="password2" type="password" class="form-control" id="pwd2" placeholder="Re-Enter password" required>
                             </div>
                             <div class="col-md-1">
                             </div>
