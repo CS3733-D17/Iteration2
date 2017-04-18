@@ -86,8 +86,8 @@ public class FormImport extends HttpServlet {
             appControl.writeApplicationToCookies(response);
             appControl.writeLabelToCookies(response);
             
-            String error = appControl.validateApplication();
-            WebComponentProvider.setSuccessMessage(response, error);
+            //String error = appControl.validateApplication();
+            //WebComponentProvider.setSuccessMessage(response, error);
             
             
             pg.setBody(form.replace("##FORM_CONTENT", formTemplate));
@@ -139,6 +139,8 @@ public class FormImport extends HttpServlet {
                     
                 }
                 catch(Exception e){
+                    WebComponentProvider.setSuccessMessage(response, "Unknown Error");
+                    e.printStackTrace();
                     response.sendRedirect("/SuperSlackers/form/import?existingId="+importId);
                 }
             }

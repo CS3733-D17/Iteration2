@@ -106,16 +106,16 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         if (!(request.getParameter("alcohol_low").equals("")) && !(request.getParameter("alcohol_hi").equals(""))) {
                             double lo = Double.parseDouble(request.getParameter("alcohol_low"));
                             double hi = Double.parseDouble(request.getParameter("alcohol_hi"));
-                            System.out.println("Double");
+                            
                             filter = new AlcoholRange(lo,hi);
                             search.addFilter(filter);
                         }
                     } else {
                         if (!(request.getParameter("alcohol_low").equals(""))) {
                             filter = new AlcoholFilter(Double.parseDouble(request.getParameter("alcohol_low")));
-                            System.out.println("Give me alcohol " + Double.parseDouble(request.getParameter("alcohol_low")));
+                            
                             search.addFilter(filter);
-                            System.out.println("Single");
+                            
 
                         }
                     }
@@ -128,12 +128,12 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         switch (request.getParameter("source")) {
                             case "Domestic":
                                 source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC.name());
-                                System.out.println("dom");
+                                
                                 search.addFilter(source);
                                 break;
                             case "Imported":
                                 source = new ProductSourceFilter(Label.BeverageSource.IMPORTED.name());
-                                System.out.println("imp");
+                                
                                 search.addFilter(source);
                                 break;
                         }
@@ -151,7 +151,6 @@ public class ManufacturerSearchServlet extends HttpServlet {
                                 break;
                             case "BEER":
                                 label = new BeerLabel();
-                                System.out.println("Type");
                                 source = new TypeFilter(Label.BeverageType.BEER.name());
                                 search.addFilter(source);
                                 break;
@@ -200,10 +199,6 @@ public class ManufacturerSearchServlet extends HttpServlet {
         List<Label> drinkList;
         try {
             drinkList = search.runSearch(label);
-            for (Label l : drinkList)
-            {
-                System.out.println(l);
-            }
         } catch (SQLException ex) {
             ex.printStackTrace();
             response.sendRedirect("/SuperSlackers/search");

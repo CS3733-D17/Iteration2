@@ -6,6 +6,7 @@
 package com.slackers.inc.ui.web;
 
 import com.slackers.inc.Controllers.AccountController;
+import com.slackers.inc.database.entities.Admin;
 import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
@@ -71,14 +72,20 @@ public class ManufacturerSettingServlet extends HttpServlet {
                 settings = settings.replace("##userLastName", manufacturer.getLastName());
 
             }
-            else{
+            else if(type == User.UserType.US_EMPLOYEE){
                 settings = settings.replace("##Manufacturer", "");
                 UsEmployee employee = (UsEmployee) (pg.getUser());
                 settings = settings.replace("##userFirstName", employee.getFirstName());
                 settings = settings.replace("##userEmail", employee.getEmail());
                 settings = settings.replace("##userLastName", employee.getLastName());
             }
-            
+            else if(type == User.UserType.ADMIN){
+                settings = settings.replace("##Manufacturer", "");
+                Admin admn = (Admin) (pg.getUser());
+                settings = settings.replace("##userFirstName", admn.getFirstName());
+                settings = settings.replace("##userEmail", admn.getEmail());
+                settings = settings.replace("##userLastName", admn.getLastName());
+            }
             pg.setBody(settings);
             out.println(WebComponentProvider.buildPage(pg, request));
             

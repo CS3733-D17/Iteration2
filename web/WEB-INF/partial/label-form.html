@@ -1,6 +1,6 @@
 <div style="float:right; display:none;"><span id="appStatus" style="color:red; font-size: 20px;"></span></div>
 <div style="float:right;" align="right">
-    <label for="TBB_ID">TBB ID:</label>
+    <label for="TBB_ID">TTB ID:</label>
     <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_ID" type="text" size="10" disabled><br>
     <label for="TBB_CT">CT:</label>
     <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_CT" type="text" size="4" disabled><br>
@@ -84,6 +84,25 @@
     </div>
 
 </div>
+<div class="funkyradio">
+    <div class="funkyradio-success">
+        <input class="tag-new-label" type="checkbox" name="NEW" id="NEW"/>
+        <label for="NEW">Certificate of Label Application</label>
+    </div>
+    <div class="funkyradio-success">
+        <input class="tag-new-label" type="checkbox" name="EXEMPT" id="EXEMPT"/>
+        <label for="EXEMPT">Certificate of Label Application Exception in <input name="state" id="state" type="text" size="2" maxlength="2" placeholder="State" style="font-family: 'Ubuntu','Tahoma','Helvetica Neue','Helvetica','Arial','sans-serif'; font-size: 14px; line-height: 1.42857143;"></label>
+    </div>
+    <div class="funkyradio-success">
+        <input class="tag-new-label" type="checkbox" name="DISTINCT" id="DISTINCT"/>
+        <label for="DISTINCT">Distinctive bottle approval.   Bottle capacity before closure: <input placeholder="Capacity" id="capacity" name="capacity" type="text" size="6" maxlength="6" style="font-family: 'Ubuntu','Tahoma','Helvetica Neue','Helvetica','Arial','sans-serif'; font-size: 14px; line-height: 1.42857143;"></label>
+    </div>
+    <div class="funkyradio-success">
+        <input class="tag-new-label" type="checkbox" name="RESUBMIT" id="RESUBMIT"/>
+        <label for="RESUBMIT">Resubmit.  TTB id: <input placeholder="TTB Id" id="tbbid" name="tbbid" type="text" style="font-family: 'Ubuntu','Tahoma','Helvetica Neue','Helvetica','Arial','sans-serif'; font-size: 14px; line-height: 1.42857143;"></label>
+    </div>
+</div>
+<!--
 <div class="checkbox">
     <label><input type="checkbox" id = "NEW" name="NEW" checked>Certificate of Label Application</label>
 </div>
@@ -95,7 +114,7 @@
 </div>
 <div class="checkbox">
     <label><input type="checkbox" id = "RESUBMIT" name="RESUBMIT">Resubmit.  TBB id: <input id="tbbid" name="tbbid" type="text"></label>
-</div>
+</div>-->
 <div class="form-group">
     <label>Brand Name</label>
     <input id="brandName" name="brandName" class="form-control" placeholder="Brand Name" type="text" required>

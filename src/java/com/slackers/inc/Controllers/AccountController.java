@@ -207,8 +207,13 @@ public class AccountController {
         try {
             db.getEntity(user, "email");
         } catch (SQLException e) {
-            System.out.println("Trouble accessing database for login verification");
-            throw e;
+            System.out.println("Trouble accessing database for login verification. Restarting db...");
+            DerbyConnection.getInstance().reset();
+            try
+            {
+                db.getEntity(user, "email");
+            }
+            catch (Exception ex){ throw ex;}
         }
         return password.equals(user.getPassword());
     }

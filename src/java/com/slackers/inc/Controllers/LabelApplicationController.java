@@ -20,6 +20,7 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.WineLabel;
+import com.slackers.inc.ui.web.form.LabelImageGenerator;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -149,6 +150,7 @@ public class LabelApplicationController {
         try {
 
             label.setProductSource(Label.BeverageSource.valueOf(request.getParameter("source")));
+            System.out.println("AL:"+request.getParameter("alcoholContent"));
             label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent").replace("%", "")));
             BeverageType type = BeverageType.valueOf(request.getParameter("type"));
             label.setProductType(type);
@@ -171,6 +173,7 @@ public class LabelApplicationController {
                 newLabel.setWineAppelation(request.getParameter("wineAppelation"));
                 label = newLabel;
             }
+            System.out.println(label.getAlcoholContent());
             Part img = request.getPart("labelImageUpload");
             if (img != null) {
                 label.setLabelImageType(context.getMimeType(img.getSubmittedFileName()));
@@ -316,6 +319,7 @@ public class LabelApplicationController {
 
         if (revTypes.contains("alcohol")) {
             try {
+                
                 label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent-new")));
                 revisions.add("Changed alcohol content");
             } catch (Exception e) {
@@ -397,13 +401,14 @@ public class LabelApplicationController {
         }
         User usr = AccountController.getPageUser(request);
         if (usr != null) {
-            this.application.getComments().add(new LabelComment(usr, this.buildChangeComment(this.application.getApplicationId(), prevId, revisions)));
+            this.application.getComments().add(new LabelComment(usr, this.buildChangeComment(this.application.getApplicationId(), label.getLabelId(), prevId, revisions)));
         }
 
         return label;
     }
 
     public String validateApplication() {
+        System.out.println("INVAL"+this.application.getLabel().getAlcoholContent());
         if (this.application.getEmailAddress() == null || this.application.getEmailAddress().length() < 3) {
             return "Invalid email address";
         }
@@ -444,6 +449,7 @@ public class LabelApplicationController {
     }
 
     public String validateLabel() {
+        System.out.println("VALLBL:"+this.application.getLabel().getAlcoholContent());
         Label l = this.application.getLabel();
         if (l == null) {
             return "Invalid label information";
@@ -467,6 +473,7 @@ public class LabelApplicationController {
             return "Invalid beverage type";
         }
         if (l.getAlcoholContent() < 0 || l.getAlcoholContent() > 100) {
+            System.out.println("ACL"+l.getAlcoholContent());
             return "Invalid alchohol content";
         }
         if (l.getFormula() == null || l.getFormula().length() < 2) {
@@ -476,7 +483,7 @@ public class LabelApplicationController {
             if (((WineLabel) l).getPhLevel() < 0 || ((WineLabel) l).getPhLevel() > 14) {
                 return "Invalid pH level";
             }
-            if (((WineLabel) l).getGrapeVarietal() == null || ((WineLabel) l).getGrapeVarietal().length() < 5) {
+            if (((WineLabel) l).getGrapeVarietal() == null || ((WineLabel) l).getGrapeVarietal().length() < 2) {
                 return "Grape varietal is invalid";
             }
         }
@@ -627,7 +634,7 @@ public class LabelApplicationController {
         return b.toString();
     }
 
-    public String buildChangeComment(long applicationId, long prevLabelId, List<String> revisions) {
+    public String buildChangeComment(long applicationId, long newLabelId, long prevLabelId, List<String> revisions) {
 
         StringBuilder b = new StringBuilder();
 
@@ -640,6 +647,14 @@ public class LabelApplicationController {
             b.append("</li>");
         }
         b.append("</ul>");
+        b.append("<div class=\"row\">");
+        b.append("<div class=\"col-sm-6\">");
+        b.append("<br><label>Old Image:</label><br>");
+        b.append("<img src=\"").append(LabelImageGenerator.getAccessStringForApplication(prevLabelId)).append("&targetWidth=300\">");
+        b.append("</div>").append("<div class=\"col-sm-6\">");
+        b.append("<br><label>New Image:</label><br>");
+        b.append("<img src=\"").append(LabelImageGenerator.getAccessStringForApplication(newLabelId)).append("&targetWidth=300\">");
+        b.append("</div>").append("</div>");
         b.append("<a class=\"btn btn-primary\" style=\"float:right;\" ");
         b.append("href=\"").append("/SuperSlackers/form/view?type=previous&id=").append(applicationId).append("&labelId=").append(prevLabelId).append("\">");
         b.append("View Previous Label");
