@@ -89,54 +89,38 @@ public class ManufacturerSearchServlet extends HttpServlet {
         Label label = new Label();
         search.reset();
         Map<String, String[]> param = request.getParameterMap();
+        Filter filter;
         for (String parameter : param.keySet()) {
             switch (parameter) {
-                case "keywords":
-                    if (!(request.getParameter("keywords").equals(""))) {
-                        ExactFilter brand = new BrandNameFilter(request.getParameter("keywords"));
-                        search.addFilter(brand);
-                    }
+                
+                // This produces all, but is there some empty ones?
+                case "keywords": 
+                    //if (!(request.getParameter("keywords").equals(""))) {
+                        filter = new BrandNameRange(request.getParameter("keywords"));
+                        search.addFilter(filter);
+                    //}
                     break;
-                case "alcohol":
-                    if(request.getParameter("alohol").equals("between")){
+                    
+                case "alcoholSearchType":
+                    if(request.getParameter("alcoholSearchType").equals("between")){
                         if (!(request.getParameter("alcohol_low").equals("")) && !(request.getParameter("alcohol_hi").equals(""))) {
                             double lo = Double.parseDouble(request.getParameter("alcohol_low"));
                             double hi = Double.parseDouble(request.getParameter("alcohol_hi"));
-                            search.addFilter(new AlcoholRange(lo, hi));
+                            System.out.println("Double");
+                            filter = new AlcoholRange(lo,hi);
+                            search.addFilter(filter);
                         }
                     } else {
                         if (!(request.getParameter("alcohol_low").equals(""))) {
-                            AlcoholFilter alcoholContent = new AlcoholFilter(Double.parseDouble(request.getParameter("alcohol_low")));
+                            filter = new AlcoholFilter(Double.parseDouble(request.getParameter("alcohol_low")));
                             System.out.println("Give me alcohol " + Double.parseDouble(request.getParameter("alcohol_low")));
-                            search.addFilter(alcoholContent);
+                            search.addFilter(filter);
+                            System.out.println("Single");
+
                         }
                     }
                     break;
-//                case "type":
-//                    if(!(request.getParameter("type") == null)){
-//                        Filter type;
-//                        switch(request.getParameter("type")){
-//                            case "Beer":
-//                                type = new TypeFilter(Label.BeverageType.BEER);
-//                                search.addFilter(type);
-//                                break;
-//                            case "Wine":
-//                                type = new TypeFilter(Label.BeverageType.WINE);
-//                                search.addFilter(type);
-//                                break;
-//                            case "Distilled":
-//                                type = new TypeFilter(Label.BeverageType.DISTILLED);
-//                                search.addFilter(type);
-//                                break;
-//                        }
-//                    }
-//                    break;
-                case "originLocation": //Dont have a filter for origin location
-//                    if(!(request.getParameter("originLocation").equals(""))){
-//                        Filter alcoholContent = new AlcoholFilter(Integer.parseInt(request.getParameter("originLocation")));
-//                        search.addFilter(alcoholContent);
-//                    }
-                    break;
+
                 case "source":
                     if (!(request.getParameter("source").equals("na"))) {
                         ExactFilter source;
@@ -155,28 +139,31 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         }
                     }
                     break;
+                    
                 case "type":
                     if (!(request.getParameter("type").equals("ALL"))) {
                         ExactFilter source;
                         switch (request.getParameter("type")) {
                             case "WINE":
                                 label = new WineLabel();
-                                source = new TypeFilter(Label.BeverageType.WINE);
+                                source = new TypeFilter(Label.BeverageType.WINE.name());
                                 search.addFilter(source);
                                 break;
                             case "BEER":
                                 label = new BeerLabel();
-                                source = new TypeFilter(Label.BeverageType.BEER);
+                                System.out.println("Type");
+                                source = new TypeFilter(Label.BeverageType.BEER.name());
                                 search.addFilter(source);
                                 break;
                             case "DISTILLED":
                                 label = new DistilledLabel();
-                                source = new TypeFilter(Label.BeverageType.DISTILLED);
+                                source = new TypeFilter(Label.BeverageType.DISTILLED.name());
                                 search.addFilter(source);
                                 break;
                         }
                     }
                     break;
+                    
                 case "ph":
                     if(request.getParameter("ph").equals("between")){
                         if (!(request.getParameter("ph_low").equals("")) && !(request.getParameter("ph_hi").equals(""))) {
@@ -186,10 +173,12 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         }
                     } else {
                         if (!(request.getParameter("ph_low").equals(""))) {
+                            
                             search.addFilter(new PHFilter(Double.parseDouble(request.getParameter("ph_low"))));
                         }
                     }
                     break;
+                    
                 case "vintage":
                     if(request.getParameter("vintage").equals("between")){
                         if (!(request.getParameter("vintage_low").equals("")) && !(request.getParameter("vintage_hi").equals(""))) {
