@@ -4,7 +4,8 @@
             <fieldset id="appForm" disabled>
                 ##FORM_CONTENT
             </fieldset>
-        </form>  
+        </form>
+        <div id="hideUpload" style="display:none;"></div>
         <!--<div class="row">
             <div class="col-sm-1 col-md-2">
             </div>
@@ -112,7 +113,16 @@
             </div>
             <div id="tag-new-label-div"> 
                 <label for="imgSelector-new">Label Image</label>
-                <input id="imgSelector-new" class="tag-new-label-div-input" type="file" name="labelImageUpload-new" accept=".png,.jpg,.jpeg,image/png,image/jpeg">
+                <input id="imgSelector-new" class="tag-new-label-div-input" type="file" name="labelImageUpload-new" accept=".png,.jpg,.jpeg,image/png,image/jpeg" onchange="document.getElementById('lblImg-new').src = window.URL.createObjectURL(this.files[0])">
+                <div class="row">
+                    <div class="col-sm-1 col-md-2">
+                    </div>
+                    <div class="col-sm-10 col-md-8">
+                        <img id="lblImg-new" src="##LABEL_IMAGE_PATH_NEW" class="img-responsive" alt="New Label Image">
+                    </div>
+                    <div class="col-sm-1 col-md-2">
+                    </div>                
+                </div>
             </div>
             <button id="submitRevisions" class="btn btn-success" style="width:100%; margin-top: 30px;">Submit Revisions</button>
         </form>

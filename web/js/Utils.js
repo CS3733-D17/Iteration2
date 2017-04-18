@@ -100,6 +100,7 @@ function __fillForm_SUB()
     }
     out = JSON.parse(atob(getCookie("SSINCAP_DATA")));
     Object.keys(out).forEach(function(k){
+        console.log(k+"->"+out[k]);
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);
@@ -123,6 +124,7 @@ function __fillForm_SUB()
     });
     out = JSON.parse(atob(getCookie("SSINCAP_LBL")));
     Object.keys(out).forEach(function(k){
+        console.log(k+"->"+out[k]);
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);

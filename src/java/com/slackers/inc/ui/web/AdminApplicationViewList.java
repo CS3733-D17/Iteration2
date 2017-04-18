@@ -56,7 +56,6 @@ public class AdminApplicationViewList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        System.out.println("LIST");
         try (PrintWriter out = response.getWriter()) {
             pg = WebComponentProvider.getCorrectFrame(request, "Application Page");
             String applications = WebComponentProvider.loadPartialPage(this, "adminList-partial.html");
@@ -65,7 +64,6 @@ public class AdminApplicationViewList extends HttpServlet {
             {            
                 if (request.getParameter("subset").equalsIgnoreCase("waiting"))
                 {
-                    System.out.println("WAITING");
                     filters.add(new ExactFilter(){
                         @Override
                         public Object getValue() {
@@ -80,7 +78,6 @@ public class AdminApplicationViewList extends HttpServlet {
                 }
                 if (request.getParameter("subset").equalsIgnoreCase("under"))
                 {
-                    System.out.println("UNDER REVIEW");
                     filters.add(new ExactFilter(){
                         @Override
                         public Object getValue() {
@@ -95,7 +92,6 @@ public class AdminApplicationViewList extends HttpServlet {
                 }
                 if (request.getParameter("subset").equalsIgnoreCase("accepted"))
                 {
-                    System.out.println("UNDER REVIEW");
                     filters.add(new ExactFilter(){
                         @Override
                         public Object getValue() {
@@ -110,7 +106,6 @@ public class AdminApplicationViewList extends HttpServlet {
                 }
                 if (request.getParameter("subset").equalsIgnoreCase("rejected"))
                 {
-                    System.out.println("UNDER REVIEW");
                     filters.add(new ExactFilter(){
                         @Override
                         public Object getValue() {

@@ -30,7 +30,9 @@ public class BrandNameRange implements RangeFilter{
 
     @Override
     public String getColumn() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "brandName";
     }
+
+    
     
 }

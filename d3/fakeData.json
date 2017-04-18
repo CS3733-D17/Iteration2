@@ -1,0 +1,173 @@
+[
+{
+
+		"name":"employe1",
+		"history":[
+			{
+			"date": 1,
+			"forms": 5
+			},
+			{
+			"date":2,
+			"forms":20
+			},
+
+			{
+			"date": 3,
+			"forms": 25
+			},
+			{
+			"date":4,
+			"forms":20
+			},
+
+			{
+			"date": 5,
+			"forms": 5
+			},
+			{
+			"date":6,
+			"forms":20
+			}, 
+
+			{
+			"date": 7,
+			"forms": 5
+			}
+			]
+			
+},
+
+
+{
+
+		"name":"employe2",
+		"history":[
+			{
+			"date": 1,
+			"forms": 5
+			},
+			{
+			"date":2,
+			"forms":20
+			},
+
+			{
+			"date": 3,
+			"forms": 5
+			},
+			{
+			"date":4,
+			"forms":20
+			},
+
+			{
+			"date": 5,
+			"forms": 5
+			},
+			{
+			"date":6,
+			"forms":20
+			}, 
+
+			{
+			"date": 7,
+			"forms": 5
+			}
+			]
+			
+},
+
+{
+
+		"name":"employe3",
+		"history":[
+			{
+			"date": 1,
+			"forms": 5
+			},
+			{
+			"date":2,
+			"forms":20
+			},
+
+			{
+			"date": 3,
+			"forms": 5
+			},
+			{
+			"date":4,
+			"forms":20
+			},
+
+			{
+			"date": 5,
+			"forms": 5
+			},
+			{
+			"date":6,
+			"forms":20
+			}, 
+
+			{
+			"date": 7,
+			"forms": 5
+			}
+			]
+			
+},
+
+{
+
+		"name":"employe4",
+		"history":[
+			{
+			"date": 1,
+			"forms": 22
+			},
+			{
+			"date":2,
+			"forms":20
+			},
+
+			{
+			"date": 3,
+			"forms": 5
+			},
+			{
+			"date":4,
+			"forms":20
+			},
+
+			{
+			"date": 5,
+			"forms": 5
+			},
+			{
+			"date":6,
+			"forms":20
+			}, 
+
+			{
+			"date": 7,
+			"forms": 5
+			}
+			]
+			
+},
+{
+
+		"name":"employe5",
+		"history":[
+			{
+			"date": 1,
+			"forms": 5
+			},
+			{
+			"date":2,
+			"forms":30
+			}
+			]
+			
+}
+]

@@ -5,7 +5,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by jestrada on 4/2/17.
  */
-public class AlcoholFilter implements ExactFilter_old {
+public class AlcoholFilter implements ExactFilter {
 
     double percent;
 
@@ -13,15 +13,16 @@ public class AlcoholFilter implements ExactFilter_old {
         this.percent = percent;
     }
 
-    @Override
-    public Label preApply(Label aFilter) {
-        aFilter.setAlcoholContent(percent);
-        return aFilter;
-    }
+    
 
     @Override
     public String getColumn() {
         return "alchoholContent";
+    }
+
+    @Override
+    public Object getValue() {
+        return percent;
     }
 
 }
