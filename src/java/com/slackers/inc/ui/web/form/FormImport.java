@@ -72,15 +72,17 @@ public class FormImport extends HttpServlet {
                 appControl.setEmailAddress(pg.getUser().getEmail());
                 appControl.setApplicant((Manufacturer)pg.getUser());
                 formTemplate = formTemplate.replace("<img id=\"lblImg\" src=\"##LABEL_IMAGE_PATH\" class=\"img-responsive\" alt=\"Label Image\">",
-                        "<img id=\"lblImg\" src=\"##LABEL_IMAGE_PATH\" class=\"img-responsive\" alt=\"Label Image\">"+
+                        "<img id=\"lblImg\" src=\"\" class=\"img-responsive\" alt=\"Label Image\">"+
+                                "<a target=\"_blank\" href=\""+importer.getExistingApplicationURL()+"\" class=\"btn btn-danger\">Go to existing form to download image</a>"+
                                 "<input type=\"hidden\" name=\"useUrl\" value=\"##LABEL_IMAGE_PATH\">");
                 formTemplate = formTemplate.replace("##LABEL_IMAGE_PATH",importer.getImageUrl());
+                System.out.println("LOADED");
             }
             else
             {
                 formTemplate = formTemplate.replace("##LABEL_IMAGE_PATH","");
             }
-            
+            appControl.removeApplicationFromCookies(response);
             appControl.writeApplicationToCookies(response);
             appControl.writeLabelToCookies(response);
             
@@ -129,7 +131,7 @@ public class FormImport extends HttpServlet {
                 {
                     WebComponentProvider.setSuccessMessage(response, null);
                     Manufacturer man = (Manufacturer)AccountController.getPageUser(request);
-                    appControl.attachComment(new LabelComment(man, "<h4><strong>Imported application from existing source</strong></h4><a class=\"btn btn-default\" href=\""+FormImporter.COLAURL+importId+"\">Visit existing application</a>"));
+                    appControl.attachComment(new LabelComment(man, "<h4>Imported application from existing source</h4><a class=\"btn btn-default\" target=\"_blank\" href=\""+FormImporter.COLAURL+importId+"\">Visit existing application</a>"));
                     appControl.submitApplication(man);
                     IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Form Submission Complete");
                     pg.setBody(WebComponentProvider.loadPartialPage(this, "form-submitted.html").replace("##ID", Long.toString(appControl.getLabelApplication().getApplicationId())));

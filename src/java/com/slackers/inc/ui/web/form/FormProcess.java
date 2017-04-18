@@ -41,8 +41,7 @@ public class FormProcess extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             LabelApplicationController appControl = new LabelApplicationController();
-            Long appId = Long.parseLong(request.getParameter("id"));
-            
+            Long appId = Long.parseLong(request.getParameter("id"));            
             appControl.loadApplication(appId);
             appControl.writeApplicationToCookies(response);
             appControl.writeLabelToCookies(response);

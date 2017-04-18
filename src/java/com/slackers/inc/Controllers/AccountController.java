@@ -7,12 +7,12 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.User.UserType;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
@@ -59,8 +59,8 @@ public class AccountController {
             MessageDigest md = MessageDigest.getInstance("MD5");
             bytes = md.digest(bytes);
         } catch (Exception e){}
-        password = null; // promote gc of password. Prevent from hanging in memory
-        return Base64.encode(bytes);
+        password = null; // promote gc of password. Prevent from hanging in memory        
+        return Base64.getEncoder().encodeToString(bytes);
     }
     
     public static User getPageUser(HttpServletRequest request)

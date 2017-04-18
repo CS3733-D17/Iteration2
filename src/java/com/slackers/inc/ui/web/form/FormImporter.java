@@ -43,6 +43,7 @@ public class FormImporter {
             Pattern imgs = Pattern.compile("<img src=\"(\\/colasonline\\/publicViewAttachment[\\s\\S]+?)\"");
             Matcher matchedimgs = imgs.matcher(response.getResponse());
             if (matchedimgs.find()) {
+                System.out.println(COLAURL + this.tbbId);
                 System.out.println("URL:" + matchedimgs.group(1));
                 return "https://www.ttbonline.gov" + matchedimgs.group(1);
             }
@@ -50,6 +51,11 @@ public class FormImporter {
         return "";
     }
 
+    public String getExistingApplicationURL()
+    {
+        return COLAURL + this.tbbId;
+    }
+    
     public LabelApplication importApplication() {
         HttpRequest request = new HttpRequest(COLAURL + this.tbbId);//16309001000410
         HttpResponse response = request.submitRequest();
