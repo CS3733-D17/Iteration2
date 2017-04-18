@@ -85,14 +85,25 @@ public class FormProcess extends HttpServlet {
             UsEmployee emp = (UsEmployee)AccountController.getPageUser(request);
             if (action!=null)
             {
+                String TBBCT = request.getParameter("TBBCT")!=null ? request.getParameter("TBBCT") : "";
+                String TBBOR = request.getParameter("TBBOR")!=null ? request.getParameter("TBBOR") : "";
+                String lblComment = request.getParameter("commentText")!=null ? request.getParameter("commentText") : "";
+                appControl.setTBB_CT(TBBCT);
+                appControl.setTBB_OR(TBBOR);
                 if (action.equals("accept"))
                 {
-                    appControl.approveApplication(emp, new Date(new java.util.Date().getTime()+63072000000L));
+                    if (lblComment.length()>1)
+                        appControl.approveApplication(emp, new Date(new java.util.Date().getTime()+63072000000L), lblComment);
+                    else 
+                        appControl.approveApplication(emp, new Date(new java.util.Date().getTime()+63072000000L));
                     response.sendRedirect(WebComponentProvider.root(request));
                 }
                 else if (action.equals("reject"))
                 {
-                    appControl.rejectApplication(emp);
+                    if (lblComment.length()>1)
+                        appControl.rejectApplication(emp, lblComment);
+                    else
+                        appControl.rejectApplication(emp);
                     response.sendRedirect(WebComponentProvider.root(request));
                 }
                 else

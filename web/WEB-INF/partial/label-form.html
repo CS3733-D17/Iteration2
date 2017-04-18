@@ -82,19 +82,19 @@
             </label>
         </div><br>
     </div>
-    
+
 </div>
 <div class="checkbox">
-  <label><input type="checkbox" id = "NEW" name="NEW" checked>Certificate of Label Application</label>
+    <label><input type="checkbox" id = "NEW" name="NEW" checked>Certificate of Label Application</label>
 </div>
 <div class="checkbox">
-  <label><input type="checkbox" id = "EXEMPT" name="EXEMPT">Certificate of Label Application Exception in <input name="state" id="state" type="text" size="2" maxlength="2" placeholder="State"></label>
+    <label><input type="checkbox" id = "EXEMPT" name="EXEMPT">Certificate of Label Application Exception in <input name="state" id="state" type="text" size="2" maxlength="2" placeholder="State"></label>
 </div>
 <div class="checkbox">
-  <label><input type="checkbox" id = "DISTINCT" name="DISTINCT">Distinctive bottle approval.   Bottle capacity before closure: <input id="capacity" name="capacity" type="text" size="6" maxlength="6"></label>
+    <label><input type="checkbox" id = "DISTINCT" name="DISTINCT">Distinctive bottle approval.   Bottle capacity before closure: <input id="capacity" name="capacity" type="text" size="6" maxlength="6"></label>
 </div>
 <div class="checkbox">
-  <label><input type="checkbox" id = "RESUBMIT" name="RESUBMIT">Resubmit.  TBB id: <input id="tbbid" name="tbbid" type="text"></label>
+    <label><input type="checkbox" id = "RESUBMIT" name="RESUBMIT">Resubmit.  TBB id: <input id="tbbid" name="tbbid" type="text"></label>
 </div>
 <div class="form-group">
     <label>Brand Name</label>
@@ -144,14 +144,14 @@
 <h3>Label Image</h3><br>
 <input id="imgSelector" type="file" name="labelImageUpload" accept=".png,.jpg,.jpeg,image/png,image/jpeg" onchange="document.getElementById('lblImg').src = window.URL.createObjectURL(this.files[0])">
 <div class="row">
-            <div class="col-sm-1 col-md-2">
-            </div>
-            <div class="col-sm-10 col-md-8">
-                <img id="lblImg" src="##LABEL_IMAGE_PATH" class="img-responsive" alt="Label Image">
-            </div>
-            <div class="col-sm-1 col-md-2">
-            </div>                
-        </div>
+    <div class="col-sm-1 col-md-2">
+    </div>
+    <div class="col-sm-10 col-md-8">
+        <img id="lblImg" src="##LABEL_IMAGE_PATH" class="img-responsive" alt="Label Image">
+    </div>
+    <div class="col-sm-1 col-md-2">
+    </div>                
+</div>
 <script>
     getMessage();
 </script>

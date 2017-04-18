@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -82,6 +83,14 @@ public class LabelImageGenerator extends HttpServlet {
                 {
                     mimeType = "image/png";
                 }*/
+                
+                if (label.getLabelImageType().equalsIgnoreCase("urlAbsolute"))
+                {
+                    String url = new String(label.getLabelImage(), StandardCharsets.US_ASCII);
+                    response.sendRedirect(url);
+                    return;
+                }
+                
                 response.setContentType("image/png");
                 boolean wrote=false;
                 if (request.getParameter("targetWidth")!=null)

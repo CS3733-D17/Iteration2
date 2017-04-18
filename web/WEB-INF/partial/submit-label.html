@@ -1,5 +1,17 @@
 <div class="container">
     <div class="well">
+        <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Import from existing form
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <form action="/SuperSlackers/form/import" method="GET">
+                            <input placeholder="Existing TBB ID" type="text" name="existingId" class="form-control">
+                            <button type="submit" class="btn btn-warning" style="width:100%;">Import</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         <form action="/SuperSlackers/form/create" method="post" enctype="multipart/form-data">
             ##FORM_CONTENT
             <button id="appSubmitNew" type="submit" class="btn btn-primary" style="width:100%; margin-top: 30px;">Submit</button>
