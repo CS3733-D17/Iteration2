@@ -127,12 +127,12 @@ public class ManufacturerSearchServlet extends HttpServlet {
 
                         switch (request.getParameter("source")) {
                             case "Domestic":
-                                source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC);
+                                source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC.name());
                                 System.out.println("dom");
                                 search.addFilter(source);
                                 break;
                             case "Imported":
-                                source = new ProductSourceFilter(Label.BeverageSource.IMPORTED);
+                                source = new ProductSourceFilter(Label.BeverageSource.IMPORTED.name());
                                 System.out.println("imp");
                                 search.addFilter(source);
                                 break;

@@ -6,17 +6,14 @@ import com.slackers.inc.database.entities.Label;
  * Created by Matt on 4/2/2017.
  */
 public class ProductSourceFilter  implements ExactFilter {
+    String source;
+    //Label.BeverageSource source;
 
-    Label.BeverageSource source;
-
-    public ProductSourceFilter(Label.BeverageSource source) {
+    public ProductSourceFilter(String source) {
         this.source = source;
     }
 
-    public Label preApply(Label label) {
-        label.setProductSource(source);
-        return label;
-    }
+    
 
     @Override
     public String getColumn() {
