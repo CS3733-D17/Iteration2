@@ -25,6 +25,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -33,6 +35,7 @@ import java.util.Base64;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +44,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonBuilderFactory;
@@ -80,6 +84,16 @@ public class LabelApplicationController {
         db.getEntity(application, application.getPrimaryKeyName());
     }
 
+    public LabelApplication getApplication() {
+        return application;
+    }
+
+    public void setApplication(LabelApplication application) {
+        this.application = application;
+    }
+
+    
+    
     public LabelApplication getLabelApplication() {
         return this.application;
     }
@@ -159,28 +173,67 @@ public class LabelApplicationController {
                 newLabel.setWineAppelation(request.getParameter("wineAppelation"));
                 label = newLabel;
             }
-            Part img = request.getPart("labelImageUpload");
-            if (img != null) {
-                label.setLabelImageType(context.getMimeType(img.getSubmittedFileName()));
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                BufferedImage imgBuffered = ImageIO.read(img.getInputStream());
-                if (imgBuffered.getWidth()>1000)
-                {
-                    Image temp = imgBuffered.getScaledInstance(1000, -1, Image.SCALE_DEFAULT);
-                    BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
-                    toSave.getGraphics().drawImage(temp, 0, 0, null);
-                    ImageIO.write(toSave, "png", buffer);
-                    buffer.flush();
-                    toSave.getGraphics().dispose();
+            if (request.getParameter("useUrl")!=null)
+            {
+                try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+                    HttpURLConnection connection = (HttpURLConnection) new URL(request.getParameter("useUrl")).openConnection();
+                    connection.connect();
+                    try (InputStream input = connection.getInputStream()) {
+                        BufferedImage imgBuffered = ImageIO.read(input);
+                        if (imgBuffered!=null)
+                        {
+                            if (imgBuffered.getWidth()>1000)
+                            {
+                                Image temp = imgBuffered.getScaledInstance(1000, -1, Image.SCALE_DEFAULT);
+                                BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                                toSave.getGraphics().drawImage(temp, 0, 0, null);
+                                ImageIO.write(toSave, "png", buffer);
+                                buffer.flush();
+                                toSave.getGraphics().dispose();
+                            }
+                            else
+                            {
+                                ImageIO.write(imgBuffered, "png", buffer);
+                                buffer.flush();
+                            }
+                            label.setLabelImage(buffer.toByteArray());
+                            label.setLabelImageType("image/png");
+                        }
+                        else
+                        {
+                            System.out.println("Image cannot be read. Using url reference");                            
+                            label.setLabelImage(new URL(request.getParameter("useUrl")).toString().getBytes(StandardCharsets.US_ASCII));                            
+                            label.setLabelImageType("urlAbsolute");
+                        }
+                    }
+                    connection.disconnect();
                 }
-                else
-                {
-                    ImageIO.write(imgBuffered, "png", buffer);
-                    buffer.flush();
-                }                    
-                label.setLabelImage(buffer.toByteArray());
-                label.setLabelImageType("image/png");
-                buffer.close();
+            }
+            else
+            {
+                Part img = request.getPart("labelImageUpload");
+                if (img != null) {
+                    label.setLabelImageType(context.getMimeType(img.getSubmittedFileName()));
+                    try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+                        BufferedImage imgBuffered = ImageIO.read(img.getInputStream());
+                        if (imgBuffered.getWidth()>1000)
+                        {
+                            Image temp = imgBuffered.getScaledInstance(1000, -1, Image.SCALE_DEFAULT);
+                            BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                            toSave.getGraphics().drawImage(temp, 0, 0, null);
+                            ImageIO.write(toSave, "png", buffer);
+                            buffer.flush();
+                            toSave.getGraphics().dispose();
+                        }
+                        else
+                        {
+                            ImageIO.write(imgBuffered, "png", buffer);
+                            buffer.flush();
+                        }
+                        label.setLabelImage(buffer.toByteArray());
+                        label.setLabelImageType("image/png");
+                    }
+                }
             }
             return label;
         } catch (Exception e) {
@@ -668,7 +721,7 @@ public class LabelApplicationController {
 
     public boolean attachComment(LabelComment coment) throws SQLException {
         this.application.getComments().add(coment);
-        return db.writeEntity(this.application, this.application.getPrimaryKeyName());
+        return true;
     }
 
     public boolean attachApproval(ApplicationApproval approval) throws SQLException {
@@ -738,6 +791,23 @@ public class LabelApplicationController {
         }
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
+    
+    public boolean approveApplication(UsEmployee submitter, Date experationDate, String comment) throws SQLException {
+        ApplicationApproval approval = new ApplicationApproval(submitter, experationDate);
+        approval.setApplication(application);
+        this.application.setStatus(LabelApplication.ApplicationStatus.APPROVED);
+        this.application.getLabel().setApproval(approval);
+        this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
+        this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
+        submitter.getApplications().remove(this.application);
+        this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
+        this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()+
+                "<br><br><h5><strong>Comment:</strong></h5>"+comment));
+        for (LabelComment l : this.application.getComments()) {
+            System.out.println(l);
+        }
+        return db.writeEntity(this.application, this.application.getPrimaryKeyName());
+    }
 
     public boolean rejectApplication(UsEmployee submitter) throws SQLException {
         this.application.setStatus(LabelApplication.ApplicationStatus.REJECTED);
@@ -747,6 +817,17 @@ public class LabelApplicationController {
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:red;\">Application Rejected</span></h4>"));
+        return this.saveApplication();
+    }
+    public boolean rejectApplication(UsEmployee submitter, String comment) throws SQLException {
+        this.application.setStatus(LabelApplication.ApplicationStatus.REJECTED);
+        this.application.getLabel().setApproval(null);
+        this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
+        this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
+        submitter.getApplications().remove(this.application);
+        this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
+        this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:red;\">Application Rejected</span></h4>"+
+                "<br><br><h5><strong>Comment:</strong></h5>"+comment));
         return this.saveApplication();
     }
 
@@ -934,5 +1015,23 @@ public class LabelApplicationController {
     public Map<ApplicationType, String> getApplicationTypes() {
         return application.getApplicationTypes();
     }
+
+    public String getTBB_CT() {
+        return application.getTBB_CT();
+    }
+
+    public void setTBB_CT(String TBB_CT) {
+        application.setTBB_CT(TBB_CT);
+    }
+
+    public String getTBB_OR() {
+        return application.getTBB_OR();
+    }
+
+    public void setTBB_OR(String TBB_OR) {
+        application.setTBB_OR(TBB_OR);
+    }
+    
+    
 
 }
