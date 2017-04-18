@@ -6,7 +6,7 @@ import com.slackers.inc.database.entities.WineLabel;
 /**
  * Created by Matt on 4/2/2017.
  */
-public class VintageFilter implements ExactFilter_old {
+public class VintageFilter implements ExactFilter {
 
     int vintage;
 
@@ -23,6 +23,11 @@ public class VintageFilter implements ExactFilter_old {
     @Override
     public String getColumn() {
         return "vintage";
+    }
+
+    @Override
+    public Object getValue() {
+        return this.vintage;
     }
 
 }

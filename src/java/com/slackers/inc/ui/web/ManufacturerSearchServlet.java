@@ -93,7 +93,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
             switch (parameter) {
                 case "keywords":
                     if (!(request.getParameter("keywords").equals(""))) {
-                        ExactFilter_old brand = new BrandNameFilter(request.getParameter("keywords"));
+                        ExactFilter brand = new BrandNameFilter(request.getParameter("keywords"));
                         search.addFilter(brand);
                     }
                     break;
@@ -139,7 +139,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                     break;
                 case "source":
                     if (!(request.getParameter("source").equals("na"))) {
-                        ExactFilter_old source;
+                        ExactFilter source;
 
                         switch (request.getParameter("source")) {
                             case "Domestic":
@@ -157,7 +157,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                     break;
                 case "type":
                     if (!(request.getParameter("type").equals("ALL"))) {
-                        ExactFilter_old source;
+                        ExactFilter source;
                         switch (request.getParameter("type")) {
                             case "WINE":
                                 label = new WineLabel();
@@ -216,6 +216,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 System.out.println(l);
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             response.sendRedirect("/SuperSlackers/search");
             return;
         }

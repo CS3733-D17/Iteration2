@@ -6,7 +6,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by jestrada on 4/2/17.
  */
-public class PlantFilter implements ExactFilter_old {
+public class PlantFilter implements ExactFilter {
 
     String value;
 
@@ -14,15 +14,16 @@ public class PlantFilter implements ExactFilter_old {
         this.value = value;
     }
 
-    @Override
-    public Label preApply(Label aFilter) {
-        aFilter.setPlantNumber(value);
-        return aFilter;
-    }
+ 
 
     @Override
     public String getColumn() {
         return "plantNumber";
+    }
+
+    @Override
+    public Object getValue() {
+        return value;
     }
 
 }
