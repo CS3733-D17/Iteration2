@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
     <head>
         <script type="text/javascript">
@@ -6,20 +5,18 @@
                 var firstName = document.forms["createAccount"]["fName"].value;
                 var lastName = document.forms["createAccount"]["lName"].value;
                 var password = document.forms["createAccount"]["pwd"].value;
+                var re = new RegExp(/\S+@\S+\.\S+/);
+                var email = document.forms["createAccount"]["email"].value;
                 if (firstName === "") {document.getElementById("fName").style="background-color: #ff8888";}
                 else {document.getElementById("fName").style="background-color: #ffffff";}
                 if (lastName === "") {document.getElementById("lName").style="background-color: #ff8888";}
                 else {document.getElementById("lName").style="background-color: #ffffff";}
-
+                if (!re.test(email)) {document.getElementById("email").style="background-color: #ff8888";}
+                else {document.getElementById("email").style="background-color: #ffffff";}
                 if (password === "") {document.getElementById("pwd").style="background-color: #ff8888";}
                 else {document.getElementById("pwd").style="background-color: #ffffff";}
             }
         </script>
-         <!--TODO: remove-->
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
 </html>
 <div class="container">

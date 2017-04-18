@@ -98,7 +98,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                     }
                     break;
                 case "alcohol":
-                    if(request.getParameter("alohol").equals("between")){
+                    if(request.getParameter("alcohol").equals("between")){
                         if (!(request.getParameter("alcohol_low").equals("")) && !(request.getParameter("alcohol_hi").equals(""))) {
                             double lo = Double.parseDouble(request.getParameter("alcohol_low"));
                             double hi = Double.parseDouble(request.getParameter("alcohol_hi"));

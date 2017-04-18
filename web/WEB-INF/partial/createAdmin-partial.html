@@ -1,3 +1,24 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            function validateForm() {
+                var firstName = document.forms["createAdmin"]["fName"].value;
+                var lastName = document.forms["createAdmin"]["lName"].value;
+                var password = document.forms["createAdmin"]["pwd"].value;
+                var re = new RegExp(/\S+@\S+\.\S+/);
+                var email = document.forms["createAdmin"]["email"].value;
+                if (firstName === "") {document.getElementById("fName").style="background-color: #ff8888";}
+                else {document.getElementById("fName").style="background-color: #ffffff";}
+                if (lastName === "") {document.getElementById("lName").style="background-color: #ff8888";}
+                else {document.getElementById("lName").style="background-color: #ffffff";}
+                if (!re.test(email)) {document.getElementById("email").style="background-color: #ff8888";}
+                else {document.getElementById("email").style="background-color: #ffffff";}
+                if (password === "") {document.getElementById("pwd").style="background-color: #ff8888";}
+                else {document.getElementById("pwd").style="background-color: #ffffff";}
+            }
+        </script>
+   </head>
+</html>
 <div class="container">
     <div class="row">
         <div class="col-md-3 hidden-sm">
@@ -10,7 +31,7 @@
                     <br>
                 </div>
                 <div>
-                    <form action="/SuperSlackers/account/create/admin" method="post">
+                    <form name="createAdmin" action="/SuperSlackers/account/create/admin" method="post">
                         <div class="row">
                             <div class="col-md-1">
                             </div>
@@ -55,7 +76,7 @@
                                 <div class="form-group" align="center">
                                     <label class="radio-inline"><input type="radio" name="uType" value="admin" checked>Administrator</label>
                                 </div>
-                                <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
+                                <button onclick="validateForm()" type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
                             </div>
                             <div class="col-md-1">
                             </div>
