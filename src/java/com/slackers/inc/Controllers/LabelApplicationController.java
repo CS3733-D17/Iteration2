@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -545,6 +549,24 @@ public class LabelApplicationController {
         response.addCookie(lbl);
         response.addCookie(data);
     }
+    
+    public void employeeJson(){
+        UsEmployee employee = new UsEmployee();
+        List<UsEmployee> list;
+        try {
+            list = db.getAllEntites_Typed(employee);
+        } catch (SQLException ex) {
+            Logger.getLogger(LabelApplicationController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Something went horrible wrong");
+            return;
+        }
+        // TODO Create json file
+        
+            
+            
+        
+    }
+    
 
     public String renderCommentList(HttpServletRequest request) {
         StringBuilder b = new StringBuilder();
