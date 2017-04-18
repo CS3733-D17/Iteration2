@@ -7,13 +7,15 @@
                 var lastName = document.forms["createAccount"]["lName"].value;
                 var pass1 = document.forms["createAccount"]["pwd"].value;
                 var pass2 = document.forms["createAccount"]["pwd2"].value;
+                var re = new RegExp(/\S+@\S+\.\S+/);
                 if (firstName == "") {document.getElementById("fName").style="background-color: #ff8888";}
                 else {document.getElementById("fName").style="background-color: #ffffff";}
                 if (lastName == "") {document.getElementById("lName").style="background-color: #ff8888";}
                 else {document.getElementById("lName").style="background-color: #ffffff";}
-                if (pass1 != pass2) {
-                    document.getElement("pwd2").style="background-color: #ff8888";
-                }
+                if (pass1 != pass2) {document.getElement("pwd2").style="background-color: #ff8888";}
+                else {document.getElementById("pwd2").style="background-color: #ffffff";}
+                if (!(re.test(document.forms["createAccount"]["email"].value))) {document.getElementById("email").style="background-color: #ff8888";}
+                else {document.getElementById("email").style="background-color: #ffffff";}
             }
         </script>
         <meta charset="utf-8">
@@ -55,7 +57,7 @@
                             </div>
                             <div class="col-md-10">
                                 <label for="email">Email:</label>
-                                <input name="email" type="email" class="form-control" id="email" placeholder="Enter email" required>
+                                <input name="email" type="email" class="form-control" id="email" placeholder="Enter email">
                             </div>
                             <div class="col-md-1">
                             </div>
