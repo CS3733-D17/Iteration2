@@ -9,10 +9,10 @@ import com.slackers.inc.database.entities.Label;
 public class TypeFilter implements ExactFilter {
 
 
+    String value;
+    //Label.BeverageType value;
 
-    Label.BeverageType value;
-
-    public TypeFilter(Label.BeverageType value){
+    public TypeFilter(String value){
         this.value = value;
     }
 
