@@ -515,7 +515,7 @@ public class DerbyConnection {
         String stmt;
         List<String> statements = new LinkedList<>();
         List<Object> vals = new LinkedList<>();
-        if (filters.isEmpty())
+        if (!filters.isEmpty())
         {      
             for (Filter f : filters)
             {
@@ -574,7 +574,7 @@ public class DerbyConnection {
         String stmt;
         List<String> statements = new LinkedList<>();
         List<Object> vals = new LinkedList<>();
-        if (filters.isEmpty())
+        if (!filters.isEmpty())
         {
             for (Filter f : filters)
             {

@@ -3,25 +3,25 @@
         <span>Results</span>
         </h1>
         <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Download As
                 <span class="caret"></span></button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu col-md-1">
                 <li>
                     <a href="#"> <form  action="##SEARCH_URL" method="POST" target="_blank">
-                        <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Csv</button>
+                        <button type ="submit" class='btn btn-primary col-md-12'>Csv Format</button>
                 </form></a></li>
                 <li>
                     <a href="#"> <form  action="##SEARCH_URL&type=tsv" method="POST" target="_blank">
-                        <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Tsv</button>
+                        <button type ="submit" class='btn btn-primary col-md-12'>Tsv Format</button>
                 </form></a></li>
                 <li>
                     <a href="#"><form  action="##SEARCH_URL&type=delimiter" method="POST" target="_blank">
-                        <button type ="submit" class='btn btn-primary col-md-2 pull-right'>Download Custom</button>
+                        <button type ="submit" class='btn btn-primary col-md-12'>Custom Format</button>
                        
                 </form></a></li>
 
                 <li>
-                    <a href="#"><input type="text" name="delimiter"></a>
+                    <a href="#"><input type="text" name="delimiter" class="col-md-12"></a>
                 </li>
 
             </ul>
@@ -34,5 +34,4 @@
     </br>
     <div class="panel-group" id="applicationAccordion">        
         ##Drinks
-    </div> 
-</div>
+    </div>
