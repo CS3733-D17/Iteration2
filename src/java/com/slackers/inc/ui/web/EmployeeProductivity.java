@@ -98,7 +98,11 @@ public class EmployeeProductivity extends HttpServlet {
                 {
                     Map<String,Integer> day = new HashMap<>();
                     day.put(a.getApplicationDate().toString(), 1);
+                    Map<String,Integer> future = new HashMap<>();
+                    Date d = new Date(new java.util.Date().getTime()+86400000);
+                    future.put(d.toString(), 1);
                     values.put(a.getSubmitter().getEmail(), day);
+                    values.put(a.getSubmitter().getEmail(), future);
                 }
             }
             

@@ -67,7 +67,7 @@
       });
         
         
-	var yScale = d3.scale.linear().domain([0,30]).range([height, 0]);
+	var yScale = d3.scale.linear().domain([0,50]).range([height, 0]);
 	var xScale = d3.time.scale().domain([date.parse(maxMin[0]), date.parse(maxMin[1])]).range([0,width]);
 	//[date.parse(json.),date.parse("2017-04-18")
 	var line = d3.svg.line()
