@@ -19,8 +19,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
-
 /**
  * @author Created by SrinuL on 3/30/17.
  */
@@ -402,5 +400,3 @@ public class AccountController {
         }
     }
 }
-
-
