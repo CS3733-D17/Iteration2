@@ -141,7 +141,7 @@ public class ApplicationsPageServlet extends HttpServlet {
         }
         if (app.getStatus() == ApplicationStatus.UNDER_REVIEW)
         {
-            return "<span style=\"margin-left:30px;\" class=\"label label-danger\">Under Review</span>";
+            return "<span style=\"margin-left:30px;\" class=\"label label-warning\">Under Review</span>";
         }
         return "";
     }

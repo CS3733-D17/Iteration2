@@ -77,11 +77,11 @@ public class ManufacturerPage implements IPageFrame{
 "      <li class=\"dropdown\"><a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"\">Applications <span class=\"caret\"></span></a>\n" +
 "        <ul class=\"dropdown-menu\">\n" +
 "          <li><a href=\""+WebComponentProvider.root(request)+"myApplications\">All</a></li>\n" +
-"          <li><a href=\"myApplications?subset=working\">Working</a></li>\n" +
-"          <li><a href=\"myApplications?subset=submitted\">Submitted</a></li>\n" +
-"          <li><a href=\"myApplications?subset=underReview\">Under Review</a></li>\n" +
-"          <li><a href=\"myApplications?subset=accepted\">Accepted</a></li>\n" +
-"          <li><a href=\"myApplications?subset=rejected\">Rejected</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/myApplications?subset=working\">Working</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/myApplications?subset=submitted\">Submitted</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/myApplications?subset=underReview\">Under Review</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/myApplications?subset=accepted\">Accepted</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/myApplications?subset=rejected\">Rejected</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +
 //"      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +

@@ -50,7 +50,7 @@ public class HomeServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
-            pg = WebComponentProvider.getCorrectFrame(request, "home");
+            pg = WebComponentProvider.getCorrectFrame(request, "Home");
             pg.setBody(WebComponentProvider.loadPartialPage(this, "home-partial.html"));
             out.println(WebComponentProvider.buildPage(pg, request));
         }
@@ -67,7 +67,7 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doGet(request, response);
     }
 
     /**

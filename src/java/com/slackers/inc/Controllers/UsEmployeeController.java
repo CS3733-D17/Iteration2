@@ -121,13 +121,20 @@ public class UsEmployeeController {
                 List<LabelApplication> newforms = new LinkedList<>();
 
                 // collect by oldest -> all from same person until no submissions left or the collected list contains 10 or more elements
-                while (!forms.isEmpty() && newforms.size()<10)
+                /*while (!forms.isEmpty() && newforms.size()<10)
                 {
                     LabelApplication entry = forms.get(0);
                     // collect all entries from the oldest submitter
                     List<LabelApplication> temp = forms.stream().filter((e) -> {return e.getSubmitter().equals(entry.getSubmitter());}).collect(Collectors.toList());
                     newforms.addAll(temp);
                     forms.removeAll(temp);
+                }*/
+                int i=0;
+                for (LabelApplication app : forms)
+                {
+                    if (i==10)
+                        break;
+                    newforms.add(app);
                 }
 
                 for (LabelApplication l : newforms)
