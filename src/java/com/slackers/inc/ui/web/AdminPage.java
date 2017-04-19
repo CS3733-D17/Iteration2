@@ -82,7 +82,7 @@ public class AdminPage implements IPageFrame{
 "          <li><a href=\"/SuperSlackers/admin/glblApps?subset=rejected\">Rejected</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +
-//"      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
+"      <li><a href=\""+WebComponentProvider.root(request)+"admin/empProd\">Productivity</a></li>\n" +
 "    </ul>\n" +
 "    <ul class=\"nav navbar-nav navbar-right\">\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"account/settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +

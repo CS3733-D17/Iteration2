@@ -1,0 +1,143 @@
+<style>
+	.label { font-size: 10px; } 
+	.line { fill: none; stroke-width: 1.4px; stroke: #74736c; font-size: 15px;}
+	.area { fill: #cec6b9;
+			opacity: 0.5;}
+	.background {fill: none;}
+	.chart {
+		float: left;
+		padding-right: 5px;
+		padding-bottom: 5px;
+		padding-top: 0;
+		padding-left: 0;
+	}
+	.xaxis path,
+	.yaxis path,
+	.yaxis line {
+		fill:none;
+		stroke: #000;
+		opacity: 0.5;
+		shape-rendering: crispEdges;
+	}
+	.xaxis text,
+	.yaxis text { font-size: 12px;}
+	.tick line {stroke-dasharray: 3,3; stroke: #74736c; }
+	svg { border: solid 0px #333; margin: 5px;}
+</style>
+
+<head>
+</head>
+<body></body>
+<script src = "http://d3js.org/d3.v3.min.js"></script>
+<script>
+    ##global
+	var height = 120, width = 150;
+	var data;
+	var date = d3.time.format("%Y-%m-%d");
+	//var extent = d3.extent(data.history, function(d) { return d.date;});
+	var margin = {top:10,bot:50, left:35, right:20};
+        
+        var maxMin;
+        var dateValues = [];
+        json.forEach(function(i) {
+            //console.log(i);
+            for(var j=0;j<i.history.length;j++) {
+            //console.log(i.history[j].date);
+                dateValues.push(i.history[j].date);
+            }
+            maxMin = d3.extent(dateValues);
+        //Check the console - it all be there
+        console.log(maxMin);
+      });
+        
+        
+	var yScale = d3.scale.linear().domain([0,30]).range([height, 0]);
+	var xScale = d3.time.scale().domain([date.parse(maxMin[0]), date.parse(maxMin[1])]).range([0,width]);
+	//[date.parse(json.),date.parse("2017-04-18")
+	var line = d3.svg.line()
+		.x(function(d){
+			return xScale(date.parse(d.date));
+			
+			}) 
+			
+		.y(function(d) { return yScale(+d.forms);});
+	var area = d3.svg.area()
+		.x(function(d) {
+			return xScale(date.parse(d.date));
+		})
+		.y0(height)
+		.y1(function(d) { return yScale(+d.forms); });
+	var yAxis = d3.svg.axis()
+		.scale(yScale)
+		.orient("left").ticks(4)
+		.outerTickSize(0)
+		.tickSubdivide(1)
+		.tickSize(-width);
+	var xAxis = d3.svg.axis()
+		.scale(xScale)
+		.orient("bottom").ticks(maxMin.length)
+		.outerTickSize(0)
+		.tickSubdivide(1)
+		.tickSize(-height);
+	//d3.json("fakeData.json", function(json) {
+	
+                //data = JSON.parse(json);//JSON.parse(json);
+                data = json;
+		var div = d3.select("body").selectAll(".chart").data(data);
+		
+		div.enter()
+			.append("div")
+			.attr("class", "chart")
+			.append("svg")
+			.append("g");
+		var svg = div.select("svg")
+			.attr("width", width + margin.right + margin.left)
+			.attr("height", height + margin.bot + margin.top);
+		
+		var g = svg.select("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top +")");
+		g.append("rect")
+			.attr("class", "background")
+			.style("pointer-events", "all")
+			.attr("width", width + margin.right)
+			.attr("height", height + margin.top);
+		var lines= g.append("g");
+		lines.append("path")
+			.attr("class", "line")
+			.attr("pointer-events", "none") 
+			.attr("d", function(d){
+				return line(d.history);
+			});
+		lines.append("path")
+			.attr("class", "area")
+			.attr("pointer-events", "none") 
+			.attr("d", function(d){
+				return area(d["history"]);
+			});
+		lines.append("text")
+			.attr("class", "date")
+			.attr("text-anchor", "start");
+		lines.append("text")
+			.attr("class", "title")
+			.attr("text-anchor","middle")
+			.attr("y", height)
+			.attr("dy", margin.bot /2  + 20)
+			.attr("x", width /2)
+			.text(function(d) { return d.name;});
+		
+		g.append("g")
+			.attr("class", "yaxis")
+			.call(yAxis);
+		g.append("g")
+			.attr("class", "xaxis")
+			.attr("transform", "translate(0," + (height)  + " )")
+			.call(xAxis);
+		svg.append("text")
+			.attr("text-anchor", "middle")
+			.attr("transform", "translate(" +margin.left/2  + "," + height/2+")rotate(-90)")
+			.style('font-size', '12px')
+			.text("Forms Complete");
+		svg.selectAll(".xaxis text")
+			.attr("transform", "translate(-10,10)rotate(-45)");
+	console.log(data);
+</script>
