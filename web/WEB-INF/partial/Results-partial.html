@@ -14,11 +14,11 @@
                                 <button type ="submit" class='btn btn-primary col-md-12'>Csv Format</button>
                             </form></li>
                         <li>
-                            <form  action="##SEARCH_URL&type=tsv" method="POST" target="_blank" style="padding:5px;">
+                            <form  action="##SEARCH_URL&Dtype=tsv" method="POST" target="_blank" style="padding:5px;">
                                 <button type ="submit" class='btn btn-primary col-md-12'>Tsv Format</button>
                             </form></li>
                         <li>
-                            <form  action="##SEARCH_URL&type=delimiter" method="POST" target="_blank" style="padding:5px;">
+                            <form  action="##SEARCH_URL&Dtype=delimiter" method="POST" target="_blank" style="padding:5px;">
                                 <button type ="submit" class='btn btn-primary col-md-12'>Custom Format </button>
                                 <input type="text" name="delimiter" class="form-control" placeholder="Custom Delimiter">
                             </form></li>
@@ -31,13 +31,15 @@
                 <form action="/SuperSlackers/search" method="post">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="input-group">
-                                <input name ="keywords" type="text" class="form-control" placeholder="Search" id="keywords">
+                            <div class="input-group dropdown">
+                                <input name ="keywords" type="text" class="form-control" placeholder="Search" id="keywords" onkeypress="getSearches();" oninput="getSearches();" onchange="getSearches();" onfocus="showSuggestions(true)" onfocusout="showSuggestions(false)">
                                 <div class="input-group-btn">
                                     <button class="btn btn-default" type="submit" value="">
                                         <i class="glyphicon glyphicon-search"></i>
                                     </button>
                                 </div>
+                                <ul class="dropdown-menu open" id="suggestions">
+                                </ul>
                             </div>
                             <br>
                             <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#advanced">Advanced</button>
@@ -210,8 +212,47 @@
 
         }
     }
-
-
+    
+    function showSuggestions(show)
+    {
+        setTimeout(function(){
+            if (show)
+            {
+                document.getElementById('suggestions').style.display = 'block';
+            }
+            else
+            {
+                document.getElementById('suggestions').style.display = 'none';
+            }
+        },1000);
+    }
+    
+    function setSearchText(text)
+    {
+        document.getElementById('keywords').value=text;
+        getSearches();
+    }
+    
+    var xhttp = new XMLHttpRequest();
+    function getSearches()
+    {
+        var name = document.getElementById('keywords').value;
+        xhttp.abort();
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var sug = JSON.parse(this.responseText);
+                var htm = "";
+                for (var i=0; i<sug.length; i++)
+                {
+                    htm+="<li><a onclick=\"setSearchText('"+sug[i]+"');\">"+sug[i]+"</a></li>";
+                }
+                document.getElementById("suggestions").innerHTML = htm;
+            }
+        };
+        xhttp.open("GET", "/SuperSlackers/search/autocomplete?brand="+name, true);
+        xhttp.send();        
+    }
 
 
 

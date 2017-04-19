@@ -111,7 +111,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                             search.addFilter(filter);
                         }
                     } else {
-                        if (!(request.getParameter("alcohol_low").equals(""))) {
+                        if (!(request.getParameter("alcohol_low")==null || request.getParameter("alcohol_low").equals(""))) {
                             filter = new AlcoholFilter(Double.parseDouble(request.getParameter("alcohol_low")));
                             
                             search.addFilter(filter);
@@ -171,7 +171,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                             search.addFilter(new PHRange(lo, hi));
                         }
                     } else {
-                        if (!(request.getParameter("ph_low").equals(""))) {
+                        if (!(request.getParameter("ph_low")==null || request.getParameter("ph_low").equals(""))) {
                             
                             search.addFilter(new PHFilter(Double.parseDouble(request.getParameter("ph_low"))));
                         }
@@ -186,7 +186,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                             search.addFilter(new VintageRange(lo, hi));
                         }
                     } else {
-                        if (!(request.getParameter("vintage_low").equals(""))) {
+                        if (!(request.getParameter("vintage_low")==null||request.getParameter("vintage_low").equals(""))) {
                             search.addFilter(new VintageFilter(Integer.parseInt(request.getParameter("vintage_low"))));
                         }
                     }
@@ -212,11 +212,11 @@ public class ManufacturerSearchServlet extends HttpServlet {
 
         if (request.getParameter("action") != null && request.getParameter("action").equals("download")) {
             IDelimiterFormat format = new CsvFormat();
-            if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("tsv"))
+            if (request.getParameter("Dtype")!=null && request.getParameter("Dtype").equalsIgnoreCase("tsv"))
             {
                 format = new TsvFormat();
             }
-            if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("delimiter") && request.getParameter("delimiter")!=null)
+            if (request.getParameter("Dtype")!=null && request.getParameter("Dtype").equalsIgnoreCase("delimiter") && request.getParameter("delimiter")!=null)
             {
                 format = new CharFormat(request.getParameter("delimiter"));
             }
@@ -235,6 +235,8 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 out.addIgnoredGetMethod("getUpdatableEntityValues");
                 out.addIgnoredGetMethod("getApproval");
                 out.addIgnoredGetMethod("getTableName");
+                out.addIgnoredGetMethod("getLabelImage");
+                out.addIgnoredGetMethod("getLabelImageType");
 
                 out.writeColumnHeader();
                 out.write(drinkList);
