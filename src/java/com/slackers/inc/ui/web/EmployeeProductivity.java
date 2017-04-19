@@ -51,7 +51,7 @@ public class EmployeeProductivity extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Employee Productivity");
 
             
             List<Filter> filter = new LinkedList<>();
@@ -130,7 +130,9 @@ public class EmployeeProductivity extends HttpServlet {
             
             
             /* TODO output your page here. You may use following sample code. */
-            out.println(renderViz(global));
+            pg.setBody(renderViz(global));
+            out.println(WebComponentProvider.buildPage(pg, request));
+            //out.println(renderViz(global));
            
         } catch (SQLException ex) {
             ex.printStackTrace();

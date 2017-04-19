@@ -27,11 +27,27 @@
 
 <head>
 </head>
-<body></body>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-10 ">
+                <h3>Employee Productivity</h3><br><br>
+                    <div class="vis">
+        
+                     </div>
+                </div>
+            <div class="col-md-1">
+            </div>                
+        </div>
+    </div>
+    
+</body>
 <script src = "http://d3js.org/d3.v3.min.js"></script>
 <script>
     ##global
-	var height = 120, width = 150;
+	var height = $(window).height()/5 , width = $(window).width()/6 ;
 	var data;
 	var date = d3.time.format("%Y-%m-%d");
 	//var extent = d3.extent(data.history, function(d) { return d.date;});
@@ -83,7 +99,7 @@
 	
                 //data = JSON.parse(json);//JSON.parse(json);
                 data = json;
-		var div = d3.select("body").selectAll(".chart").data(data);
+		var div = d3.select(".vis").selectAll(".chart").data(data);
 		
 		div.enter()
 			.append("div")
