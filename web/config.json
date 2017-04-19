@@ -7,7 +7,7 @@
     "@gray-light": "#7a8288",
     "@gray-lighter": "#999999",
     "@brand-primary": "@gray-light",
-    "@brand-success": "#00bc8c",
+    "@brand-success": "#00bc43",
     "@brand-info": "#5bc0de",
     "@brand-warning": "#f89406",
     "@brand-danger": "#ee5f5b",

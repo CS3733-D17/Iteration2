@@ -159,6 +159,7 @@ public class AdminApplicationViewList extends HttpServlet {
             }*/
             
             applications = applications.replace("##Applications", b.toString());
+            applications = applications.replace("##PAGE", "Page "+Integer.toString((int)Math.floor(offset/10)+1));
             if (apps.isEmpty())
                 applications = applications.replace("##NEXT", "/SuperSlackers/admin/glblApps?subset="+request.getParameter("subset")+"&offset="+(offset));
             else
