@@ -53,13 +53,34 @@ public class DerbyConnection {
     
     private Connection con;
     private Set<String> tables;
+    private boolean isOpen;
     
     private DerbyConnection() throws SQLException
     {
-        Map<String,String> properties = new HashMap<>();
-        properties.put("create", "true");
-        this.con = DriverManager.getConnection(makeConnectionString(properties));
-        this.tables = new HashSet<>();
+        open();
+    }
+    
+    public void reset()
+    {
+        this.shutdownDb();
+        try {
+            this.open();
+        } catch (SQLException ex) {
+            Logger.getLogger(DerbyConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void open() throws SQLException
+    {
+        if (!this.isOpen)
+        {
+            System.out.println("Connecting to database...");
+            Map<String,String> properties = new HashMap<>();
+            properties.put("create", "true");
+            this.con = DriverManager.getConnection(makeConnectionString(properties));
+            this.tables = new HashSet<>();
+            isOpen=true;
+        }
     }
     
     public boolean tableExists(String tableName) throws SQLException
@@ -75,6 +96,7 @@ public class DerbyConnection {
     
     public boolean createTable(String tableName, List<String> columns) throws SQLException
     {        
+        this.open();
         String stmt = String.format("CREATE TABLE %s (%s)", tableName, String.join(", ", columns));
         CallableStatement call = con.prepareCall(stmt);
         return call.execute();
@@ -88,6 +110,7 @@ public class DerbyConnection {
 
     private boolean checkForTable(IEntity entity) throws SQLException
     {
+        this.open();
         if (this.tables.contains(entity.getTableName()))
             return true;
         if (this.tableExists(entity.getTableName()))
@@ -596,7 +619,6 @@ public class DerbyConnection {
         {
             stmt = String.format("SELECT * FROM %s OFFSET %d rows fetch first %d rows only ", entity.getTableName(), offset, numberOfResults);
         }
-        System.out.println(stmt);
         PreparedStatement call = con.prepareStatement(stmt);
         int i = 1;
         for (Object o : vals)
@@ -764,6 +786,7 @@ public class DerbyConnection {
     public void closeConnection() throws SQLException
     {
         this.con.close();
+        this.isOpen=false;
     }    
     
     public static DerbyConnection getInstance()
@@ -795,6 +818,7 @@ public class DerbyConnection {
     
     public boolean shutdownDb()
     {
+        System.out.println("Shutting down database...");
         try {
             this.closeConnection();
         } catch (SQLException ex) {

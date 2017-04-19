@@ -6,25 +6,26 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by jestrada on 4/2/17.
  */
-public class TypeFilter implements ExactFilter_old {
+public class TypeFilter implements ExactFilter {
 
 
+    String value;
+    //Label.BeverageType value;
 
-    Label.BeverageType value;
-
-    public TypeFilter(Label.BeverageType value){
+    public TypeFilter(String value){
         this.value = value;
     }
 
-    @Override
-    public Label preApply(Label aFilter) {
-        aFilter.setProductType(value);
-        return aFilter;
-    }
+
 
     @Override
     public String getColumn() {
         return "productType";
+    }
+
+    @Override
+    public Object getValue() {
+        return this.value;
     }
 
 }

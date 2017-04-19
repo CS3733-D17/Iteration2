@@ -55,6 +55,7 @@ public class FormActionDispatchServlet extends HttpServlet {
                             if (!m.getApplications().isEmpty())
                             {
                                 LabelApplicationController con = new LabelApplicationController(m.getApplications().get(m.getApplications().size()-1));
+                                con.setEmailAddress(m.getEmail());
                                 con.writeApplicationToCookies(response);
                             }
                         }catch (Exception e)

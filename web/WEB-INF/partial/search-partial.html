@@ -4,39 +4,43 @@
         <form action="/SuperSlackers/search" method="post">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="input-group">
-                        <input name ="keywords" type="text" class="form-control" placeholder="Search" id="keywords">
+                    <div class="input-group dropdown">
+                        <input name ="keywords" type="text" class="form-control" placeholder="Search" id="keywords" onkeypress="getSearches();" oninput="getSearches();" onchange="getSearches();" onfocus="showSuggestions(true)" onfocusout="showSuggestions(false)">
                         <div class="input-group-btn">
                             <button class="btn btn-default" type="submit" value="">
                                 <i class="glyphicon glyphicon-search"></i>
                             </button>
                         </div>
+                        <ul class="dropdown-menu open" id="suggestions">
+                        </ul>
                     </div>
                     <br>
                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#advanced">Advanced</button>
                     <input id="bType" type="hidden" value="ALL" name="type">
                     <div id="advanced" class="collapse">
                         <ul class = "pagination">
-                            <li class="active"><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value='ALL'">All</a></li>
-                            <li><a href="#Wine" data-toggle="tab" onclick="document.getElementById('bType').value='WINE'">Wine</a></li>
-                            <li><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value='BEER'">Beer</a></li>
-                            <li><a href="#Distilled" data-toggle="tab" onclick="document.getElementById('bType').value='DISTILLED'">Distilled</a></li>
+                            <li class="active"><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value = 'ALL'">All</a></li>
+                            <li><a href="#Wine" data-toggle="tab" onclick="document.getElementById('bType').value = 'WINE'">Wine</a></li>
+                            <li><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value = 'BEER'">Beer</a></li>
+                            <li><a href="#Distilled" data-toggle="tab" onclick="document.getElementById('bType').value = 'DISTILLED'">Distilled</a></li>
                         </ul>
                         <div class="form-group">
                             <label>Alcohol Content</label>
-
-
-
-
-
-                            <select id="alcohol" name="alcoholSearchType" onchange="alcoholFunction()" >
+                            <select style="color: #000000" id="alcohol" name="alcoholSearchType" onchange="alcoholFunction()" >
                                 <option value="equal" >is equal to</option>
                                 <option value="between">is between</option>
-
                             </select>
-                            <input type="text" name="alcohol_low" id="alcohol_low" placeholder="0.0-100.0" class="as-variable-input" value="">
-                            <span id="alcoholAnd" style="display: none;" >&nbsp;and&nbsp;</span>
-                            <input type="text" name="alcohol_hi" id="alcohol_hi" placeholder="0.0-100.0" class="as-variable-input " value="" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <input type="text" name="alcohol_low" id="alcohol_low" placeholder="Values between 0.0 - 100.0%" class="form-control as-variable-input" value="">
+                                </div>
+                                <div class="col-md-2" align="center" style="vertical-align: middle;">
+                                    <span id="alcoholAnd" style="display: none; vertical-align: middle;" >and</span>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" name="alcohol_hi" id="alcohol_hi" placeholder="Values between 0.0 - 100.0%" class="form-control as-variable-input " value="" style="display: none;">
+                                </div>
+                            </div>
 
 
 
@@ -45,14 +49,14 @@
 
 
 
-                            <input class="form-control" placeholder="Values between 0.0 - 100.0" type="text" id="alcoholContent" name="alcoholContent">
+                            <!--<input class="form-control" placeholder="Values between 0.0 - 100.0%" type="text" id="alcoholContent" name="alcoholContent">-->
 
                         </div>
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Origin Location</label>
                             <input class="form-control" placeholder="Origin Location" type="text" id="originLocation" name="originLocation">
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label>Source of Product</label>
                             <select class="form-control" id="source" name="source">
@@ -71,43 +75,57 @@
                             <div id = "Beer" class="tab-pane fade in active">
 
                             </div>
-                            <div id="Distilled" class="tab-pane fade in active">
+                            <div id="Distilled" class="tab-pane fade">
                             </div>
-                            <div id = "Wine" class="tab-pane fade in active">
+                            <div id = "Wine" class="tab-pane fade">
 
                                 <div class="form-group">
                                     <label>pH Level</label>
 
 
-                                    <select id="ph" name="ph" onchange="phFunction()">
+                                    <select style="color: #000000" id="ph" name="ph" onchange="phFunction()">
                                         <option value="equal" >is equal to</option>
                                         <option value="between">is between</option>
 
                                     </select>
-                                    <input type="text" name="ph_low" id="ph_low" placeholder="0.0-100.0" class="as-variable-input" value="">
-                                    <span id="phAnd" style="display: none;" >&nbsp;and&nbsp;</span>
-                                    <input type="text" name="ph_hi" id="ph_hi" placeholder="0.0-100.0" class="as-variable-input " value="" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <input type="text" name="ph_low" id="ph_low" placeholder="pH Level: 0.0-14.0" class="form-control" value="">
+                                        </div>
+                                        <div class="col-md-2" align="center">
+                                            <span id="phAnd" style="display: none;">and</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" name="ph_hi" id="ph_hi" placeholder="pH Level: 0.0-14.0" class="form-control" value="" style="display: none;">
+                                        </div>
+                                    </div>
 
 
 
-
-                                    <input class="form-control" placeholder="PH Level" type="text" name = "pHLevel" id="pHLevel">
+                                    <!--<input class="form-control" placeholder="PH Level" type="text" name = "pHLevel" id="pHLevel">-->
                                 </div>
 
                                 <div class="form-group">
                                     <label>Vintage Year</label>
 
-                                    <select id="vintage" name="vintage" onchange="vintageFunction()">
+                                    <select style="color: #000000" id="vintage" name="vintage" onchange="vintageFunction()">
                                         <option value="equal" >is equal to</option>
                                         <option value="between">is between</option>
 
                                     </select>
-                                    <input type="text" name="vintage_low" id="vintage_low" placeholder="0.0-100.0" class="as-variable-input" value="">
-                                    <span id="vintageAnd" style="display: none;" >&nbsp;and&nbsp;</span>
-                                    <input type="text" name="vintage_hi" id="vintage_hi" placeholder="0.0-100.0" class="as-variable-input " value="" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <input type="text" name="vintage_low" id="vintage_low" placeholder="Year" class="form-control" value="">
+                                        </div>
+                                        <div class="col-md-2" align="center">
+                                            <span id="vintageAnd" style="display: none;">and</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" name="vintage_hi" id="vintage_hi" placeholder="Year" class="form-control" value="" style="display: none;">
+                                        </div>
+                                    </div>
 
-
-                                    <input class="form-control" placeholder="Vintage Year" type="text" name="vintageYear" id="vintageYear">
+                                    <!--<input class="form-control" placeholder="Vintage Year" type="text" name="vintageYear" id="vintageYear">-->
                                 </div>
 
                             </div>
@@ -125,22 +143,23 @@
 
 
 
-    function alcoholFunction(){               
-        if (document.getElementById("alcohol").value === "equal"){
+    function alcoholFunction() {
+        if (document.getElementById("alcohol").value === "equal") {
             console.log(document.getElementById("alcohol").value);
             document.getElementById("alcoholAnd").style.display = "none";
-            document.getElementById( "alcohol_hi").style.display = "none";
-
+            document.getElementById("alcohol_hi").style.display = "none";
+            document.getElementById("alcohol_hi").value = "";
         } else {
             document.getElementById("alcoholAnd").style.display = "inline-block";
             document.getElementById("alcohol_hi").style.display = "inline-block";
 
         }
     }
-    function vintageFunction(){               
-        if (document.getElementById("vintage").value === "equal"){
+    function vintageFunction() {
+        if (document.getElementById("vintage").value === "equal") {
             document.getElementById("vintageAnd").style.display = "none";
-            document.getElementById( "vintage_hi").style.display = "none";
+            document.getElementById("vintage_hi").style.display = "none";
+            document.getElementById("vintage_hi").value = "";
 
         } else {
             document.getElementById("vintageAnd").style.display = "inline-block";
@@ -148,11 +167,12 @@
 
         }
     }
-    function phFunction(){               
-        if (document.getElementById("ph").value === "equal"){
+    function phFunction() {
+        if (document.getElementById("ph").value === "equal") {
             console.log(document.getElementById("ph").value);
             document.getElementById("phAnd").style.display = "none";
-            document.getElementById( "ph_hi").style.display = "none";
+            document.getElementById("ph_hi").style.display = "none";
+            document.getElementById("ph_hi").value = "";
 
         } else {
             document.getElementById("phAnd").style.display = "inline-block";
@@ -160,9 +180,48 @@
 
         }
     }
+    
+    function showSuggestions(show)
+    {
+        setTimeout(function(){
+            if (show)
+            {
+                document.getElementById('suggestions').style.display = 'block';
+            }
+            else
+            {
+                document.getElementById('suggestions').style.display = 'none';
+            }
+        },1000);
+    }
+    
+    function setSearchText(text)
+    {
+        document.getElementById('keywords').value=text;
+        getSearches();
+    }
+    
+    var xhttp = new XMLHttpRequest();
+    function getSearches()
+    {
+        var name = document.getElementById('keywords').value;
+        xhttp.abort();
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var sug = JSON.parse(this.responseText);
+                var htm = "";
+                for (var i=0; i<sug.length; i++)
+                {
+                    htm+="<li><a onclick=\"setSearchText('"+sug[i]+"');\">"+sug[i]+"</a></li>";
+                }
+                document.getElementById("suggestions").innerHTML = htm;
+            }
+        };
+        xhttp.open("GET", "/SuperSlackers/search/autocomplete?brand="+name, true);
+        xhttp.send();        
+    }
 
-
-        
 
 
 </script>

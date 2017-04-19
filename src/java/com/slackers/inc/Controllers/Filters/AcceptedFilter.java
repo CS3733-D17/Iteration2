@@ -6,7 +6,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by jestrada on 4/2/17.
  */
-public class AcceptedFilter implements ExactFilter_old {
+public class AcceptedFilter implements ExactFilter {
 
     boolean value;
 
@@ -14,15 +14,16 @@ public class AcceptedFilter implements ExactFilter_old {
         this.value = value;
     }
 
-    @Override
-    public Label preApply(Label aFilter) {
-        aFilter.setIsAccepted(value);
-        return aFilter;
-    }
+    
 
     @Override
     public String getColumn() {
         return "isAccepted";
+    }
+
+    @Override
+    public Object getValue() {
+        return this.value;
     }
 
 }

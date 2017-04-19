@@ -5,7 +5,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by Matt on 4/2/2017.
  */
-public class RepresentativeIdNumberFilter implements ExactFilter_old {
+public class RepresentativeIdNumberFilter implements ExactFilter {
 
     String id;
 
@@ -21,6 +21,11 @@ public class RepresentativeIdNumberFilter implements ExactFilter_old {
     @Override
     public String getColumn() {
         return "representativeIdNumber";
+    }
+
+    @Override
+    public Object getValue() {
+        return id;
     }
 
 

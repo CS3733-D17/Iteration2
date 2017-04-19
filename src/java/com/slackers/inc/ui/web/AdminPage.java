@@ -69,7 +69,7 @@ public class AdminPage implements IPageFrame{
 "        <span class=\"icon-bar\"></span>\n" +
 "        <span class=\"icon-bar\"></span>\n" +
 "      </button>"+
-"      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\">COLA Search Registry</a>\n" +
+"      <a class=\"navbar-brand\" href=\""+WebComponentProvider.root(request)+"\"><span class=\"glyphicon glyphicon-glass\"></span> COLA Search Registry</a>\n" +
 "    </div><div class=\"collapse navbar-collapse\" id=\"colaNav\">\n" +
 "    <ul class=\"nav navbar-nav\">\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"search\">Search</a></li>\n" +
@@ -82,7 +82,7 @@ public class AdminPage implements IPageFrame{
 "          <li><a href=\"/SuperSlackers/admin/glblApps?subset=rejected\">Rejected</a></li>\n" +
 "        </ul>\n" +
 "      </li>\n" +
-//"      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +
+"      <li><a href=\""+WebComponentProvider.root(request)+"admin/empProd\">Productivity</a></li>\n" +
 "    </ul>\n" +
 "    <ul class=\"nav navbar-nav navbar-right\">\n" +
 "      <li><a href=\""+WebComponentProvider.root(request)+"account/settings\"><span class=\"glyphicon glyphicon-cog\"></span>"+(this.user!=null ? " "+ user.getFirstName()+" "+user.getLastName() : "")+"</a></li>\n" +

@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
@@ -60,8 +61,8 @@ public class AccountController {
             MessageDigest md = MessageDigest.getInstance("MD5");
             bytes = md.digest(bytes);
         } catch (Exception e){}
-        password = null; // promote gc of password. Prevent from hanging in memory
-        return Base64.encode(bytes);
+        password = null; // promote gc of password. Prevent from hanging in memory        
+        return Base64.getEncoder().encodeToString(bytes);
     }
     
     public static User getPageUser(HttpServletRequest request)
@@ -208,8 +209,13 @@ public class AccountController {
         try {
             db.getEntity(user, "email");
         } catch (SQLException e) {
-            System.out.println("Trouble accessing database for login verification");
-            throw e;
+            System.out.println("Trouble accessing database for login verification. Restarting db...");
+            DerbyConnection.getInstance().reset();
+            try
+            {
+                db.getEntity(user, "email");
+            }
+            catch (Exception ex){ throw ex;}
         }
         return password.equals(user.getPassword());
     }
@@ -244,12 +250,10 @@ public class AccountController {
                 response.addCookie(uPass);
                 response.addCookie(prevName);
             }     
-            System.out.println(usr);
             return usr!=null;
         }
         else
         {
-            System.out.println("U/P was null");
             return false;
         }
     }

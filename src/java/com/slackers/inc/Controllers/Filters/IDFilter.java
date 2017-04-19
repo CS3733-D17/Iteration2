@@ -6,7 +6,7 @@ import com.slackers.inc.database.entities.Label;
 /**
  * Created by jestrada on 4/2/17.
  */
-public class IDFilter implements ExactFilter_old {
+public class IDFilter implements ExactFilter {
 
     long id;
 
@@ -14,15 +14,16 @@ public class IDFilter implements ExactFilter_old {
         this.id = id;
     }
 
-    @Override
-    public Label preApply(Label aFilter) {
-        aFilter.setLabelId(id);
-        return aFilter;
-    }
+    
 
     @Override
     public String getColumn() {
         return "labelId";
+    }
+
+    @Override
+    public Object getValue() {
+        return id;
     }
 
 }

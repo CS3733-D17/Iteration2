@@ -91,14 +91,16 @@ public class ApplicationsPageServlet extends HttpServlet {
 "                           <div class=\"panel-heading\">\n" +
 "                               <div class=\"row\">\n" +
 "                                   <div class=\"col-md-10\">\n" +
-"                                       <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + manufacturer.getApplications().get(i).getLabel().getBrandName() + "</a>\n" +
+"                                       <a data-toggle=\"collapse\" data-parent=\"#applicationAccordion\" href=\"#collapse" + i + "\" style=\"font-size: 20px;\">" + apps.get(i).getLabel().getBrandName() +
+                        (apps.get(i).getLabel().getFancifulName().length()>2 ? " ("+apps.get(i).getLabel().getFancifulName()+")" : "")+ "</a>\n" +
+                        getStatusBadge(apps.get(i))+
 "                                   </div>\n" +
-"                                   <div style=\"float:right;\">\n" +
-"                                       <a href=\"/SuperSlackers/form?action=edit&id="+Long.toString(apps.get(i).getApplicationId())+"\"class='btn btn-primary btn-block'>Edit</a>\n" +
+"                                   <div class=\"col-md-2\">\n" +
+"                                       <a href=\"/SuperSlackers/form?action=view&id="+Long.toString(apps.get(i).getApplicationId())+"\"class='btn btn-primary btn-block'>View</a>\n" +
 "                                   </div>\n" +
 "                               </div>\n" +
 "                           </div>\n" +
-"                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse in\">\n" +
+"                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse\">\n" +
 "                           <div class=\"panel-body\">"+ManufacturerSearchServlet.renderLabel(this, request, apps.get(i).getLabel())+"</div>\n" +
 "                           </div>\n" +
 "                       </div>");
@@ -125,6 +127,23 @@ public class ApplicationsPageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request,response);
+    }
+    
+    private String getStatusBadge(LabelApplication app)
+    {
+        if (app.getStatus() == ApplicationStatus.APPROVED)
+        {
+            return "<span style=\"margin-left:30px;\" class=\"label label-success\">Approved</span>";
+        }
+        if (app.getStatus() == ApplicationStatus.REJECTED)
+        {
+            return "<span style=\"margin-left:30px;\" class=\"label label-danger\">Rejected</span>";
+        }
+        if (app.getStatus() == ApplicationStatus.UNDER_REVIEW)
+        {
+            return "<span style=\"margin-left:30px;\" class=\"label label-warning\">Under Review</span>";
+        }
+        return "";
     }
 
     /**
