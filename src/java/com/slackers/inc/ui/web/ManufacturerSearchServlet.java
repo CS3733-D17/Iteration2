@@ -191,7 +191,19 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         }
                     }
                     break;
-
+                case "origin":
+                    if(request.getParameter("origin").equals("between")){
+                        if (!(request.getParameter("origin_low").equals("")) && !(request.getParameter("origin_hi").equals(""))) {
+                            String lo = request.getParameter("origin_low");
+                            String hi = request.getParameter("origin_hi");
+                            search.addFilter(new OriginRange(lo, hi));
+                        }
+                    } else {
+                        if (!(request.getParameter("origin_low")==null||request.getParameter("origin_low").equals(""))) {
+                            search.addFilter(new OriginFilter(request.getParameter("origin_low")));
+                        }
+                    }
+                    break;
             }
         }
 

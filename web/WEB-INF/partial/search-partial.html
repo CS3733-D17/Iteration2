@@ -99,6 +99,22 @@
                                             <input type="text" name="ph_hi" id="ph_hi" placeholder="pH Level: 0.0-14.0" class="form-control" value="" style="display: none;">
                                         </div>
                                     </div>
+                                    <label>Origin</label>
+                                    <select style="color: #000000" id="origin" name="origin" onchange="originFunction()">
+                                        <option value="equal" >is equal to</option>
+                                        <option value="between">is between</option>
+                                    </select>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <input type="text" name="origin_low" id="origin_low" placeholder="Origin" class="form-control" value="">
+                                        </div>
+                                        <div class="col-md-2" align="center">
+                                            <span id="originAnd" style="display: none;">and</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" name="origin_low" id="origin_low" placeholder="Origin" class="form-control" value="" style="display: none;">
+                                        </div>
+                                    </div>
 
 
 
@@ -177,6 +193,20 @@
         } else {
             document.getElementById("phAnd").style.display = "inline-block";
             document.getElementById("ph_hi").style.display = "inline-block";
+
+        }
+    }
+    
+    function originFunction() {
+        if (document.getElementById("origin").value === "equal") {
+            console.log(document.getElementById("origin").value);
+            document.getElementById("originAnd").style.display = "none";
+            document.getElementById("origin_hi").style.display = "none";
+            document.getElementById("origin_hi").value = "";
+
+        } else {
+            document.getElementById("originAnd").style.display = "inline-block";
+            document.getElementById("origin_hi").style.display = "inline-block";
 
         }
     }
