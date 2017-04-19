@@ -36,6 +36,7 @@ public class WebComponentProvider {
                     "<html lang=\"en\"><head> <meta charset=\"utf-8\">\n" +
                     "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
                     "  <link rel=\"stylesheet\" href=\""+WEB_ROOT+"css/bootstrap.min.css\">\n" +
+                    "  <link rel=\"stylesheet\" href=\""+WEB_ROOT+"css/bootstrap-theme.min.css\">\n" +
                     "  <link rel=\"stylesheet\" href=\""+WEB_ROOT+"css/inputStyles.css\">\n" +
                     "  <script src=\""+WEB_ROOT+"jquery-3.2.0.min.js\"></script>\n" +
                 "  <script src=\""+WEB_ROOT+"js/Utils.js\"></script>\n" +
