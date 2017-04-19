@@ -173,7 +173,6 @@ public class AdminApplicationViewList extends HttpServlet {
             
            
         } catch (SQLException ex) {
-            ex.printStackTrace();
             response.sendRedirect(WebComponentProvider.root(request));
         }    
   
