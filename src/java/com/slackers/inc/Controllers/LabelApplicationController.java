@@ -769,7 +769,8 @@ public class LabelApplicationController {
         this.application.setStatus(LabelApplication.ApplicationStatus.APPROVED);
         this.application.getLabel().setApproval(approval);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
-        this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
+        this.application.setSubmitter(submitter);
+        this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()));
@@ -785,7 +786,8 @@ public class LabelApplicationController {
         this.application.setStatus(LabelApplication.ApplicationStatus.APPROVED);
         this.application.getLabel().setApproval(approval);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
-        this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
+        this.application.setSubmitter(submitter);
+        this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()
@@ -800,7 +802,8 @@ public class LabelApplicationController {
         this.application.setStatus(LabelApplication.ApplicationStatus.REJECTED);
         this.application.getLabel().setApproval(null);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
-        this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
+        this.application.setSubmitter(submitter);
+        this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:red;\">Application Rejected</span></h4>"));
@@ -811,7 +814,8 @@ public class LabelApplicationController {
         this.application.setStatus(LabelApplication.ApplicationStatus.REJECTED);
         this.application.getLabel().setApproval(null);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
-        this.application.setSubmitter(UsEmployee.NULL_EMPLOYEE);
+        this.application.setSubmitter(submitter);
+        this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:red;\">Application Rejected</span></h4>"
