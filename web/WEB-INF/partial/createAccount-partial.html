@@ -1,24 +1,20 @@
-<html>
-    <head>
-        <script type="text/javascript">
-            function validateForm() {
-                var firstName = document.forms["createAccount"]["fName"].value;
-                var lastName = document.forms["createAccount"]["lName"].value;
-                var password = document.forms["createAccount"]["pwd"].value;
-                var re = new RegExp(/\S+@\S+\.\S+/);
-                var email = document.forms["createAccount"]["email"].value;
-                if (firstName === "") {document.getElementById("fName").style="background-color: #ff8888";}
-                else {document.getElementById("fName").style="background-color: #ffffff";}
-                if (lastName === "") {document.getElementById("lName").style="background-color: #ff8888";}
-                else {document.getElementById("lName").style="background-color: #ffffff";}
-                if (!re.test(email)) {document.getElementById("email").style="background-color: #ff8888";}
-                else {document.getElementById("email").style="background-color: #ffffff";}
-                if (password === "") {document.getElementById("pwd").style="background-color: #ff8888";}
-                else {document.getElementById("pwd").style="background-color: #ffffff";}
-            }
-        </script>
-    </head>
-</html>
+<script type="text/javascript">
+    function validateForm() {
+        var firstName = document.forms["createAccount"]["fName"].value;
+        var lastName = document.forms["createAccount"]["lName"].value;
+        var password = document.forms["createAccount"]["pwd"].value;
+        var re = new RegExp(/\S+@\S+\.\S+/);
+        var email = document.forms["createAccount"]["email"].value;
+        if (firstName === "") {document.getElementById("fName").style="background-color: #ff8888";}
+        else {document.getElementById("fName").style="background-color: #ffffff";}
+        if (lastName === "") {document.getElementById("lName").style="background-color: #ff8888";}
+        else {document.getElementById("lName").style="background-color: #ffffff";}
+        if (!re.test(email)) {document.getElementById("email").style="background-color: #ff8888";}
+        else {document.getElementById("email").style="background-color: #ffffff";}
+        if (password === "") {document.getElementById("pwd").style="background-color: #ff8888";}
+        else {document.getElementById("pwd").style="background-color: #ffffff";}
+    }
+</script>
 <div class="container">
     <div class="row">
         <div class="col-md-3 hidden-sm">
