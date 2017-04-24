@@ -1,0 +1,11 @@
+/.idea/
+/out/
+/manifest.mf
+/build/
+/test/
+/dist/
+/nbproject/private/
+/nbproject/
+nbproject/ant-deploy.xml
+nnbproject/project.properties
+

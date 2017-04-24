@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="well">
+        <form action="/SuperSlackers/form/edit" method="post">
+            <fieldset id="appForm" disabled>
+            ##FORM_CONTENT
+            </fieldset>
+        </form>
+        <div id="hideUpload" style="display:none;"></div>
+        <!--<div class="row">
+            <div class="col-sm-1 col-md-2">
+            </div>
+            <div class="col-sm-10 col-md-8">
+                <img id="lblImg" src="##LABEL_IMAGE_PATH" class="img-responsive" alt="Label Image">
+            </div>
+            <div class="col-sm-1 col-md-2">
+            </div>                
+        </div>-->
+        <form action="/SuperSlackers/form/process?id=##ID" method="POST" style="margin:50px; margin-bottom: 5px;">
+            <h3>Acceptance Info</h3>
+            <br>
+            <div class="row">
+                <div class="col-xs-6">
+                    <label for="tbCt">CT</label>
+                    <input name="TBBCT" id="tbCt" type="text" class="form-control">
+                </div>
+                <div class="col-xs-6">
+                    <label for="tbOr">OR</label>
+                    <input name="TBBOR" id="tbOr" type="text" class="form-control">
+                </div>  
+            </div>
+            <br>
+            <label for="cText">Comments:</label>
+                <textarea id="cText" name="commentText" class="form-control"></textarea>
+            <button name="action" value="accept" class="btn btn-success" style="width:100%; margin-top: 30px;">Accept</button>
+            <button name="action" value="reject" class="btn btn-danger" style="width:100%; margin-top: 30px;">Reject</button>
+        </form>
+    </div>
+    <script>
+        fillForm();
+    </script>
+</div>

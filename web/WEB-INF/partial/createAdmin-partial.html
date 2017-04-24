@@ -1,0 +1,88 @@
+<script type="text/javascript">
+    function validateForm() {
+        var firstName = document.forms["createAdmin"]["fName"].value;
+        var lastName = document.forms["createAdmin"]["lName"].value;
+        var password = document.forms["createAdmin"]["pwd"].value;
+        var re = new RegExp(/\S+@\S+\.\S+/);
+        var email = document.forms["createAdmin"]["email"].value;
+        if (firstName === "") {document.getElementById("fName").style="background-color: #ff8888";}
+        else {document.getElementById("fName").style="background-color: #ffffff";}
+        if (lastName === "") {document.getElementById("lName").style="background-color: #ff8888";}
+        else {document.getElementById("lName").style="background-color: #ffffff";}
+        if (!re.test(email)) {document.getElementById("email").style="background-color: #ff8888";}
+        else {document.getElementById("email").style="background-color: #ffffff";}
+        if (password === "") {document.getElementById("pwd").style="background-color: #ff8888";}
+        else {document.getElementById("pwd").style="background-color: #ffffff";}
+    }
+</script>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 hidden-sm">
+        </div>
+        <div class="col-md-6 col-sm-12"> 
+            <div class="well well-lg">
+                <div align="center">
+                    <h2>Create Account</h2>
+                    <br>
+                    <br>
+                </div>
+                <div>
+                    <form name="createAdmin" action="/SuperSlackers/account/create/admin" method="post">
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-5">
+                                <label for="fName">First Name:</label>
+                                <input name="fName" type="text" class="form-control" id="fName" placeholder="First name" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="lName">Last Name:</label>
+                                <input name="lName" type="text" class="form-control" id="lName" placeholder="Last name" required>
+                            </div>
+                            <div class="col-md-1">                            
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <label for="email">Email:</label>
+                                <input name="email" type="email" class="form-control" id="email" placeholder="Enter email" required>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <label for="pwd">Password:</label>
+                                <input name="password" type="password" class="form-control" id="pwd" placeholder="Enter password" required>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <div class="form-group" align="center">
+                                    <label class="radio-inline"><input type="radio" name="uType" value="admin" checked>Administrator</label>
+                                </div>
+                                <button onclick="validateForm()" type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 hidden-sm">
+        </div>
+    </div>    
+</div>
