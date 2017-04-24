@@ -65,8 +65,6 @@ public class LabelApplication implements IEntity{
     private String applicant;
     private String reviewer;
     private String submitter;
-    private String TBB_CT;
-    private String TBB_OR;
     private Label label;
     private List<LabelComment> comments;
     
@@ -84,8 +82,7 @@ public class LabelApplication implements IEntity{
         this.mailingAddress = new Address();
         this.phoneNumber = "";        
         this.reviewer = "";
-        this.TBB_CT = "";        
-        this.TBB_OR = "";
+        
         this.status = ApplicationStatus.UNKNOWN;
         this.submitter = "";
     }
@@ -111,8 +108,7 @@ public class LabelApplication implements IEntity{
         values.put("emailAddress", this.emailAddress);
         values.put("applicationDate", this.applicationDate);
         values.put("representativeId", this.representativeId);
-        values.put("TBB_CT", this.TBB_CT);
-        values.put("TBB_OR", this.TBB_OR);
+        
         values.put("status", this.status); 
         if (this.applicant!=null)
             values.put("applicant", this.applicant);
@@ -137,8 +133,6 @@ public class LabelApplication implements IEntity{
         values.put("phoneNumber", this.phoneNumber);        
         values.put("emailAddress", this.emailAddress);
         values.put("applicationDate", this.applicationDate);
-        values.put("TBB_CT", this.TBB_CT);
-        values.put("TBB_OR", this.TBB_OR);
         values.put("status", this.status);        
         if (this.applicant!=null)
             values.put("applicant", this.applicant);
@@ -179,14 +173,7 @@ public class LabelApplication implements IEntity{
         {
             this.emailAddress = (String) values.get("emailAddress");
         }
-        if (values.containsKey("TBB_CT"))
-        {
-            this.TBB_CT = (String) values.get("TBB_CT");
-        }
-        if (values.containsKey("TBB_OR"))
-        {
-            this.TBB_OR = (String) values.get("TBB_OR");
-        }
+        
         if (values.containsKey("applicationDate"))
         {
             this.applicationDate = (Date) values.get("applicationDate");
@@ -258,9 +245,7 @@ public class LabelApplication implements IEntity{
         pairs.put("submitter", String.class);        
         pairs.put("label", Long.class);
         pairs.put("comments", String.class);
-        pairs.put("applicationTypes", String.class);    
-        pairs.put("TBB_CT", String.class); 
-        pairs.put("TBB_OR", String.class);       
+        pairs.put("applicationTypes", String.class);      
         pairs.put("allowedRevisions", String.class);
         return pairs;
     }
@@ -273,8 +258,6 @@ public class LabelApplication implements IEntity{
         cols.add("representativeId varchar(128)");
         cols.add("mailingAddress varchar(2048)");
         cols.add("phoneNumber varchar(64)");
-        cols.add("TBB_CT varchar(32)");
-        cols.add("TBB_OR varchar(32)");
         cols.add("emailAddress varchar(128)");
         cols.add("applicationDate date");
         cols.add("status varchar(256)");
@@ -368,19 +351,19 @@ public class LabelApplication implements IEntity{
     }
 
     public String getTBB_CT() {
-        return TBB_CT;
+        return label.getTBB_CT();
     }
 
     public void setTBB_CT(String TBB_CT) {
-        this.TBB_CT = TBB_CT;
+        label.setTBB_CT(TBB_CT);
     }
 
     public String getTBB_OR() {
-        return TBB_OR;
+        return label.getTBB_OR();
     }
 
     public void setTBB_OR(String TBB_OR) {
-        this.TBB_OR = TBB_OR;
+        label.setTBB_OR(TBB_OR);
     }
     
     public Manufacturer getApplicant() {

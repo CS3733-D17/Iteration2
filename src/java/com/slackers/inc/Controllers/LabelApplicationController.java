@@ -173,7 +173,6 @@ public class LabelApplicationController {
                 newLabel.setWineAppelation(request.getParameter("wineAppelation"));
                 label = newLabel;
             }
-            System.out.println(label.getAlcoholContent());
             Part img = request.getPart("labelImageUpload");
             if (img != null) {
                 label.setLabelImageType(context.getMimeType(img.getSubmittedFileName()));
@@ -214,7 +213,6 @@ public class LabelApplicationController {
                             label.setLabelImage(buffer.toByteArray());
                             label.setLabelImageType("image/png");
                         } else {
-                            System.out.println("Image cannot be read. Using url reference");
                             label.setLabelImage(new URL(request.getParameter("useUrl")).toString().getBytes(StandardCharsets.US_ASCII));
                             label.setLabelImageType("urlAbsolute");
                         }
@@ -247,7 +245,6 @@ public class LabelApplicationController {
             Label l = this.editLabelFromRequest(context, request);
             //DerbyConnection.getInstance().createEntity(l);
             this.application.setLabel(l);
-            System.out.println(l);
             DerbyConnection.getInstance().writeEntity(this.application, this.application.getPrimaryKeyName());
         } catch (Exception e) {
 
@@ -315,8 +312,6 @@ public class LabelApplicationController {
             revTypes.add("image");
         }
 
-        System.out.println(String.join(", ", revTypes));
-
         if (revTypes.contains("alcohol")) {
             try {
                 
@@ -328,7 +323,6 @@ public class LabelApplicationController {
         if (revTypes.contains("vintage")) {
             try {
                 ((WineLabel) label).setVintage(Integer.parseInt(request.getParameter("vintage-new")));
-                System.out.println("Vintage: " + Integer.parseInt(request.getParameter("vintage-new")));
                 revisions.add("Changed vintage");
             } catch (Exception e) {
             }
@@ -353,7 +347,6 @@ public class LabelApplicationController {
             try {
                 label.setGeneralInfo(request.getParameter("generalInfo-new"));
                 revisions.add("Changed info");
-                System.out.println("Genral: " + request.getParameter("generalInfo-new"));
             } catch (Exception e) {
             }
         }
@@ -408,7 +401,6 @@ public class LabelApplicationController {
     }
 
     public String validateApplication() {
-        System.out.println("INVAL"+this.application.getLabel().getAlcoholContent());
         if (this.application.getEmailAddress() == null || this.application.getEmailAddress().length() < 3) {
             return "Invalid email address";
         }
@@ -449,7 +441,6 @@ public class LabelApplicationController {
     }
 
     public String validateLabel() {
-        System.out.println("VALLBL:"+this.application.getLabel().getAlcoholContent());
         Label l = this.application.getLabel();
         if (l == null) {
             return "Invalid label information";
@@ -473,7 +464,6 @@ public class LabelApplicationController {
             return "Invalid beverage type";
         }
         if (l.getAlcoholContent() < 0 || l.getAlcoholContent() > 100) {
-            System.out.println("ACL"+l.getAlcoholContent());
             return "Invalid alchohol content";
         }
         if (l.getFormula() == null || l.getFormula().length() < 2) {
