@@ -1,3 +1,19 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            function validateForm() {
+                var re = new RegExp(/\S+@\S+\.\S+/);
+                var email = document.forms["login"]["email"].value;
+                var password = document.forms["login"]["pwd"].value;
+                if (!re.test(email)) {document.getElementById("email").style="background-color: #ff8888";}
+                else {document.getElementById("email").style="background-color: #ffffff";}
+                if (password === "") {document.getElementById("pwd").style="background-color: #ff8888";}
+                else {document.getElementById("pwd").style="background-color: #ffffff";}
+            }
+        </script>
+    </head>
+</html>
+
 <div class="container">
     <div class="row">
         <div class="col-md-3 hidden-sm">
@@ -10,13 +26,13 @@
                     <br>
                 </div>
                 <div>
-                    <form action="login" method="post">
+                    <form name="login" action="login" method="post">
                         <div class="row">
                             <div class="col-md-1">
                             </div>
                             <div class="col-md-10">
                                 <label for="email">Email:</label>
-                                <input name="email" type="email" class="form-control" id="email" placeholder="Enter email">
+                                <input name="email" type="email" class="form-control" id="email" placeholder="Enter email" required>
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -26,8 +42,8 @@
                             <div class="col-md-1">
                             </div>
                             <div class="col-md-10">
-                                <label for="pwd">Password:</label>
-                                <input name="password" type="password" class="form-control" id="pwd" placeholder="Enter password">
+                                <label for="pwd">Password:</label>  
+                                <input name="password" type="password" class="form-control" id="pwd" placeholder="Enter password" required>
                             </div>
                             <div class="col-md-1">
                             </div>

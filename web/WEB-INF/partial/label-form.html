@@ -2,79 +2,57 @@
     function validateForm(field) {
 
         //regular expressions to check if the fields are valid
-        var repIdReg = new RegExp(/\d+$/);
-        var plantNumberReg = new RegExp(/\d+$/);
+        var repIdReg = new RegExp(/^\d+$/);
+        var plantNumberReg = new RegExp(/^\d+$/);
         var phoneReg = new RegExp(/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/);
-        var serialReg = new RegExp(/\w{1,10}/);
-        var emailReg = new RegExp(/[/\S|\s]+?@[/\S|\s]+/);
+        var serialReg = new RegExp(/^\d{2}-\d{3}$/);
+        var emailReg = new RegExp(/[/\S|\s]+?@[/\S|\s]/);
         var alcoholContentReg = new RegExp(/^\d{1,3}$/);
         var addressReg = new RegExp(/^.+?\n.+?\n.+$/);
         var brandNameReg = new RegExp(/\w/);
         var formulaReg = new RegExp(/\w/);
-        field = "formula";
+
         switch (field) { //yes, the switch cases don't break on purpose
             case "formula":
                 var formula = document.getElementById("formula").value;
-                if (formula === "") {
-                    document.getElementById("formula").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("formula").style.backgroundColor = "#ffffff";
-                }
+                if (formula === "") {document.getElementById("formula").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("formula").style.backgroundColor = "#ffffff";}
             case "brandName":
                 var brandName = document.getElementById("brandName").value;
-                if (brandName === "") {
-                    document.getElementById("brandName").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("brandName").style.backgroundColor = "#ffffff";
-                }
+                if (brandName === "") {document.getElementById("brandName").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("brandName").style.backgroundColor = "#ffffff";}
             case "alcoholContent":
                 var alcoholContent = document.getElementById("alcoholContent").value;
-                if (!alcoholContentReg.test(alcoholContent)) {
-                    document.getElementById("alcoholContent").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("alcoholContent").style.backgroundColor = "#ffffff";
-                }
+                if (!alcoholContentReg.test(alcoholContent)) {document.getElementById("alcoholContent").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("alcoholContent").style.backgroundColor = "#ffffff";}
             case "serialNumber":
                 var serialNumber = document.getElementById("serialNumber").value;
-                if (!serialReg.test(serialNumber)) {
-                    document.getElementById("serialNumber").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("serialNumber").style.backgroundColor = "#ffffff";
-                }
+                if (!serialReg.test(serialNumber)) {document.getElementById("serialNumber").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("serialNumber").style.backgroundColor = "#ffffff";}
             case "address":
                 var address = document.getElementById("address").value;
-                if (!addressReg.test(address)) {
-                    document.getElementById("address").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("address").style.backgroundColor = "#ffffff";
-                }
+                if (!addressReg.test(address)) {document.getElementById("address").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("address").style.backgroundColor = "#ffffff";}
                 var mailAddress = document.getElementById("mailAddress").value;
-                if (!addressReg.test(mailAddress) && mailAddress != "") {
-                    document.getElementById("mailAddress").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("mailAddress").style.backgroundColor = "#ffffff";
-                }
+                if (!addressReg.test(mailAddress) && mailAddress != "") {document.getElementById("mailAddress").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("mailAddress").style.backgroundColor = "#ffffff";}
             case "email":
                 var email = document.getElementById("email").value;
-                if (!emailReg.test(email)) {
-                    document.getElementById("email").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("email").style.backgroundColor = "#ffffff";
-                }
+                if (!emailReg.test(email)) {document.getElementById("email").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("email").style.backgroundColor = "#ffffff";}
             case "phone":
                 var phone = document.getElementById("phone").value;
-                if (!phoneReg.test(phone)) {
-                    document.getElementById("phone").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("phone").style.backgroundColor = "#ffffff";
-                }
+                if (!phoneReg.test(phone)) {document.getElementById("phone").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("phone").style.backgroundColor = "#ffffff";}
             case "plantNumber":
                 var plantNumber = document.getElementById("plantNumber").value;
-                if (!plantNumberReg.test(plantNumber)) {
-                    document.getElementById("plantNumber").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("plantNumber").style.backgroundColor = "#ffffff";
-                }
+                if (!plantNumberReg.test(plantNumber)) {document.getElementById("plantNumber").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("plantNumber").style.backgroundColor = "#ffffff";}
+            case "repId":
+                var repId = document.getElementById("representativeId").value;
+                if (!repIdReg.test(repId)) {document.getElementById("representativeId").style.backgroundColor = "#ff8888";}
+                else {document.getElementById("representativeId").style.backgroundColor = "#ffffff";}
+                break;
 
         }
 
@@ -97,29 +75,29 @@
 
         <div class="form-group">
             <label>Representative Id Number</label>
-            <input id="representativeId" name = "representativeId" class="form-control" placeholder="Representative ID" type="text" oninput="validateForm('repId')" required>
+            <input id="representativeId" name = "representativeId" class="form-control" placeholder="Representative ID" type="text" onfocus="validateForm('repId')" required>
         </div>
 
         <div class="form-group">
             <label>Plant Registry/Basic Permit/Brewer's No.</label>
-            <input id="plantNumber" name = "plantNumber" class="form-control" placeholder="Value" type="text" oninput="validateForm('plantNumber')" required>
+            <input id="plantNumber" name = "plantNumber" class="form-control" placeholder="Value" type="text" onfocus="validateForm('plantNumber')"required>
         </div>
     </div>
     <div class="col-sm-6">
         <div class="form-group">                
             <label>Phone Number</label> 
-            <input id="phone" name="phone" class="form-control" placeholder="Phone Number" type="text" oninput="validateForm('phone')" required>
+            <input id="phone" name="phone" class="form-control" placeholder="Phone Number" type="text" onfocus="validateForm('phone')"required>
         </div>
 
         <div class="form-group">                
             <label>Email Address</label> 
-            <input id="email" name="email" class="form-control" placeholder="E-Mail Address" type="text" oninput="validateForm('email')" required>
+            <input id="email" name="email" class="form-control" placeholder="E-Mail Address" type="text" onfocus="validateForm('email')" required>
         </div>
     </div>
 </div>
 <div class="form-group">
     <label>Application Address</label>
-    <textarea id="address" name="address" class="form-control" rows="3" oninput="validateForm('address')" required></textarea>
+    <textarea id="address" name="address" class="form-control" rows="3" onfocus="validateForm('address')" required></textarea>
 </div>
 <div class="form-group">
     <label>Mailing Address</label>
@@ -134,11 +112,11 @@
     <div class="col-sm-6">
         <div class="form-group">
             <label>Serial Number</label>
-            <input id="serialNumber" name="serialNumber" class="form-control" placeholder="##-####" type="text" oninput="validateForm('serialNumber')" required>
+            <input id="serialNumber" name="serialNumber" class="form-control" placeholder="##-####" type="text" onfocus="validateForm('serialNumber')" required>
         </div>
         <div class="form-group">
             <label>Alcohol Content</label>
-            <input id="alcoholContent" name="alcoholContent" class="form-control" placeholder="0-100%" type="text" oninput="validateForm('alcoholContent')" required>
+            <input id="alcoholContent" name="alcoholContent" class="form-control" placeholder="0-100%" type="text" onfocus="validateForm('alcoholContent')" required>
         </div>
     </div>
     <div class="col-sm-6">
@@ -199,7 +177,7 @@
 </div>-->
 <div class="form-group">
     <label>Brand Name</label>
-    <input id="brandName" name="brandName" class="form-control" placeholder="Brand Name" type="text" oninput="validateForm('brandName')" required>
+    <input id="brandName" name="brandName" class="form-control" placeholder="Brand Name" type="text" onfocus="validateForm('brandName')" required>
 </div>
 <div class="form-group">
     <label>Fanciful Name</label>
@@ -207,7 +185,7 @@
 </div>
 <div class="form-group">
     <label>Formula</label>
-    <textarea id="formula" name="formula" class="form-control" rows="4" oninput="validateForm('formula')" required></textarea>
+    <textarea id="formula" name="formula" class="form-control" rows="4" onfocus="validateForm('formula')" required></textarea>
 </div>
 <div class="form-group">
     <label>Write any information below, not on the label that is on the container.</label>
