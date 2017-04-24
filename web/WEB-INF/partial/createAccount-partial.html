@@ -1,3 +1,20 @@
+<script type="text/javascript">
+    function validateForm() {
+        var firstName = document.forms["createAccount"]["fName"].value;
+        var lastName = document.forms["createAccount"]["lName"].value;
+        var password = document.forms["createAccount"]["pwd"].value;
+        var re = new RegExp(/\S+@\S+\.\S+/);
+        var email = document.forms["createAccount"]["email"].value;
+        if (firstName === "") {document.getElementById("fName").style="background-color: #ff8888";}
+        else {document.getElementById("fName").style="background-color: #ffffff";}
+        if (lastName === "") {document.getElementById("lName").style="background-color: #ff8888";}
+        else {document.getElementById("lName").style="background-color: #ffffff";}
+        if (!re.test(email)) {document.getElementById("email").style="background-color: #ff8888";}
+        else {document.getElementById("email").style="background-color: #ffffff";}
+        if (password === "") {document.getElementById("pwd").style="background-color: #ff8888";}
+        else {document.getElementById("pwd").style="background-color: #ffffff";}
+    }
+</script>
 <div class="container">
     <div class="row">
         <div class="col-md-3 hidden-sm">
@@ -10,17 +27,17 @@
                     <br>
                 </div>
                 <div>
-                    <form action="signup" method="post">
+                    <form name="createAccount" action="signup" method="post">
                         <div class="row">
                             <div class="col-md-1">
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-5" id="FirstName">
                                 <label for="fName">First Name:</label>
-                                <input name="fName" type="text" class="form-control" id="fName" placeholder="First name">
+                                <input name="fName" type="text" class="form-control" id="fName" placeholder="First name" required>
                             </div>
                             <div class="col-md-5">
                                 <label for="lName">Last Name:</label>
-                                <input name="lName" type="text" class="form-control" id="lName" placeholder="Last name">
+                                <input name="lName" type="text" class="form-control" id="lName" placeholder="Last name" required>
                             </div>
                             <div class="col-md-1">                            
                             </div>
@@ -31,7 +48,7 @@
                             </div>
                             <div class="col-md-10">
                                 <label for="email">Email:</label>
-                                <input name="email" type="email" class="form-control" id="email" placeholder="Enter email">
+                                <input name="email" type="email" class="form-control" id="email" placeholder="Enter email" required>
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -42,7 +59,7 @@
                             </div>
                             <div class="col-md-10">
                                 <label for="pwd">Password:</label>
-                                <input name="password" type="password" class="form-control" id="pwd" placeholder="Enter password">
+                                <input name="password" type="password" class="form-control" id="pwd" placeholder="Enter password" required>
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -56,7 +73,7 @@
                                     <label class="radio-inline"><input type="radio" name="uType" value="manufacturer" checked>Manufacturer</label>
                                     <label class="radio-inline"><input type="radio" name="uType" value="employee">Employee</label>
                                 </div>
-                                <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
+                                <button onclick="validateForm()" type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
                             </div>
                             <div class="col-md-1">
                             </div>
