@@ -5,14 +5,26 @@
         var password = document.forms["createAccount"]["pwd"].value;
         var re = new RegExp(/\S+@\S+\.\S+/);
         var email = document.forms["createAccount"]["email"].value;
-        if (firstName === "") {document.getElementById("fName").style="background-color: #ff8888";}
-        else {document.getElementById("fName").style="background-color: #ffffff";}
-        if (lastName === "") {document.getElementById("lName").style="background-color: #ff8888";}
-        else {document.getElementById("lName").style="background-color: #ffffff";}
-        if (!re.test(email)) {document.getElementById("email").style="background-color: #ff8888";}
-        else {document.getElementById("email").style="background-color: #ffffff";}
-        if (password === "") {document.getElementById("pwd").style="background-color: #ff8888";}
-        else {document.getElementById("pwd").style="background-color: #ffffff";}
+        if (firstName === "") {
+            document.getElementById("fName").style = "background-color: #ff8888";
+        } else {
+            document.getElementById("fName").style = "background-color: #ffffff";
+        }
+        if (lastName === "") {
+            document.getElementById("lName").style = "background-color: #ff8888";
+        } else {
+            document.getElementById("lName").style = "background-color: #ffffff";
+        }
+        if (!re.test(email)) {
+            document.getElementById("email").style = "background-color: #ff8888";
+        } else {
+            document.getElementById("email").style = "background-color: #ffffff";
+        }
+        if (password === "") {
+            document.getElementById("pwd").style = "background-color: #ff8888";
+        } else {
+            document.getElementById("pwd").style = "background-color: #ffffff";
+        }
     }
 </script>
 <div class="container">
@@ -77,7 +89,7 @@
                             </div>
                             <div class="col-md-1">
                             </div>
-                            
+
                         </div>
                     </form>
                 </div>

@@ -7,10 +7,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +28,7 @@ public class HttpRequest {
 
     protected String url;
     protected HttpMethod method;
+    protected List<String> cookies;
 
     protected Map<String, String> parameters;
 
@@ -35,6 +36,7 @@ public class HttpRequest {
         this.url = urlString;
         this.method = method;
         this.parameters = parameters;
+        this.cookies = new LinkedList<>();
     }
 
     public HttpRequest(String urlString, Map<String, String> parameters) {
@@ -75,6 +77,11 @@ public class HttpRequest {
         return s.toString();
     }
 
+    public void addCookie(String name, String value)
+    {
+        this.cookies.add(name+"="+value);
+    }
+    
     public HttpResponse submitRequest() {
         try {
             if (!(this.url.startsWith("http://") || this.url.startsWith("https://"))) {
@@ -87,6 +94,8 @@ public class HttpRequest {
                         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                         con.setRequestMethod("POST");
                         con.setRequestProperty("User-Agent", AGENT);
+                        if (!this.cookies.isEmpty())
+                            con.setRequestProperty("Cookie", String.join("; ", this.cookies));
                         con.setDoOutput(true);
                         try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
                             wr.writeBytes(this.buildParameterList());
@@ -119,6 +128,8 @@ public class HttpRequest {
                         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                         con.setRequestMethod("GET");
                         con.setRequestProperty("User-Agent", AGENT);
+                        if (!this.cookies.isEmpty())
+                            con.setRequestProperty("Cookie", String.join("; ", this.cookies));
                         int responseCode = con.getResponseCode();
                         StringBuilder response = null;
                         try (BufferedReader in = new BufferedReader(

@@ -14,14 +14,25 @@ import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.WineLabel;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -30,7 +41,7 @@ import java.util.regex.Pattern;
 public class FormImporter {
 
     public static String COLAURL = "https://www.ttbonline.gov/colasonline/viewColaDetails.do?action=publicFormDisplay&ttbid=";
-    private String tbbId;    
+    private String tbbId;
 
     public FormImporter(String id) {
         this.tbbId = id;
@@ -51,11 +62,61 @@ public class FormImporter {
         return "";
     }
 
-    public String getExistingApplicationURL()
-    {
+    public BufferedImage getImage() {
+        HttpRequest request = new HttpRequest(COLAURL + this.tbbId);//16309001000410
+        HttpResponse response = request.submitRequest();
+        if (response != null) {
+            List<String> cookies = new LinkedList<>();
+            for (String c : response.getHeaders().get("Set-Cookie"))
+            {
+                cookies.add(c.substring(0, c.indexOf(";")));
+            }
+            Pattern imgs = Pattern.compile("<img src=\"(\\/colasonline\\/publicViewAttachment[\\s\\S]+?)\"");
+            Matcher matchedimgs = imgs.matcher(response.getResponse());
+            if (matchedimgs.find()) {                
+                String url = "https://www.ttbonline.gov" + matchedimgs.group(1);
+                System.out.println("URL:" + url);
+                try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+                    HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+                    connection.setRequestProperty("Cookie", String.join("; ", cookies));
+                    System.out.println(connection.getResponseCode());
+                    connection.connect();
+                    try (InputStream input = connection.getInputStream()) {
+                        BufferedImage imgBuffered = ImageIO.read(input);
+                        if (imgBuffered != null) {
+                            System.out.println("not null");
+                            if (imgBuffered.getWidth() > 1000) {
+                                Image temp = imgBuffered.getScaledInstance(1000, -1, Image.SCALE_DEFAULT);
+                                BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                                toSave.getGraphics().drawImage(temp, 0, 0, null);
+                                ImageIO.write(toSave, "png", buffer);
+                                ImageIO.write(toSave, "png", new File("out.png"));
+                                System.out.println("wrote");
+                                buffer.flush();
+                                toSave.getGraphics().dispose();
+                            } else {
+                                ImageIO.write(imgBuffered, "png", buffer);
+                                ImageIO.write(imgBuffered, "png", new File("out.png"));
+                                System.out.println("wrote");
+                                buffer.flush();
+                            }
+                        } else {
+                            System.out.println("WAS NuLL");
+                        }
+                    }
+                    //connection.disconnect();
+                } catch (IOException ex) {
+                    Logger.getLogger(FormImporter.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getExistingApplicationURL() {
         return COLAURL + this.tbbId;
     }
-    
+
     public LabelApplication importApplication() {
         HttpRequest request = new HttpRequest(COLAURL + this.tbbId);//16309001000410
         HttpResponse response = request.submitRequest();
