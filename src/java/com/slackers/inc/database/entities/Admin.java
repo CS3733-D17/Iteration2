@@ -8,6 +8,9 @@ package com.slackers.inc.database.entities;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     A class to represent an Admin in our system. Contains all fields and methods
+ *     from the User class. Admins have more rights than normal users, as in most systems.
  */
 public class Admin extends User{
 

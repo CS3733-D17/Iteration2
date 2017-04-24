@@ -12,6 +12,10 @@ import java.util.*;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     A class to represent a user in our system. Holds fields for email, password, the user's type,
+ *     and the user's first and last name. The user type is an enum, telling us if the user is a
+ *     manufacturer, US employee, COLA user, admin, or something else.
  */
 public class User implements IEntity{
     
