@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.database.entities;
 
-import com.slackers.inc.database.DerbyConnection;
+import com.slackers.inc.Controllers.LabelApplicationController;
 import com.slackers.inc.database.IEntity;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -51,6 +51,8 @@ public class Label implements IEntity{
     private String fancifulName;
     private String formula;
     private String generalInfo;
+    private String TBB_CT;
+    private String TBB_OR;
     private String labelImageType;
     private byte[] labelImage;
     
@@ -73,11 +75,13 @@ public class Label implements IEntity{
         this.fancifulName = "";
         this.formula = "";
         this.generalInfo = "";
+        this.TBB_CT = "";        
+        this.TBB_OR = "";
         this.labelImage=null;
         this.labelImageType = "";
         this.pullImageOut = false;
     }
-
+    
     public ApplicationApproval getApproval() {
         return approval;
     }
@@ -228,7 +232,8 @@ public class Label implements IEntity{
         values.put("productSource", this.productSource.name());
         values.put("productType", this.productType.name());
         values.put("brandName", this.brandName);
-        
+        values.put("TBB_CT", this.TBB_CT);
+        values.put("TBB_OR", this.TBB_OR);
         values.put("serialNumber", this.serialNumber);
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
@@ -256,7 +261,8 @@ public class Label implements IEntity{
         values.put("productType", this.productType.name());
         values.put("brandName", this.brandName);
         values.put("serialNumber", this.serialNumber);
-        
+        values.put("TBB_CT", this.TBB_CT);
+        values.put("TBB_OR", this.TBB_OR);
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
@@ -309,7 +315,14 @@ public class Label implements IEntity{
         {
             this.serialNumber = (String) values.get("serialNumber");
         }
-        
+        if (values.containsKey("TBB_CT"))
+        {
+            this.TBB_CT = (String) values.get("TBB_CT");
+        }
+        if (values.containsKey("TBB_OR"))
+        {
+            this.TBB_OR = (String) values.get("TBB_OR");
+        }
         if (values.containsKey("fancifulName"))
         {
             this.fancifulName = (String) values.get("fancifulName");
@@ -350,7 +363,9 @@ public class Label implements IEntity{
         pairs.put("brandName", String.class);
         pairs.put("serialNumber", String.class);
         pairs.put("fancifulName", String.class);
-        pairs.put("formula", String.class);
+        pairs.put("formula", String.class);   
+        pairs.put("TBB_CT", String.class); 
+        pairs.put("TBB_OR", String.class);  
         pairs.put("generalInfo", String.class);
         if (this.pullImageOut)
         {
@@ -378,6 +393,8 @@ public class Label implements IEntity{
         cols.add("wineAppelation varchar(128)");
         cols.add("generalInfo varchar(1024)");
         cols.add("serialNumber varchar(64)");
+        cols.add("TBB_CT varchar(32)");
+        cols.add("TBB_OR varchar(32)");
         cols.add("phLevel float");
         cols.add("vintage int");        
         cols.add("labelImage blob");
@@ -411,6 +428,22 @@ public class Label implements IEntity{
     @Override
     public String toString() {
         return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource=" + productSource + ", productType=" + productType + ", brandName=" + brandName + ", general=" + generalInfo+ ", labelimage=" + labelImageType +": "+ (labelImage!=null) + '}';
+    }
+    
+    public String getTBB_CT() {
+        return TBB_CT;
+    }
+
+    public void setTBB_CT(String TBB_CT) {
+        this.TBB_CT = TBB_CT;
+    }
+
+    public String getTBB_OR() {
+        return TBB_OR;
+    }
+
+    public void setTBB_OR(String TBB_OR) {
+        this.TBB_OR = TBB_OR;
     }
     
 }

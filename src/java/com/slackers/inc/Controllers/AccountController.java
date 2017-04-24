@@ -248,12 +248,10 @@ public class AccountController {
                 response.addCookie(uPass);
                 response.addCookie(prevName);
             }     
-            System.out.println(usr);
             return usr!=null;
         }
         else
         {
-            System.out.println("U/P was null");
             return false;
         }
     }

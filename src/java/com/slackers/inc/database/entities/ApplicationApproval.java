@@ -70,6 +70,11 @@ public class ApplicationApproval implements IEntity{
     }   
     
     public UsEmployee getAgent() {
+        try {
+            DerbyConnection.getInstance().getEntity(this.agent, this.agent.getPrimaryKeyName());
+        } catch (SQLException ex) {
+            Logger.getLogger(ApplicationApproval.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return agent;
     }
 
@@ -138,11 +143,6 @@ public class ApplicationApproval implements IEntity{
         if (values.containsKey("agent"))
         {
             this.agent.setPrimaryKeyValue((String)values.get("agent"));
-            try {
-                DerbyConnection.getInstance().getEntity(this.agent, this.agent.getPrimaryKeyName());
-            } catch (SQLException ex) {
-                Logger.getLogger(ApplicationApproval.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         if (values.containsKey("application"))
         {

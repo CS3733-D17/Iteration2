@@ -11,6 +11,7 @@ import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.entities.LabelApplication;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -19,6 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,7 +51,8 @@ public class EmployeeProductivity extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
+            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Employee Productivity");
+
             
             List<Filter> filter = new LinkedList<>();
             filter.add(new RangeFilter(){
@@ -91,26 +98,57 @@ public class EmployeeProductivity extends HttpServlet {
                 {
                     Map<String,Integer> day = new HashMap<>();
                     day.put(a.getApplicationDate().toString(), 1);
+                    Map<String,Integer> future = new HashMap<>();
+                    Date d = new Date(new java.util.Date().getTime()+86400000);
+                    future.put(d.toString(), 1);
                     values.put(a.getSubmitter().getEmail(), day);
+                    values.put(a.getSubmitter().getEmail(), future);
                 }
             }
             
+            JsonArrayBuilder data = Json.createArrayBuilder();
+            
+            JsonArrayBuilder history = Json.createArrayBuilder();
+            
+            
+            for(Map.Entry<String, Map<String,Integer>> t: values.entrySet()) {
+                String key = t.getKey();
+                for (Map.Entry<String,Integer> e : t.getValue().entrySet()){
+                    JsonObjectBuilder day = Json.createObjectBuilder()
+                            .add("date", e.getKey())
+                            .add("forms", e.getValue());
+                            
+                    history.add(day);
+                    System.out.println("OuterKey: " + key + " InnerKey: " + e.getKey()+ " VALUE:" +e.getValue());
+                }
+                JsonObjectBuilder employee = Json.createObjectBuilder()
+                        .add("name", key);
+                
+                employee.add("history", history);
+                data.add(employee);
+            }
+            
+            String global = data.build().toString();
+            System.out.println(global);
             
             
             
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet EmployeeProductivity</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet EmployeeProductivity at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            pg.setBody(renderViz(global));
+            out.println(WebComponentProvider.buildPage(pg, request));
+            //out.println(renderViz(global));
+           
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger(EmployeeProductivity.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private String renderViz(String global) {
+        
+        String viz = WebComponentProvider.loadPartialPage(this, "productivity-partial.html");
+        String replace = viz.replace("##global", "var json = " + global + ";");
+        return replace;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
