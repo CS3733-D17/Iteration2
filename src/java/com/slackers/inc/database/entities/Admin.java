@@ -9,11 +9,12 @@ package com.slackers.inc.database.entities;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  *
- *     A class to represent an Admin in our system. Contains all fields and methods
+ *     Represents an Admin in our system. Contains all fields and methods
  *     from the User class. Admins have more rights than normal users, as in most systems.
  */
 public class Admin extends User{
 
+    // NULL_ADMIN is used when we need a placeholder for an unknown admin.
     public static final Admin NULL_ADMIN = new Admin("unknown","unknown","unknown","unknown");
     
     public Admin(String firstName, String lastName, String email, String password) {

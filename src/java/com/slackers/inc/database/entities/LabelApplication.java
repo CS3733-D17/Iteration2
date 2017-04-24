@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *
  */
 public class LabelApplication implements IEntity{
 

@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  *
- *     A class to hold the address of any user. Contains information about the user's
+ *     Holds the address of any user. Contains information about the user's
  *     line 1, line 2, city, state, zip code, and country.
  */
 public class Address implements Serializable{

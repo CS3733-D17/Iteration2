@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  *
- *     A class representing an application approval. It holds information about which
+ *     Represents an application approval. It holds information about which
  *     agent approved the application, when it was approved, when the approval will
  *     expire. It also holds information about the approved applications ID, and the
  *     approvals ID.
