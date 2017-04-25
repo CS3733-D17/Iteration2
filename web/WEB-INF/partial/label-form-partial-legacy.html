@@ -1,4 +1,4 @@
-<div style="width:650px;">
+<div style="width:auto;">
     <div class="data" align="right"><strong>OMB No. 1513-0020</strong></div>
     <table width="100%" border="2" cellspacing="0" cellpadding="2">
         <tbody><tr>
@@ -6,7 +6,7 @@
                     <div class="sectionhead">FOR TTB USE ONLY</div>
                 </td>
                 <td width="60%" rowspan="3" bordercolor="1"> 
-                    <div class="medhead">DEPARTMENT OF THE TREASURY</div>
+                    <div class="medhead">DEPARTMENT OF THE TREASURY </div>
                     <div class="smhead">ALCOHOL AND TOBACCO TAX AND TRADE BUREAU</div>
                     <div class="lghead">APPLICATION FOR AND CERTIFICATION/EXEMPTION OF LABEL/BOTTLE APPROVAL</div>
                     <div class="smhead">(See Instructions and Paperwork Reduction Act Notice on Back)</div>
@@ -60,10 +60,7 @@
                                     <div class="boldlabel">2. PLANT REGISTRY/BASIC PERMIT/BREWER'S NO. <i>(Required)</i></div>
                                     <div class="data">            
 
-                                        BR-WA-ELY-1
-                                        <br>
-
-                                        BR-CA-20003
+                                        <input type="text" style="color:#000;"  >
                                         <br>
 
                                     </div>
@@ -74,7 +71,7 @@
                                         <tbody><tr> 
                                                 <td width="5%" valign="top">
 
-                                                    <input type="checkbox" disabled="true" value="" checked="" alt="Source of Product: Domestic">
+                                                    <input type="checkbox"  value="" alt="Source of Product: Domestic">
 
                                                 </td>
                                                 <td width="95%" class="smalldata">Domestic</td>
@@ -82,7 +79,7 @@
                                             <tr>
                                                 <td width="5%" valign="top">
 
-                                                    <input type="checkbox" disabled="true" value="" alt="Source of Product: Imported">
+                                                    <input type="checkbox"  value="" alt="Source of Product: Imported">
 
                                                 </td>
                                                 <td width="95%" class="smalldata">Imported</td>
@@ -95,22 +92,20 @@
 
                 <td width="60%" rowspan="2"> 
                     <div class="label">
-                        8. NAME AND ADDRESS OF APPLICANT AS SHOWN ON PLANT 
-                        REGISTRY, BASIC PERMIT OR BREWER'S NOTICE. INCLUDE APPROVED DBA OR TRADENAME 
+                        8. NAME AND ADDRESS OF APPLICANT AS SHOWN ON PLANT <br>
+                        REGISTRY, BASIC PERMIT OR BREWER'S NOTICE. INCLUDE APPROVED
+                        DBA OR TRADENAME 
                         IF USED ON LABEL <strong><i>(Required)</i></strong>
                     </div>
                     <br>
                     <div class="data">
-
-                        ELYSIAN BREWING COMPANY, ELYSIAN BREWING COMPANY, INC.<br>
-                        1221 E PIKE ST<br>
-                        <br>
-                        SEATTLE
-                        WA 
-                        98122<br>
+                        <textarea id="address" name="address" class="form-control" rows="3" oninput="validateForm('address')" required></textarea>
+                        <!--<input type="text" style="color:#000;"  placeholder="Mailing Name"><br>
+                        <input type="text" style="color:#000;"  placeholder="Mailing Address"><br>
+                        <input type="text" style="color:#000;"  placeholder="City, State, Zip Code"><br>
                         <br>
 
-                        ELYSIAN BREWING COMPANY&nbsp;(Used on label)
+                        <input type="text" style="color:#000;"  placeholder="Company Name(Used on label)">-->
 
                     </div>
                 </td>
@@ -121,7 +116,7 @@
                         <tbody><tr>
                                 <td width="50%">
                                     <div class="label">4. SERIAL NUMBER <i>(Required)</i></div>
-                                    <div class="data">16E203</div>
+                                    <div class="data"><input type="text" style="color:#000;" ></div>
                                     <br>
                                 </td>        
                                 <td width="60%">
@@ -131,7 +126,7 @@
                                         <tbody><tr> 
                                                 <td width="5%" valign="top">
 
-                                                    <input type="checkbox" disabled="true" value="" alt="Type of Product: Wine">
+                                                    <input type="checkbox" value="" alt="Type of Product: Wine">
 
                                                 </td>
                                                 <td width="95%" class="smalldata">WINE</td>
@@ -139,7 +134,7 @@
                                             <tr>
                                                 <td width="5%" valign="top">
 
-                                                    <input type="checkbox" disabled="true" value="" alt="Type of Product: Distilled Spirits">
+                                                    <input type="checkbox"  value="" alt="Type of Product: Distilled Spirits">
 
                                                 </td>
                                                 <td width="95%" class="smalldata">DISTILLED SPIRITS</td>
@@ -147,7 +142,7 @@
                                             <tr>
                                                 <td width="5%" valign="top">
 
-                                                    <input type="checkbox" disabled="true" value="" checked="" alt="Type of Product: Malt Beverage">
+                                                    <input type="checkbox"  value="" alt="Type of Product: Malt Beverage">
 
                                                 </td>
                                                 <td width="95%" class="smalldata">MALT BEVERAGE</td>
@@ -162,17 +157,17 @@
             <tr>
                 <td width="40%"> 
                     <div class="boldlabel">6. BRAND NAME <i>(Required)</i></div>
-                    <div class="data">ELYSIAN BREWING COMPANY</div>
+                    <div class="data"> <input type="text" style="color:#000;" > </div>
                 </td>
                 <td width="60%" rowspan="2"> 
                     <div class="label">8a. MAILING ADDRESS, IF DIFFERENT</div>
-                    <div class="data"></div>
+                    <div class="data"><input type="text" style="color:#000;" ></div>
                 </td>
             </tr>
             <tr>
                 <td width="40%"> 
                     <div class="boldlabel">7. FANCIFUL NAME <i>(If any)</i></div>
-                    <div class="data">THE IMMORTAL</div>
+                    <div class="data"> <input type="text" style="color:#000;" > </div>
                 </td>
             </tr>
         </tbody></table>
@@ -187,7 +182,7 @@
                 <td width="10%">
                     <div class="label">9. FORMULA</div>
 
-                    <div class="data">
+                    <div class="data"> <input type="text" style="color:#000;" >
                     </div>
 
 
@@ -198,10 +193,10 @@
 
                 <td width="20%">
                     <div class="label">10. GRAPE VARIETAL(S) <i>(Wine Only)</i></div>
-                    <div class="data">N/A</div>
+                    <div class="data"><input type="text" style="color:#000;" ></div>
                 </td>
 
-                <td width="50%" rowspan="3">
+                <td width="80%" rowspan="3">
                     <div class="label">14. TYPE OF APPLICATION <i>(Check applicable box(es))</i></div>
                     <div class="data">
 
@@ -209,7 +204,7 @@
                             <tbody><tr> 
                                     <td width="20%" valign="top"><p class="data">a. 
 
-                                            <input type="checkbox" disabled="true" value="" checked="" alt="Type of Application">
+                                            <input type="checkbox"  value="" alt="Type of Application">
 
                                         </p></td>
                                     <td width="80%" class="smalldata">CERTIFICATE OF LABEL APPROVAL</td>
@@ -217,7 +212,7 @@
                                 <tr>
                                     <td width="20%" valign="top"><p class="data">b. 
 
-                                            <input type="checkbox" disabled="true" value="" alt="Certificate of label Approval">
+                                            <input type="checkbox"  value="" alt="Certificate of label Approval">
 
                                         </p></td>
                                     <td width="80%" class="smalldata">
@@ -230,7 +225,7 @@
                                     <td valign="top">
                                         <p class="data">c. 
 
-                                            <input type="checkbox" disabled="true" value="" alt="Distinctive Liquor Bottle Approval">
+                                            <input type="checkbox" value="" alt="Distinctive Liquor Bottle Approval">
 
                                         </p></td>
                                     <td class="smalldata">
@@ -243,7 +238,7 @@
 
                                     <td width="20%" valign="top"><p class="data">d. 
 
-                                            <input type="checkbox" disabled="true" value="" alt="Previous TTB Id">
+                                            <input type="checkbox" value="" alt="Previous TTB Id">
 
                                         </p></td>
                                     <td width="80%" class="smalldata">
@@ -260,17 +255,17 @@
             <tr>
                 <td width="60%" colspan="2">
                     <div class="label">11. WINE APPELLATION <i>(If on label)</i></div>
-                    <div class="data"></div>
+                    <div class="data"><input type="text" style="color:#000;" ></div>
                 </td>
             </tr>
             <tr>
                 <td width="20%"> 
                     <div class="label">12. PHONE NUMBER</div>
-                    <div class="data">(314) 577-2693</div>
+                    <div class="data"><input type="text" style="color:#000;" ></div>
                 </td>
                 <td width="30%">
-                    <div class="boldlabel">13. EMAIL ADDRESS</div>
-                    <div class="data">&nbsp;
+                    <div class="label">13. EMAIL ADDRESS</div>
+                    <div class="data"> <input type="text" style="color:#000;" >&nbsp;
 
 
                     </div>

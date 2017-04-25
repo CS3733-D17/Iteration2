@@ -33,33 +33,9 @@ public class EmailWrapper {
     
     Properties props;
     
-//    EmailWrapper _email;
-    
-//    private EmailWrapper(){
-//        this.to[0] = "";
-//        this.from = "";
-//        this.pwd = "";
-//        this.sub = "";
-//        this.msg = "";
-//        
-//        this.session = Session.getDefaultInstance(props,    
-//           new javax.mail.Authenticator() {    
-//           protected PasswordAuthentication getPasswordAuthentication() {    
-//           return new PasswordAuthentication(from,pwd);  
-//           }    
-//          });    
-//        
-//        this.props = new Properties();
-//        props.put("mail.smtp.host", "smtp.gmail.com");    
-//        props.put("mail.smtp.socketFactory.port", "465");    
-//        props.put("mail.smtp.socketFactory.class",    
-//                        "javax.net.ssl.SSLSocketFactory");    
-//        props.put("mail.smtp.auth", "true");    
-//        props.put("mail.smtp.port", "465");
-//    
-//    }
 
-    public EmailWrapper(String from, String pwd, String sub, String msg, String... to){
+
+    public EmailWrapper(String from, String pwd, String sub, String msg, String[] to){
         this.to = to;
         this.from = from;
         this.pwd = pwd;
@@ -74,7 +50,7 @@ public class EmailWrapper {
         props.put("mail.smtp.auth", "true");    
         props.put("mail.smtp.port", "465");
         
-        // This  part doesn't work
+        
         this.session = Session.getDefaultInstance(props,    
             new javax.mail.Authenticator() {    
                 //@Override
@@ -83,13 +59,13 @@ public class EmailWrapper {
                 }    
             });    
 
-        // ---------------------------
+        
         message = new MimeMessage(session);
         
         
     }
     
-    public EmailWrapper(String from, String pwd, String sub, String msg,String[] cc, String... to){
+    public EmailWrapper(String from, String pwd, String sub, String msg, String[] cc, String[] to){
         this.to = to;
         this.from = from;
         this.pwd = pwd;
@@ -97,6 +73,13 @@ public class EmailWrapper {
         this.msg = msg;
         this.cc = cc;
         
+        this.props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");    
+        props.put("mail.smtp.socketFactory.port", "465");    
+        props.put("mail.smtp.socketFactory.class",    
+                        "javax.net.ssl.SSLSocketFactory");    
+        props.put("mail.smtp.auth", "true");    
+        props.put("mail.smtp.port", "465");  
         
         this.session = Session.getDefaultInstance(props,    
             new javax.mail.Authenticator() {    
@@ -108,14 +91,40 @@ public class EmailWrapper {
         
         message = new MimeMessage(session);
         
+          
+    }
+    
+    public EmailWrapper(String sub, String msg, String[] to){
+        this.to = to;
+        this.from = "superslackersinc@gmail.com";
+        this.pwd = "super123";
+        this.sub = sub;
+        this.msg = msg;
+        
         this.props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");    
         props.put("mail.smtp.socketFactory.port", "465");    
         props.put("mail.smtp.socketFactory.class",    
                         "javax.net.ssl.SSLSocketFactory");    
         props.put("mail.smtp.auth", "true");    
-        props.put("mail.smtp.port", "465");    
+        props.put("mail.smtp.port", "465");
+        
+        
+        this.session = Session.getDefaultInstance(props,    
+            new javax.mail.Authenticator() {    
+                //@Override
+                protected PasswordAuthentication getPasswordAuthentication() {    
+                    return new PasswordAuthentication(from,pwd);  
+                }    
+            });    
+
+        
+        message = new MimeMessage(session);
+        
+        
     }
+    
+
     
     
     
@@ -136,6 +145,7 @@ public class EmailWrapper {
 //    } 
     
    
+
     // Sends the email according to the informtion held
     // in this class via javax.mail
     public void sendEmail(){
