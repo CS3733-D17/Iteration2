@@ -8,6 +8,9 @@ package com.slackers.inc.Controllers.Filters;
 /**
  *
  * @author Matt
+ *
+ * Used to find any beverages with a ph between
+ * lo and hi.
  */
 public class PHRange implements RangeFilter {
 

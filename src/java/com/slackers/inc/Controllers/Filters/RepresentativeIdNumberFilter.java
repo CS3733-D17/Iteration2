@@ -4,6 +4,9 @@ import com.slackers.inc.database.entities.Label;
 
 /**
  * Created by Matt on 4/2/2017.
+ *
+ * Used to search for a beverage with an exact
+ * representative id number
  */
 public class RepresentativeIdNumberFilter implements ExactFilter {
 

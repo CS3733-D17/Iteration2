@@ -5,6 +5,9 @@ import com.slackers.inc.database.entities.Label;
 
 /**
  * Created by jestrada on 4/2/17.
+ *
+ * Used to find beverages where the plant name
+ * is exactly the same as a value.
  */
 public class PlantFilter implements ExactFilter {
 
