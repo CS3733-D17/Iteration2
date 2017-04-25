@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.Controllers.Email;
 
-// Email : superslackersin@gmail.com
+// Email : superslackersinc@gmail.com
 // pwd : super123
 
 import java.util.Properties;
@@ -132,7 +132,7 @@ public class EmailWrapper {
     
    
     
-    public void sendEmail() throws Exception{
+    public void sendEmail(){
 
         try {    
             // Checks if theres anyone to send to
