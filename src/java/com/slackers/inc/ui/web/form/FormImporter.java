@@ -28,6 +28,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -62,52 +63,63 @@ public class FormImporter {
         return "";
     }
 
-    public BufferedImage getImage() {
+    public ImageData getImageData() {
         HttpRequest request = new HttpRequest(COLAURL + this.tbbId);//16309001000410
         HttpResponse response = request.submitRequest();
         if (response != null) {
             List<String> cookies = new LinkedList<>();
-            for (String c : response.getHeaders().get("Set-Cookie"))
-            {
+            for (String c : response.getHeaders().get("Set-Cookie")) {
                 cookies.add(c.substring(0, c.indexOf(";")));
             }
             Pattern imgs = Pattern.compile("<img src=\"(\\/colasonline\\/publicViewAttachment[\\s\\S]+?)\"");
             Matcher matchedimgs = imgs.matcher(response.getResponse());
-            if (matchedimgs.find()) {                
+            if (matchedimgs.find()) {
+
                 String url = "https://www.ttbonline.gov" + matchedimgs.group(1);
-                System.out.println("URL:" + url);
+                url = url.replace(" ", "%20");
+                BufferedImage imgBuffered = null;
                 try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
                     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                     connection.setRequestProperty("Cookie", String.join("; ", cookies));
-                    System.out.println(connection.getResponseCode());
-                    connection.connect();
+                    connection.setRequestMethod("GET");
+                    int type = ImageData.TYPE_PNG;
                     try (InputStream input = connection.getInputStream()) {
-                        BufferedImage imgBuffered = ImageIO.read(input);
-                        if (imgBuffered != null) {
-                            System.out.println("not null");
-                            if (imgBuffered.getWidth() > 1000) {
-                                Image temp = imgBuffered.getScaledInstance(1000, -1, Image.SCALE_DEFAULT);
-                                BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
-                                toSave.getGraphics().drawImage(temp, 0, 0, null);
-                                ImageIO.write(toSave, "png", buffer);
-                                ImageIO.write(toSave, "png", new File("out.png"));
-                                System.out.println("wrote");
-                                buffer.flush();
-                                toSave.getGraphics().dispose();
-                            } else {
-                                ImageIO.write(imgBuffered, "png", buffer);
-                                ImageIO.write(imgBuffered, "png", new File("out.png"));
-                                System.out.println("wrote");
-                                buffer.flush();
+                        input.mark(Integer.MAX_VALUE);
+                        try {
+                            imgBuffered = ImageIO.read(input);
+                            if (imgBuffered != null) {
+                                if (imgBuffered.getWidth() > 1000) {
+                                    Image temp = imgBuffered.getScaledInstance(1000, -1, Image.SCALE_DEFAULT);
+                                    BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                                    toSave.getGraphics().drawImage(temp, 0, 0, null);
+                                    ImageIO.write(toSave, "png", buffer);
+                                    buffer.flush();
+                                    toSave.getGraphics().dispose();
+                                } else {
+                                    ImageIO.write(imgBuffered, "png", buffer);
+                                    buffer.flush();
+                                }
+                                type = ImageData.TYPE_PNG;
                             }
-                        } else {
-                            System.out.println("WAS NuLL");
+                        } catch (Exception e) {
+                        }
+                        if (imgBuffered == null) {
+                            input.reset();
+                            byte[] b = new byte[256];
+                            int off=0;
+                            int len=0;
+                            while ((len=input.read(b)) != -1) {
+                                buffer.write(b, off, len);
+                            }
+                            type = ImageData.TYPE_JPEG;
                         }
                     }
-                    //connection.disconnect();
+                    connection.disconnect();
+                    return new ImageData(buffer.toByteArray(), type);
                 } catch (IOException ex) {
                     Logger.getLogger(FormImporter.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                return null;
             }
         }
         return null;
@@ -273,5 +285,26 @@ public class FormImporter {
         }
 
         return null;
+    }
+    
+    public static class ImageData
+    {
+        public static int TYPE_PNG=0;
+        public static int TYPE_JPEG=1;
+        private int type;
+        private byte[] bytes;
+        private ImageData(byte[] data, int type)
+        {
+            this.bytes = data;
+            this.type = type;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public byte[] getBytes() {
+            return bytes;
+        }        
     }
 }

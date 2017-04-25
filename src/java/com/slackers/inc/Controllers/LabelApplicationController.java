@@ -148,9 +148,7 @@ public class LabelApplicationController {
 
         label.setRepresentativeIdNumber(request.getParameter("representativeId"));
         try {
-
             label.setProductSource(Label.BeverageSource.valueOf(request.getParameter("source")));
-            System.out.println("AL:"+request.getParameter("alcoholContent"));
             label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent").replace("%", "")));
             BeverageType type = BeverageType.valueOf(request.getParameter("type"));
             label.setProductType(type);
