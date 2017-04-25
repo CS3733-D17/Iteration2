@@ -72,11 +72,10 @@ public class FormImport extends HttpServlet {
                 appControl.setEmailAddress(pg.getUser().getEmail());
                 appControl.setApplicant((Manufacturer)pg.getUser());
                 formTemplate = formTemplate.replace("<img id=\"lblImg\" src=\"##LABEL_IMAGE_PATH\" class=\"img-responsive\" alt=\"Label Image\">",
-                        "<img id=\"lblImg\" src=\"\" class=\"img-responsive\" alt=\"Label Image\">"+
+                        "<img id=\"lblImg\" src=\"##LABEL_IMAGE_PATH\" class=\"img-responsive\" alt=\"Label Image\">"+
                                 "<a target=\"_blank\" href=\""+importer.getExistingApplicationURL()+"\" class=\"btn btn-danger\">Go to existing form to download image</a>"+
                                 "<input type=\"hidden\" name=\"useUrl\" value=\"##LABEL_IMAGE_PATH\">");
-                formTemplate = formTemplate.replace("##LABEL_IMAGE_PATH",importer.getImageUrl());
-                System.out.println("LOADED");
+                formTemplate = formTemplate.replace("##LABEL_IMAGE_PATH",LabelImageGenerator.getAccessStringForExistingApplication(request, importId));
             }
             else
             {

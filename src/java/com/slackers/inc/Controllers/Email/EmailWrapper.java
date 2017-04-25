@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.Controllers.Email;
 
-// Email : superslackersin@gmail.com
+// Email : superslackersinc@gmail.com
 // pwd : super123
 
 import java.util.Properties;
@@ -13,7 +13,7 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 /**
- *
+ * 
  * @author jestrada
  */
 public class EmailWrapper {
@@ -132,7 +132,7 @@ public class EmailWrapper {
     
    
     
-    public void sendEmail() throws Exception{
+    public void sendEmail(){
 
         try {    
             // Checks if theres anyone to send to
@@ -158,7 +158,7 @@ public class EmailWrapper {
             Transport.send(message);    
             System.out.println("message sent successfully");    
             } catch (MessagingException e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
             }    
     }    
     

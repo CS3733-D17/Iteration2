@@ -82,6 +82,7 @@ public class ManufacturerPage implements IPageFrame{
 "          <li><a href=\"/SuperSlackers/myApplications?subset=underReview\">Under Review</a></li>\n" +
 "          <li><a href=\"/SuperSlackers/myApplications?subset=accepted\">Accepted</a></li>\n" +
 "          <li><a href=\"/SuperSlackers/myApplications?subset=rejected\">Rejected</a></li>\n" +
+"          <li><a href=\"/SuperSlackers/myApplications?subset=corrections\">Needs Corrections</a></li>\n" +                
 "        </ul>\n" +
 "      </li>\n" +
 //"      <li><a href=\""+WebComponentProvider.root(request)+"\">Info</a></li>\n" +

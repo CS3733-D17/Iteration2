@@ -31,9 +31,13 @@ function unclickBox(id)
 {
     document.getElementById("wineInfo").style.display= "none";
     if (document.getElementById(id)!=null)
+    {
         document.getElementById(id).checked = false;
+    }
     if (document.getElementById(id+"-lbl")!=null)
+    {
         document.getElementById(id+"-lbl").className = "btn btn-default";
+    }
 }
 
 function clickBox(id)
@@ -227,7 +231,8 @@ function handleRevisionDisplays()
     res |= handleRevOptDisp("tag-formula");
     res |= handleRevOptDisp("tag-general");
     res |= handleRevOptDisp("tag-new-label");
-    
+    res |= handleRevOptDisp("tag-brandName");
+    res |= handleRevOptDisp("tag-address");
     if (res)
     {
         if (document.getElementById("submitRevisions")!=null)
@@ -239,3 +244,7 @@ function handleRevisionDisplays()
                 document.getElementById("submitRevisions").style.display = "none";
     }
 }
+
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
