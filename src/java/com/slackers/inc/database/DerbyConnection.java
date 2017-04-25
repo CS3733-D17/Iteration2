@@ -8,34 +8,29 @@ package com.slackers.inc.database;
 import com.slackers.inc.Controllers.Filters.ExactFilter;
 import com.slackers.inc.Controllers.Filters.Filter;
 import com.slackers.inc.Controllers.Filters.RangeFilter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+
+import java.io.*;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Used for connecting to our Derby database. Singleton pattern.
  */
 public class DerbyConnection {
+    // Class used for our database.
     private final static String DRIVER_CLASS = "org.apache.derby.jdbc.EmbeddedDriver";
     private final static String DB_PROTOCOL_BASE = "jdbc:derby:";
+    // Location of database relative to this project
     private final static String DB_RELATIVE_LOCATION = "database/DB";
     private final static String COLLECTION_DELIMITER = ":::";
+    // The single instance
     private static DerbyConnection INSTANCE;
     
     static
@@ -50,16 +45,20 @@ public class DerbyConnection {
             System.exit(1);
         }       
     }
-    
+
+    // Connection to the database
     private Connection con;
+    // Tables in this database
     private Set<String> tables;
     private boolean isOpen;
-    
+
+    // On construction, a connection to the database is open
     private DerbyConnection() throws SQLException
     {
         open();
     }
-    
+
+    // Shuts down the DB, then reopens it.
     public void reset()
     {
         this.shutdownDb();
@@ -69,7 +68,8 @@ public class DerbyConnection {
             Logger.getLogger(DerbyConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    // Opens a connection to the DB
     private void open() throws SQLException
     {
         if (!this.isOpen)
@@ -82,7 +82,12 @@ public class DerbyConnection {
             isOpen=true;
         }
     }
-    
+
+    /**
+     * @param tableName Name of a table
+     * @return true if the table exists in the database. false otherwise
+     * @throws SQLException
+     */
     public boolean tableExists(String tableName) throws SQLException
     {
         DatabaseMetaData md = con.getMetaData();
@@ -93,7 +98,14 @@ public class DerbyConnection {
         }
         return false;
     }
-    
+
+    /**
+     * Creates a table in the DB.
+     * @param tableName Name of table to create
+     * @param columns List of names of columns that table has
+     * @return true if the creation was successful, false otherwise
+     * @throws SQLException
+     */
     public boolean createTable(String tableName, List<String> columns) throws SQLException
     {        
         this.open();
@@ -101,6 +113,13 @@ public class DerbyConnection {
         CallableStatement call = con.prepareCall(stmt);
         return call.execute();
     }
+
+    /**
+     * Deletes a table from the DB
+     * @param tableName Name of table to delete
+     * @return true if the deletion was successful, false otherwise
+     * @throws SQLException
+     */
     public boolean deleteTable(String tableName) throws SQLException
     {
         String stmt = String.format("DROP TABLE IF EXISTS %s", tableName);
@@ -108,6 +127,12 @@ public class DerbyConnection {
         return call.execute();
     }
 
+    /**
+     * Checks that the DB has all the tables necessary to hold given object.
+     * @param entity Entity used to check for tables
+     * @return true if the table exists, false otherwise
+     * @throws SQLException
+     */
     private boolean checkForTable(IEntity entity) throws SQLException
     {
         this.open();
@@ -120,7 +145,15 @@ public class DerbyConnection {
         }
         return this.createTable(entity.getTableName(), entity.tableColumnCreationSettings());
     }
-    
+
+    /**
+     * Creates the entity in our database. Assumes it does not exist already.
+     * Do not use this if you want to write an object to the DB, instead use
+     * writeEntity
+     * @param entity Entity to create
+     * @return If the creation was successful.
+     * @throws SQLException
+     */
     public boolean createEntity(IEntity entity) throws SQLException
     {
         if (!checkForTable(entity)) // create table if non existant
@@ -173,7 +206,16 @@ public class DerbyConnection {
         results.close();        
         return res;
     }
-    
+
+    /**
+     * Deletes an entity from the DB.
+     * @param entity Entity to delete
+     * @param searchColumns Matches the information in the entity with
+     *                      the information in the DB table to find the
+     *                      correct entity.
+     * @return If the deletion was successful
+     * @throws SQLException
+     */
     public boolean deleteEntity(IEntity entity, String... searchColumns) throws SQLException
     {
         if (!checkForTable(entity)) // create table if non existant
@@ -215,7 +257,16 @@ public class DerbyConnection {
         call.close();
         return res;
     }
-    
+
+    /**
+     * Updates an already existing entity in the DB
+     * Do not use this if you want to write an object to the DB, instead use
+     * writeEntity
+     * @param entity Entity to update
+     * @param searchColumns Columns to match in search to find entity
+     * @return if the update was successful
+     * @throws SQLException
+     */
     public boolean updateEntity(IEntity entity, String... searchColumns) throws SQLException
     {
         if (!checkForTable(entity)){ // create table if non existant
@@ -285,7 +336,14 @@ public class DerbyConnection {
         call.close();
         return res;
     }
-    
+
+    /**
+     * Checks if an entity exists
+     * @param entity Entity to check for
+     * @param searchColumns Columns used to find correct entity
+     * @return if the entity was successful
+     * @throws SQLException
+     */
     public boolean entityExists(IEntity entity, String... searchColumns) throws SQLException
     {
         if (!checkForTable(entity)) // create table if non existant
@@ -331,7 +389,14 @@ public class DerbyConnection {
         results.close();
         return false;
     }
-    
+
+    /**
+     * Retrieves an entity from the DB.
+     * @param entity Entity to retrieve
+     * @param searchColumns Columns to match to find the correct
+     *                      entity.
+     * @throws SQLException
+     */
     public void getEntity(IEntity entity, String... searchColumns) throws SQLException
     {
         if (!checkForTable(entity)) // create table if non existant
@@ -385,7 +450,15 @@ public class DerbyConnection {
         }
         results.close();
     }
-    
+
+    /**
+     * Get all entites that match the columns given.
+     * @param entity Entity with information to match
+     * @param searchColumns Columns to match
+     * @return List of entities that match the information in the given entity
+     *         as long as they are in the given searchColumns
+     * @throws SQLException
+     */
     public List<IEntity> getAllEntites(IEntity entity, String... searchColumns) throws SQLException
     {
         if (!checkForTable(entity)) // create table if non existant
@@ -441,7 +514,10 @@ public class DerbyConnection {
         results.close();
         return entites;
     }
-    
+
+    /**
+     * Same as getAllEntites but uses a generic type T
+     */
     public <T extends IEntity> List<T> getAllEntites_Typed(T entity, String... searchColumns) throws SQLException
     {
         if (!checkForTable(entity)) // create table if non existant
@@ -502,7 +578,10 @@ public class DerbyConnection {
         results.close();
         return entites;
     }
-    
+
+    /**
+     * Same as getAllEntites_Typed but matches all columns.
+     */
     public <T extends IEntity> List<T> getAllEntites_Typed(T entity) throws SQLException
     {
         if (!checkForTable(entity)) // create table if non existant
@@ -532,7 +611,15 @@ public class DerbyConnection {
         results.close();
         return entites;
     }
-    
+
+    /**
+     * Searches for entities in the DB given a list of filters
+     * @param entity Entity given
+     * @param filters Filters applied to narrow down search
+     * @param <T> Type of entity
+     * @return List of entities which match the filter
+     * @throws SQLException
+     */
     public <T extends IEntity> List<T> search(T entity, List<Filter> filters) throws SQLException
     {
         String stmt;
@@ -591,7 +678,11 @@ public class DerbyConnection {
         results.close();
         return entites;
     }
-    
+
+    /**
+     * Same as previous search, but only retrieves the given amount, with an
+     * offset. This allows for more efficient use of the DB.
+     */
     public <T extends IEntity> List<T> search(T entity, List<Filter> filters, int numberOfResults, int offset) throws SQLException
     {
         String stmt;
@@ -651,6 +742,11 @@ public class DerbyConnection {
         return entites;
     }
 
+    /**
+     * Use this to add entities to the database.
+     * Checks if the entity exists already, and chooses the
+     * correct function to use.
+     */
     public boolean writeEntity(IEntity entity, String... searchColumns) throws SQLException
     {
         if (this.entityExists(entity, searchColumns))
@@ -787,8 +883,11 @@ public class DerbyConnection {
     {
         this.con.close();
         this.isOpen=false;
-    }    
-    
+    }
+
+    /**
+     * Get an instance of the DB connection.
+     */
     public static DerbyConnection getInstance()
     {
         return DerbyConnection.INSTANCE;
@@ -815,7 +914,10 @@ public class DerbyConnection {
         String base = DB_PROTOCOL_BASE + DB_RELATIVE_LOCATION + ";" + propString.toString();
         return base;
     }
-    
+
+    /**
+     * Shuts down the DB
+     */
     public boolean shutdownDb()
     {
         System.out.println("Shutting down database...");

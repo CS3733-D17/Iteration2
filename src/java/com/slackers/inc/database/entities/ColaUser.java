@@ -8,9 +8,12 @@ package com.slackers.inc.database.entities;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ * Represents a COLA user in our system.
  */
 public class ColaUser extends User{
 
+    // NULL_COLA_USER is used when a placeholder is needed for an unknown COLA user.
     public static final ColaUser NULL_COLA_USER = new ColaUser("unknown","unknown","unknown","unknown");
     
     public ColaUser(String firstName, String lastName, String email, String password) {

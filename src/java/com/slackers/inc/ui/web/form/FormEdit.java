@@ -86,7 +86,7 @@ public class FormEdit extends HttpServlet {
             appControl.loadApplication(id);
             if (appControl.editApplicationFromRequest(this.getServletContext(), request)==null)
             {
-                    response.sendRedirect("/SuperSlackers/form/edit?id="+id);
+                response.sendRedirect("/SuperSlackers/form/edit?id="+id);
             }
             else
             {

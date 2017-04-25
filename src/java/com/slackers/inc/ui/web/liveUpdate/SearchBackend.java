@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.slackers.inc.ui.web;
+package com.slackers.inc.ui.web.liveUpdate;
 
 import com.slackers.inc.Controllers.Filters.AcceptedFilter;
 import com.slackers.inc.Controllers.Filters.BrandNameRange;
@@ -46,7 +46,6 @@ public class SearchBackend extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("LANDING");
         response.setContentType("text/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             

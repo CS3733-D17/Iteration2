@@ -45,6 +45,10 @@ public class COLASearchController {
         return searchControl;
     }
 
+    /**
+     * Refresh the COLA user associated with this controller
+     * @return Whether the refresh succeeded
+     */
     public boolean refresh()
     {
         try {

@@ -4,6 +4,8 @@ import com.slackers.inc.database.entities.Label;
 
 /**
  * Created by Matt on 4/2/2017.
+ *
+ * Filter for finding any beverages with a particular name
  */
 public class BrandNameFilter implements ExactFilter {
 

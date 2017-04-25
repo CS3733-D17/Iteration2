@@ -14,6 +14,7 @@ import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.Label.BeverageSource;
 import com.slackers.inc.database.entities.Label.BeverageType;
 import com.slackers.inc.database.entities.LabelApplication;
+import com.slackers.inc.database.entities.LabelApplication.ApplicationStatus;
 import com.slackers.inc.database.entities.LabelApplication.ApplicationType;
 import com.slackers.inc.database.entities.LabelComment;
 import com.slackers.inc.database.entities.Manufacturer;
@@ -34,9 +35,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +44,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -148,9 +143,7 @@ public class LabelApplicationController {
 
         label.setRepresentativeIdNumber(request.getParameter("representativeId"));
         try {
-
             label.setProductSource(Label.BeverageSource.valueOf(request.getParameter("source")));
-            System.out.println("AL:"+request.getParameter("alcoholContent"));
             label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent").replace("%", "")));
             BeverageType type = BeverageType.valueOf(request.getParameter("type"));
             label.setProductType(type);
@@ -245,7 +238,16 @@ public class LabelApplicationController {
             Label l = this.editLabelFromRequest(context, request);
             //DerbyConnection.getInstance().createEntity(l);
             this.application.setLabel(l);
-            DerbyConnection.getInstance().writeEntity(this.application, this.application.getPrimaryKeyName());
+            
+            if (this.application.getStatus()==ApplicationStatus.SENT_FOR_CORRECTIONS)// resubmit
+            {
+                this.application.getComments().add(new LabelComment(this.getApplicant(), "<h4><span style=\"color:cyan;\"></span></h4>"));
+                this.submitApplication(this.getApplicant());
+            }
+            else
+            {
+                this.saveApplication();
+            }
         } catch (Exception e) {
 
         }
@@ -312,9 +314,58 @@ public class LabelApplicationController {
             revTypes.add("image");
         }
 
+        if (request.getParameter("rev13") != null) {
+            revTypes.add("image");
+            revTypes.add("general");
+        }
+        if (request.getParameter("rev14") != null) {
+            revTypes.add("image");
+        }
+        if (request.getParameter("rev15") != null) {
+            revTypes.add("image");
+        }
+        if (request.getParameter("rev16") != null) {
+            revTypes.add("image");
+        }
+        if (request.getParameter("rev17") != null) {
+            revTypes.add("image");
+            revTypes.add("general");
+        }
+        if (request.getParameter("rev18") != null) {
+            revTypes.add("image");
+        }
+        if (request.getParameter("rev19") != null) {
+            revTypes.add("image");
+            revTypes.add("brand");
+        }
+        if (request.getParameter("rev20") != null) {
+            revTypes.add("image");
+            revTypes.add("address");
+        }
+
+        if (revTypes.contains("brand")) {
+            try {
+                label.setBrandName(request.getParameter("brandName-new"));
+                label.setFancifulName(request.getParameter("fancifulName-new"));
+                revisions.add("Changed brand name");
+            } catch (Exception e) {
+            }
+        }
+        if (revTypes.contains("address")) {
+            try {
+                this.application.setApplicantAddress(Address.tryParse(request.getParameter("address-new")));
+                try {
+                    this.application.setMailingAddress(Address.tryParse(request.getParameter("mailAddress-new")));
+                } catch (Exception e) {
+                    this.application.setMailingAddress(this.application.getMailingAddress());
+                }
+                revisions.add("Changed address information");
+            } catch (Exception e) {
+            }
+        }
         if (revTypes.contains("alcohol")) {
             try {
-                
+
                 label.setAlcoholContent(Double.parseDouble(request.getParameter("alcoholContent-new")));
                 revisions.add("Changed alcohol content");
             } catch (Exception e) {
@@ -463,7 +514,7 @@ public class LabelApplicationController {
         if (l.getProductType() == null || l.getProductType() == BeverageType.UNKNOWN) {
             return "Invalid beverage type";
         }
-        if (l.getAlcoholContent() < 0 || l.getAlcoholContent() > 100) {
+        if ((l.getAlcoholContent() < 0 || l.getAlcoholContent() > 100) && l.getAlcoholContent()!=-1) {
             return "Invalid alchohol content";
         }
         if (l.getFormula() == null || l.getFormula().length() < 2) {
@@ -813,8 +864,87 @@ public class LabelApplicationController {
         return this.saveApplication();
     }
 
-    public boolean sendForCorrections() throws SQLException {
+    private UsEmployee getBestMatch(String email, UsEmployee avoid) {
+        List<UsEmployee> employees = UsEmployeeController.getEmployees(email);
+        if (employees == null) {
+            employees = UsEmployeeController.getEmployees("");
+            UsEmployee canditate = UsEmployee.NULL_EMPLOYEE;
+            if (employees != null) {
+                for (UsEmployee e : employees) {
+                    if (!e.getEmail().equals(avoid.getEmail())) {
+                        canditate = e;
+                        break;
+                    }
+                }
+            }
+            return canditate;
+        }
+        UsEmployee canditate = UsEmployee.NULL_EMPLOYEE;
+        if (employees != null) {
+            for (UsEmployee e : employees) {
+                if (!e.getEmail().equals(avoid.getEmail())) {
+                    canditate = e;
+                    break;
+                }
+            }
+        }
+        return canditate;
+    }
+
+    public boolean sendToAnotherEmployee(UsEmployee emp, String emailToSendTo) throws SQLException {
+
+        this.application.getComments().add(new LabelComment(emp, "<h4><span style=\"color:orange;\">Application Sent for Second Opinion</span></h4>"));
+        
+        UsEmployee reciever = this.getBestMatch(emailToSendTo, emp);
+        if (reciever.getEmail().equals(UsEmployee.NULL_EMPLOYEE.getEmail()))
+        {
+            this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED); // put back into main pool
+            this.application.setSubmitter(emp);
+            this.application.setReviewer(reciever);
+        }
+        else
+        {
+            this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED_FOR_REVIEW);
+            this.application.setSubmitter(emp);
+            this.application.setReviewer(reciever);
+        }
+        this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
+        return this.saveApplication();
+    }
+    public boolean sendToAnotherEmployee(UsEmployee emp, String emailToSendTo, String comment) throws SQLException {
+
+        this.application.getComments().add(new LabelComment(emp, "<h4><span style=\"color:orange;\">Application Sent for Second Opinion</span></h4>"
+        + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
+        
+        UsEmployee reciever = this.getBestMatch(emailToSendTo, emp);
+        if (reciever.getEmail().equals(UsEmployee.NULL_EMPLOYEE.getEmail()))
+        {
+            this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED); // put back into main pool
+            this.application.setSubmitter(emp);
+            this.application.setReviewer(reciever);
+        }
+        else
+        {
+            this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED_FOR_REVIEW);
+            this.application.setSubmitter(emp);
+            this.application.setReviewer(reciever);
+        }
+        this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
+        return this.saveApplication();
+    }
+
+    public boolean sendForCorrections(UsEmployee emp) throws SQLException {
+        this.application.getComments().add(new LabelComment(emp, "<h4><span style=\"color:orange;\">Application Sent for Corrections</span></h4>"));
         this.application.setStatus(LabelApplication.ApplicationStatus.SENT_FOR_CORRECTIONS);
+        this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
+        return this.saveApplication();
+    }
+
+    public boolean sendForCorrections(UsEmployee emp, String comment) throws SQLException {
+        this.application.getComments().add(new LabelComment(emp, "<h4><span style=\"color:orange;\">Application Sent for Corrections</span></h4>"
+                + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
+        this.application.setStatus(LabelApplication.ApplicationStatus.SENT_FOR_CORRECTIONS);
+        this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
         return this.saveApplication();
     }
 
