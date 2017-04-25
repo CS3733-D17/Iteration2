@@ -5,6 +5,9 @@
  */
 package com.slackers.inc.Controllers.Email;
 
+// Email : superslackersin@gmail.com
+// pwd : super123
+
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
