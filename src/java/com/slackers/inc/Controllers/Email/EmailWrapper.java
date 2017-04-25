@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.Controllers.Email;
 
-// Email : superslackersin@gmail.com
+// Email : superslackersinc@gmail.com
 // pwd : super123
 
 import java.util.Properties;
@@ -13,10 +13,15 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 /**
- *
+ * 
  * @author jestrada
+ *
+ * Used to hold the information we need to email clients
+ * and can also send the email via javax.mail
  */
 public class EmailWrapper {
+    // Information about the email, such as who it is sent to
+    // who it is from, the subject and message, etc
     String[] to;
     String from;
     String[] cc;
@@ -140,8 +145,10 @@ public class EmailWrapper {
 //    } 
     
    
-    
-    public void sendEmail() {
+
+    // Sends the email according to the informtion held
+    // in this class via javax.mail
+    public void sendEmail(){
 
         try {    
             // Checks if theres anyone to send to
@@ -167,7 +174,7 @@ public class EmailWrapper {
             Transport.send(message);    
             System.out.println("message sent successfully");    
             } catch (MessagingException e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
             }    
     }    
     

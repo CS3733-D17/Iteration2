@@ -13,6 +13,10 @@ import java.util.*;
 
 /**
  * Created by John's New HP on 3/24/2017.
+ *
+ * This class uses an IDelimiterFormat interface to get the information
+ * needed to export, and then formats it correctly and outputs
+ * that formatted data to a file.
  */
 public class DelimitedWriter implements Closeable,Flushable,AutoCloseable {
 

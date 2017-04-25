@@ -5,6 +5,8 @@ import com.slackers.inc.database.entities.Label;
 
 /**
  * Created by jestrada on 4/2/17.
+ *
+ * Filter for whether a label is accepted or not
  */
 public class AcceptedFilter implements ExactFilter {
 

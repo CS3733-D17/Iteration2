@@ -56,12 +56,16 @@ public class UsEmployee extends User{
         if (values.containsKey("applications"))
         {
             this.applications.clear();
-            this.applications.addAll(LabelApplication.applicationListFromString((String)values.get("applications")));
+            List<LabelApplication> apps = LabelApplication.applicationListFromString((String)values.get("applications"));
+            if (apps!=null)
+                this.applications.addAll(apps);
         }
         if (values.containsKey("previousApplications"))
         {
             this.previousApplications.clear();
-            this.previousApplications.addAll(LabelApplication.applicationListFromString((String)values.get("previousApplications")));
+            List<LabelApplication> apps = LabelApplication.applicationListFromString((String)values.get("previousApplications"));
+            if (apps!=null)
+                this.previousApplications.addAll(apps);
         }
     }
 

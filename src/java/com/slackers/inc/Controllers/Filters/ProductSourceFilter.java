@@ -4,6 +4,9 @@ import com.slackers.inc.database.entities.Label;
 
 /**
  * Created by Matt on 4/2/2017.
+ *
+ * Used to find any beverage which matches a particular
+ * product source.
  */
 public class ProductSourceFilter  implements ExactFilter {
     String source;

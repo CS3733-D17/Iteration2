@@ -8,9 +8,12 @@ package com.slackers.inc.Controllers.Csv;
 /**
  *
  * @author Fabio Borges
+ *
+ * Used for exporting CSV format with tabs as the delimiter
  */
 public class TsvFormat implements IDelimiterFormat
 {
+    // Getters
     @Override
     public String getDelimiter() {
         return "\t";

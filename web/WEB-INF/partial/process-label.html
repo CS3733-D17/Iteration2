@@ -2,7 +2,7 @@
     <div class="well">
         <form action="/SuperSlackers/form/edit" method="post">
             <fieldset id="appForm" disabled>
-            ##FORM_CONTENT
+                ##FORM_CONTENT
             </fieldset>
         </form>
         <div id="hideUpload" style="display:none;"></div>
@@ -29,13 +29,67 @@
                 </div>  
             </div>
             <br>
+            
             <label for="cText">Comments:</label>
-                <textarea id="cText" name="commentText" class="form-control"></textarea>
-            <button name="action" value="accept" class="btn btn-success" style="width:100%; margin-top: 30px;">Accept</button>
-            <button name="action" value="reject" class="btn btn-danger" style="width:100%; margin-top: 30px;">Reject</button>
+            <textarea id="cText" name="commentText" class="form-control"></textarea>
+            <button name="action" value="accept" class="btn btn-success" style="width:100%; margin-top: 20px;">Accept</button>
+            <button name="action" value="corrections" class="btn btn-warning" style="width:100%; margin-top: 20px;">Send for Corrections</button>
+            <button name="action" value="reject" class="btn btn-danger" style="width:100%; margin-top: 20px;">Reject</button>
+            <br><br>
+            <br><br>
+            <button name="action" value="forward" class="btn btn-info" style="width:100%;">Send for second opinion</button>
+            <br><br>
+            <div class="input-group dropdown">
+                <label for="empEmail">Second opinion employee:</label>
+                <input name="empEmail" id="empEmail" type="text" class="form-control" placeholder="Employee email" onkeypress="getSearches();" oninput="getSearches();" onchange="getSearches();" onfocus="showSuggestions(true);" onfocusout="showSuggestions(false);">
+                <ul class="dropdown-menu open" id="suggestions">
+                </ul>
+            </div>
+            
+            
         </form>
     </div>
     <script>
         fillForm();
+        function showSuggestions(show)
+        {
+            setTimeout(function () {
+                if (show)
+                {
+                    document.getElementById('suggestions').style.display = 'block';
+                } else
+                {
+                    document.getElementById('suggestions').style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        function setSearchText(text)
+        {
+            document.getElementById('empEmail').value = text;
+            getSearches();
+        }
+
+        var xhttp = new XMLHttpRequest();
+        function getSearches()
+        {
+            
+            var name = document.getElementById('empEmail').value;
+            xhttp.abort();
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var sug = JSON.parse(this.responseText);
+                    var htm = "";
+                    for (var i = 0; i < sug.length; i++)
+                    {
+                        htm += "<li><a onclick=\"setSearchText('" + sug[i].substring(0,sug[i].indexOf('(')-1) + "');\">" + sug[i] + "</a></li>";
+                    }
+                    document.getElementById("suggestions").innerHTML = htm;
+                }
+            };
+            xhttp.open("GET", "/SuperSlackers/search/employees?email=" + name, true);
+            xhttp.send();
+        }
     </script>
 </div>
