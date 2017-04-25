@@ -105,6 +105,27 @@ public class FormProcess extends HttpServlet {
                         appControl.rejectApplication(emp);
                     response.sendRedirect(WebComponentProvider.root(request));
                 }
+                else if (action.equals("corrections"))
+                {
+                    if (lblComment.length()>1)
+                        appControl.sendForCorrections(emp, lblComment);
+                    else
+                        appControl.sendForCorrections(emp);
+                    response.sendRedirect(WebComponentProvider.root(request));
+                }
+                else if (action.equals("forward"))
+                {
+                    String email = request.getParameter("empEmail");
+                    if (email==null)
+                    {
+                        email = "";
+                    }
+                    if (lblComment.length()>1)
+                        appControl.sendToAnotherEmployee(emp, email, lblComment);
+                    else
+                        appControl.sendToAnotherEmployee(emp, email);
+                    response.sendRedirect(WebComponentProvider.root(request));
+                }
                 else
                 {
                     System.out.println("no Action");

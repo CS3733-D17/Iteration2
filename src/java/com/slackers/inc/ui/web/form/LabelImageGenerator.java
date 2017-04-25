@@ -57,6 +57,10 @@ public class LabelImageGenerator extends HttpServlet {
     public static String getAccessStringForApplication(long id) {
         return WebComponentProvider.WEB_ROOT + "image/label?id=" + Long.toString(id);
     }
+    
+    public static String getAccessStringForExistingApplication(HttpServletRequest request, String existingTTBid) {
+        return WebComponentProvider.root(request) + "image/label?ttbId=" + existingTTBid;
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
