@@ -11,6 +11,7 @@ package com.slackers.inc.Controllers.Csv;
  */
 public class CharFormat implements IDelimiterFormat
 {
+    // Custom delimited selected by user
     private String delim;
     
     public CharFormat(String delim)
@@ -18,6 +19,7 @@ public class CharFormat implements IDelimiterFormat
         this.delim = delim;
     }
     
+    // Getters
      @Override
     public String getDelimiter() {
         return delim;

@@ -11,6 +11,7 @@ package com.slackers.inc.Controllers.Csv;
  */
 public class CsvFormat implements IDelimiterFormat{
 
+    // Getters
     @Override
     public String getDelimiter() {
         return ",";
