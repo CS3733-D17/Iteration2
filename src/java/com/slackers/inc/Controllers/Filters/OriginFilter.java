@@ -5,6 +5,9 @@ import com.slackers.inc.database.entities.Label;
 
 /**
  * Created by jestrada on 4/2/17.
+ *
+ * A class to look for beverages with a specific
+ * origin. Origin only applies to wines.
  */
 public class OriginFilter implements ExactFilter {
 

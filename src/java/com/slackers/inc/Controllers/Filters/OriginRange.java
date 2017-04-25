@@ -8,6 +8,11 @@ package com.slackers.inc.Controllers.Filters;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Used to look for any wine with an origin in the
+ *     range low to hi, where low and hi are strings
+ *     and any origin with a name alphebetically sorted
+ *     that is placed in between these strings will match
  */
 public class OriginRange implements RangeFilter{
 

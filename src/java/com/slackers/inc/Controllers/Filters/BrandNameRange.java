@@ -8,6 +8,9 @@ package com.slackers.inc.Controllers.Filters;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Filter for finding a beverage with a particular
+ *     fragment of a name
  */
 public class BrandNameRange implements RangeFilter{
 
