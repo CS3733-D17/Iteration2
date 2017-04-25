@@ -12,13 +12,21 @@ import java.util.*;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents a user in our system. Holds fields for email, password, the user's type,
+ *     and the user's first and last name. The user type is an enum, telling us if the user is a
+ *     manufacturer, US employee, COLA user, admin, or something else.
  */
 public class User implements IEntity{
-    
+
+    // NULL_USER is used when a placeholder is needed or a user
+    // is unknown.
     public static final User NULL_USER = new User("unknown","unknown","unknown","unknown");
-    
+
+    // The table in our database for this class
     private static final String TABLE = "USERS";
-    
+
+    // What type of user is this?
     public static enum UserType
     {
         UNKNOWN,
@@ -27,7 +35,8 @@ public class User implements IEntity{
         COLA_USER,
         ADMIN;
     }
-    
+
+    // info about the user
     private String password;
     private String email;
     private UserType userType;

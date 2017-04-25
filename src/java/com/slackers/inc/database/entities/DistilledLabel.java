@@ -8,6 +8,8 @@ package com.slackers.inc.database.entities;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents the label for a distilled beverage.
  */
 public class DistilledLabel extends Label{
 

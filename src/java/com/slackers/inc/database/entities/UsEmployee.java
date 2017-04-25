@@ -13,12 +13,18 @@ import java.util.Map;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents a US employee. Can approve or reject applications.
  */
 public class UsEmployee extends User{
-    
+
+    // NULL_EMPLOYEE is used when a placeholder is needed or an employee
+    // is unknown.
     public static final UsEmployee NULL_EMPLOYEE = new UsEmployee("unknown","unknown","unknown","unknown");
-    
+
+    // The applications this employee is given to work on
     private List<LabelApplication> applications;
+    // The previous applications this employee has worked on.
     private List<LabelApplication> previousApplications;
 
     public UsEmployee(String firstName, String lastName, String email, String password) {

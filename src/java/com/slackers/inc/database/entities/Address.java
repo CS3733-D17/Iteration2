@@ -10,6 +10,9 @@ import java.io.Serializable;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Holds the address of any user. Contains information about the user's
+ *     line 1, line 2, city, state, zip code, and country.
  */
 public class Address implements Serializable{
     private String line1;
