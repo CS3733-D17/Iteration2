@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents an HTTP request in our system.
  */
 public class HttpRequest {
 
@@ -26,10 +28,13 @@ public class HttpRequest {
     }
     private static final String AGENT = "SuperSlackersAutopullBot\\1.0";
 
+    // The URL of the request
     protected String url;
+    // Which method was used to make the request, POST or GET
     protected HttpMethod method;
+    // Any cookies that are stories
     protected List<String> cookies;
-
+    // parameters and their values
     protected Map<String, String> parameters;
 
     public HttpRequest(String urlString, HttpMethod method, Map<String, String> parameters) {
@@ -47,6 +52,7 @@ public class HttpRequest {
         this(urlString, HttpMethod.POST, new HashMap<>());
     }
 
+    // getters and setters
     public HttpMethod getMethod() {
         return method;
     }
@@ -55,6 +61,7 @@ public class HttpRequest {
         this.method = method;
     }
 
+    // Adds a parameter and the value to the map stored
     public void addParameter(String name, String value) {
         this.parameters.put(name, value);
     }
@@ -63,6 +70,7 @@ public class HttpRequest {
         this.parameters.putAll(values);
     }
 
+    // Builds the parameter list to a string which can be interpreted later
     private String buildParameterList() {
         StringBuilder s = new StringBuilder();
         boolean isFirst = true;
@@ -77,11 +85,13 @@ public class HttpRequest {
         return s.toString();
     }
 
+    // Adds a cookie to the current list of cookies by converting it to a string
     public void addCookie(String name, String value)
     {
         this.cookies.add(name+"="+value);
     }
-    
+
+    // Submits the request that this class holds to the URL.
     public HttpResponse submitRequest() {
         try {
             if (!(this.url.startsWith("http://") || this.url.startsWith("https://"))) {

@@ -8,6 +8,8 @@ package com.slackers.inc.Controllers.Csv;
 /**
  *
  * @author Fabio Borges
+ *
+ * Used for exporting CSV with a custom delimiter
  */
 public class CharFormat implements IDelimiterFormat
 {
