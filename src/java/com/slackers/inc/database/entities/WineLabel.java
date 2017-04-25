@@ -10,9 +10,13 @@ import java.util.Map;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents a wine label.
  */
 public class WineLabel extends Label{
 
+    // Information about vintage year of wine, ph level,
+    // grape varietal, and wine appelation.
     private int vintage;
     private double phLevel;
     private String grapeVarietal;

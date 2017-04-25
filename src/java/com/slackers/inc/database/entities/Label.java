@@ -19,17 +19,24 @@ import java.util.logging.Logger;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents a label. Classes such as BeerLabel, DistilledLabel
+ *     extend this class to represent their respective beverages.
  */
 public class Label implements IEntity{
-    
+
+    // Label class is held in the "LABELS" table in our database
     private static final String TABLE = "LABELS";
-    
+
+    // Where this beverage came from. Domestic, imported or unknown.
     public static enum BeverageSource
     {
         DOMESTIC,
         IMPORTED,
         UNKNOWN;
-    }    
+    }
+
+    // What type of beverage this is.
     public static enum BeverageType
     {
         WINE,
@@ -37,11 +44,14 @@ public class Label implements IEntity{
         DISTILLED,
         UNKNOWN;
     }
-    
+
+    // The ID of this label in the database.
     private long labelId;
     private double alcoholContent;
+    // is the label approved?
     private boolean isAccepted;
-    
+
+    // All of this is information about the label.
     private String representativeIdNumber;
     private String plantNumber;
     private BeverageSource productSource;
@@ -55,7 +65,8 @@ public class Label implements IEntity{
     private String TBB_OR;
     private String labelImageType;
     private byte[] labelImage;
-    
+
+    // Contains the information about the label approval.
     private ApplicationApproval approval;
     
     private boolean pullImageOut;
