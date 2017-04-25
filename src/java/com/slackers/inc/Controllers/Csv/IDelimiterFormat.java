@@ -8,6 +8,10 @@ package com.slackers.inc.Controllers.Csv;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Classes implement this interface if they are a way
+ *     to export CSV files with a certain delimiter. This
+ *     is used by DelimitedWriter.java
  */
 public interface IDelimiterFormat {
     public String getDelimiter();

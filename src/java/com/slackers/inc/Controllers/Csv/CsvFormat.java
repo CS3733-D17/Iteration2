@@ -8,6 +8,8 @@ package com.slackers.inc.Controllers.Csv;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Used for exporting in CSV format with comma as the delimeter
  */
 public class CsvFormat implements IDelimiterFormat{
 
