@@ -8,6 +8,9 @@ package com.slackers.inc.database;
 /**
  *
  * @author Fabio Borges
+ *
+ *  We use the proxy design pattern to load images. This is used
+ *  when the image is not yet needed.
  */
 public class ProxyLabelImage implements ILabelImage
 {
