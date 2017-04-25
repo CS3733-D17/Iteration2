@@ -10,7 +10,7 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 /**
- *
+ * 
  * @author jestrada
  */
 public class EmailWrapper {
@@ -155,7 +155,7 @@ public class EmailWrapper {
             Transport.send(message);    
             System.out.println("message sent successfully");    
             } catch (MessagingException e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
             }    
     }    
     
