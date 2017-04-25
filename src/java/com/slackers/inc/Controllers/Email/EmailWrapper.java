@@ -15,8 +15,13 @@ import javax.mail.internet.*;
 /**
  * 
  * @author jestrada
+ *
+ * Used to hold the information we need to email clients
+ * and can also send the email via javax.mail
  */
 public class EmailWrapper {
+    // Information about the email, such as who it is sent to
+    // who it is from, the subject and message, etc
     String[] to;
     String from;
     String[] cc;
@@ -131,7 +136,8 @@ public class EmailWrapper {
 //    } 
     
    
-    
+    // Sends the email according to the informtion held
+    // in this class via javax.mail
     public void sendEmail(){
 
         try {    
