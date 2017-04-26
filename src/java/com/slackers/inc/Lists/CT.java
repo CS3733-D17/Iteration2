@@ -17,4 +17,12 @@ public class CT {
         this.ct = ct;
         this.description = description;
     }
+    
+    public String getDescription(){
+        return this.description;
+    }
+    
+    public String getCT(){
+        return this.ct;
+    }
 }

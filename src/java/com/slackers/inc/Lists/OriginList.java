@@ -13,7 +13,8 @@ import java.util.LinkedList;
  */
 public class OriginList {
     public LinkedList originList = new LinkedList();
-    public OriginList(){
+    public OriginList list = null;
+    private OriginList(){
         originList.add(new Origin("00", "AMERICAN"));
         originList.add(new Origin("01", "CALIFORNIA"));
         originList.add(new Origin("02", "NEW YORK"));
@@ -232,6 +233,13 @@ public class OriginList {
         originList.add(new Origin("9I", "BHUTAN/KINGDOM OF BHUTAN"));
         originList.add(new Origin("HK", "HONG KONG"));
         originList.add(new Origin("MC", "MUTIPLE COUNTRIES"));
+    }
+    
+    public OriginList getOriginList(){
+        if  (list == null){
+            list = new OriginList();
+        } 
+        return list;
     }
     
     public LinkedList getList(){

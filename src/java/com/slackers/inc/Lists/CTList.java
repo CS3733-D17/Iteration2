@@ -13,6 +13,7 @@ import java.util.LinkedList;
  */
 public class CTList {
     LinkedList ctList = new LinkedList();
+    public CTList list = null;
     
     
     public CTList(){
@@ -522,6 +523,13 @@ public class CTList {
         ctList.add(new CT("985", "DILUTED TEQUILA FB"));
         ctList.add(new CT("986", "DILUTED TEQUILA USB"));
         ctList.add(new CT("990", "NON ALCOHOL MIXES"));
+    }
+    
+    public CTList getCTList(){
+        if (list == null){
+            list = new CTList();
+        }
+        return list;
     }
     
 }

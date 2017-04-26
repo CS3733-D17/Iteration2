@@ -18,4 +18,11 @@ public class Origin {
         this.oc = oc;
     }
     
+    public String getDescription(){
+        return this.description;
+    }
+    
+    public String getOC(){
+        return this.oc;
+    }
 }
