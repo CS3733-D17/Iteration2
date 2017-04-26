@@ -92,6 +92,12 @@ public class LabelApplicationController {
         return this.application;
     }
 
+    /**
+     * Creates a new label application according to an HTTP request
+     * @param context 
+     * @param request HTTP request to create label application from
+     * @return The created application
+     */
     public LabelApplication createApplicationFromRequest(ServletContext context, HttpServletRequest request) {
         User pageUser = AccountController.getPageUser(request);
         if (!(pageUser instanceof Manufacturer)) {
@@ -129,6 +135,12 @@ public class LabelApplicationController {
         return this.application;
     }
 
+    /**
+     * Creates a new label according to an HTTP request
+     * @param context
+     * @param request The HTTP request to create label from
+     * @return The created label
+     */
     public Label createLabelFromRequest(ServletContext context, HttpServletRequest request) {
         Label label = new Label();
 
@@ -220,6 +232,12 @@ public class LabelApplicationController {
         return label;
     }
 
+    /**
+     * Edits this label application according to an HTTP request
+     * @param context
+     * @param request HTTP request to edit this application from
+     * @return The edited application
+     */
     public LabelApplication editApplicationFromRequest(ServletContext context, HttpServletRequest request) {
         User pageUser = AccountController.getPageUser(request);
         if (!(pageUser instanceof Manufacturer)) {
@@ -255,6 +273,12 @@ public class LabelApplicationController {
         return this.application;
     }
 
+    /**
+     * Edits this label according to an HTTP request
+     * @param context
+     * @param request The HTTP request to edit this label from
+     * @return The edited label
+     */
     public Label editLabelFromRequest(ServletContext context, HttpServletRequest request) {
 
         Label label = this.application.getLabel();
@@ -451,6 +475,10 @@ public class LabelApplicationController {
         return label;
     }
 
+    /**
+     * Check for any invalid fields in this application
+     * @return Message detailing which field is invalid
+     */
     public String validateApplication() {
         if (this.application.getEmailAddress() == null || this.application.getEmailAddress().length() < 3) {
             return "Invalid email address";
@@ -491,6 +519,10 @@ public class LabelApplicationController {
         return this.validateLabel();
     }
 
+    /**
+     * Checks for invalid fields in this label
+     * @return Message detailing which field is invalid, if any
+     */
     public String validateLabel() {
         Label l = this.application.getLabel();
         if (l == null) {
@@ -534,6 +566,10 @@ public class LabelApplicationController {
         return null;
     }
 
+    /**
+     * Remove this application from the cookies
+     * @param response HTTP response to remove from
+     */
     public void removeApplicationFromCookies(HttpServletResponse response) {
         Cookie data = new Cookie(APPLICATION_DATA_COOKIE_NAME, null);
         Cookie gen = new Cookie(APPLICATION_GENERAL_COOKIE_NAME, null);
@@ -552,6 +588,10 @@ public class LabelApplicationController {
         response.addCookie(lbl);
     }
 
+    /**
+     * Write this application to the cookies
+     * @param response HTTP response to write to
+     */
     public void writeApplicationToCookies(HttpServletResponse response) {
         JsonObjectBuilder generalObj = Json.createObjectBuilder().add("email", this.application.getEmailAddress())
                 .add("phone", this.application.getPhoneNumber())
@@ -595,10 +635,19 @@ public class LabelApplicationController {
         //this.writeLabelToCookies(response, l);
     }
 
+    /**
+     * Write this label to the cookies
+     * @param response HTTP response to write to
+     */
     public void writeLabelToCookies(HttpServletResponse response) {
         this.writeLabelToCookies(response, this.application.getLabel());
     }
 
+    /**
+     * Write a label to the cookies
+     * @param response HTTP response to write to
+     * @param l Label to write
+     */
     public void writeLabelToCookies(HttpServletResponse response, Label l) {
         JsonObjectBuilder labelObj = Json.createObjectBuilder().add("plantNumber", l.getPlantNumber())
                 .add("brandName", l.getBrandName())
@@ -633,6 +682,9 @@ public class LabelApplicationController {
         response.addCookie(data);
     }
 
+    /**
+     * Create json file for all employees
+     */
     public void employeeJson() {
         UsEmployee employee = new UsEmployee();
         List<UsEmployee> list;
@@ -647,6 +699,11 @@ public class LabelApplicationController {
 
     }
 
+    /**
+     * Render all the comments on this application
+     * @param request
+     * @return HTML code with rendered comments
+     */
     public String renderCommentList(HttpServletRequest request) {
         StringBuilder b = new StringBuilder();
         b.append("<div class=\"row\">").append("<div class=\"col-sm-1 col-md-2\"></div>");
@@ -659,6 +716,12 @@ public class LabelApplicationController {
         return b.toString();
     }
 
+    /**
+     * Renders a label comment
+     * @param request
+     * @param comment Comment to be rendered
+     * @return HTML code with rendered comment
+     */
     public String renderComment(HttpServletRequest request, LabelComment comment) {
         User usr = comment.getSubmitter();
         StringBuilder b = new StringBuilder();
@@ -675,6 +738,14 @@ public class LabelApplicationController {
         return b.toString();
     }
 
+    /**
+     * Builds comment detailing all revisions made to this application
+     * @param applicationId The application ID
+     * @param newLabelId The revised label ID
+     * @param prevLabelId The previous label ID
+     * @param revisions List of revisions
+     * @return HTML code with revision details
+     */
     public String buildChangeComment(long applicationId, long newLabelId, long prevLabelId, List<String> revisions) {
 
         StringBuilder b = new StringBuilder();
@@ -703,6 +774,11 @@ public class LabelApplicationController {
         return b.toString();
     }
 
+    /**
+     * Pull a label's image from database
+     * @param labelId ID of the label whose image will be pulled
+     * @return The same label with the image pulled
+     */
     public Label getLabelImage(long labelId) {
         return this.getLabelImage(labelId, true);
     }
@@ -757,19 +833,39 @@ public class LabelApplicationController {
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
 
+    /**
+     * Write this application to the database
+     * @return Whether the write succeeded
+     * @throws SQLException 
+     */
     public boolean saveApplication() throws SQLException {
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
 
+    /**
+     * Update this application's label and write the change to the database
+     * @return Whether the edit succeeded
+     * @throws SQLException 
+     */
     public boolean editApplication() throws SQLException {
         this.application.updateLabel();
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
 
+    /**
+     * Delete this application from the database
+     * @return Whether the delete succeeded
+     * @throws SQLException 
+     */
     public boolean deleteApplication() throws SQLException {
         return db.deleteEntity(this.application, this.application.getPrimaryKeyName());
     }
 
+    /**
+     * Create this application in the database
+     * @return
+     * @throws SQLException 
+     */
     public boolean createApplication() throws SQLException {
         this.application.setStatus(LabelApplication.ApplicationStatus.NOT_COMPLETE);
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
@@ -778,17 +874,35 @@ public class LabelApplicationController {
         return true;
     }
 
+    /**
+     * Load an application from the database
+     * @param id ID for the application
+     * @return
+     * @throws SQLException 
+     */
     public boolean loadApplication(long id) throws SQLException {
         this.application.setApplicationId(id);
         db.getEntity(this.application, this.application.getPrimaryKeyName());
         return true;
     }
 
+    /**
+     * Set this application to a given application and create in the database
+     * @param application Desired application
+     * @return
+     * @throws SQLException 
+     */
     public boolean createApplication(LabelApplication application) throws SQLException {
         this.application = application;
         return this.createApplication();
     }
 
+    /**
+     * Submit this application to a US employee
+     * @param submitter Manufacturer submitting the application
+     * @return Whether the submission succeeded
+     * @throws SQLException 
+     */
     public boolean submitApplication(Manufacturer submitter) throws SQLException {
         this.application.setApplicant(submitter);
         this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED);

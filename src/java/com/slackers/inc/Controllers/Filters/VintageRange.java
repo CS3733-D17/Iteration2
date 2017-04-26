@@ -5,6 +5,9 @@ import com.slackers.inc.database.entities.WineLabel;
 
 /**
  * Created by Matt on 4/2/2017.
+ *
+ * Used to find beverages with a vintage year between
+ * a low and a high vlaue.
  */
 public class VintageRange implements RangeFilter {
 
