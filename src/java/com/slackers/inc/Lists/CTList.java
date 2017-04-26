@@ -531,4 +531,7 @@ public class CTList {
         return Helper.instance;
     }
     
+    public LinkedList getList(){
+        return this.ctList;
+    }
 }
