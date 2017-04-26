@@ -1,3 +1,5 @@
+<div class="alert alert-danger" id = "errOut" style="display: none;" align = "center">
+</div>
 <div style="width:auto;">
     <div class="data" align="right"><strong>OMB No. 1513-0020</strong></div>
     <table width="100%" border="2" cellspacing="0" cellpadding="2">
@@ -16,7 +18,8 @@
                 <td width="40%" bgcolor="#cccccc" height="30" bordercolor="1"> 
                     <div class="label">TTB ID</div>
                     <div class="data">
-                        
+                            <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_ID" type="text" size="10" disabled><br>
+
                     </div>
                     <br>
                 </td>
@@ -25,19 +28,24 @@
                 <td width="40%" bgcolor="#FFFFFF"> 
                     <table width="100%" border="1" cellspacing="0" cellpadding="1">
                         <tbody><tr>
-                                <td width="50%" bgcolor="#FFFFFF" bordercolor="1"> 
+                                <td width="50%" bordercolor="1"> 
                                     <div class="boldlabel">1. REP. ID. NO.<i> (If any)</i></div>
                                     <div class="data">
+                                        <input id="representativeId" name = "representativeId" class="form-control" placeholder="Representative ID" type="text" oninput="validateForm('repId')">
                                     </div>
                                 </td>
                                 <td bgcolor="#cccccc" width="25%" bordercolor="1"> 
                                     <div class="label">CT</div>
-                                    <div class="data">902</div>
+                                    <div class="data">
+                                            <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_CT" type="text" size="4" disabled><br>
+                                    </div>
                                     <br>
                                 </td>
                                 <td bgcolor="#cccccc" width="25%" bordercolor="1"> 
                                     <div class="label">OR</div>
-                                    <div class="data">07</div>
+                                    <div class="data">
+                                            <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_OR" type="text" size="4" disabled><br>
+                                    </div>
                                     <br><i>
                                     </i></td>
                             </tr>   
@@ -198,10 +206,14 @@
 
 
 
-                </td>
+                
 
 
                 <td width="20%">
+                    <div class="label">9a. Alcohol Percentage</div>
+                    <div class="data">
+            <input data-toggle="tooltip" title="Note: a value of -1.0 implies the alcohol content is unknown" id="alcoholContent" name="alcoholContent" class="form-control" placeholder="0-100%" type="text" oninput="validateForm('alcoholContent')" required>
+                    </div>
                     <div class="label">10. GRAPE VARIETAL(S) <i>(Wine Only)</i></div>
                     <div class="data">
                         <input id="grapeVarietal" name="grapeVarietal" class="form-control" placeholder="Grape Varietal" type="text">
@@ -216,7 +228,8 @@
                             <tbody><tr> 
                                     <td width="20%" valign="top"><p class="data">a. 
 
-                                            <input type="checkbox"  value="" alt="Type of Application">
+                                       
+                                            <input class="tag-new-label" type="checkbox" name="NEW" id="NEW">
 
                                         </p></td>
                                     <td width="80%" class="smalldata">CERTIFICATE OF LABEL APPROVAL</td>
@@ -224,12 +237,12 @@
                                 <tr>
                                     <td width="20%" valign="top"><p class="data">b. 
 
-                                            <input class="tag-new-label" type="checkbox" name="NEW" id="NEW" required>
+                                            <input class="tag-new-label" type="checkbox" name="EXEMPT" id="EXEMPT">
 
                                         </p></td>
                                     <td width="80%" class="smalldata">
                                         CERTIFICATE OF EXEMPTION FROM LABEL APPROVAL <br>
-                                        "For sale in ___<strong></strong>____ only" (Fill in State abbreviation.)
+                                        "For sale in <input name="state" id="state" type="text" size="2" maxlength="2" placeholder="State" style="font-family: 'Ubuntu','Tahoma','Helvetica Neue','Helvetica','Arial','sans-serif'; font-size: 14px; line-height: 1.42857143;"> only" (Fill in State abbreviation.)
                                     </td>
                                 </tr>
                                 <tr>
@@ -237,24 +250,23 @@
                                     <td valign="top">
                                         <p class="data">c. 
 
-                                            <input type="checkbox" value="" alt="Distinctive Liquor Bottle Approval">
+                                            <input class="tag-new-label" type="checkbox" name="DISTINCT" id="DISTINCT">
 
                                         </p></td>
                                     <td class="smalldata">
                                         DISTINCTIVE LIQUOR BOTTLE APPROVAL. TOTAL 
-                                        BOTTLE CAPACITY BEFORE CLOSURE ____
-                                        <strong></strong>_____ (Fill in amount)
+                                        BOTTLE CAPACITY BEFORE CLOSURE <input placeholder="Capacity" id="capacity" name="capacity" type="text" size="6" maxlength="6" style="font-family: 'Ubuntu','Tahoma','Helvetica Neue','Helvetica','Arial','sans-serif'; font-size: 14px; line-height: 1.42857143;"> (Fill in amount)
                                     </td>
                                 </tr>
                                 <tr>
 
                                     <td width="20%" valign="top"><p class="data">d. 
 
-                                            <input type="checkbox" value="" alt="Previous TTB Id">
+                                            <input class="tag-new-label" type="checkbox" name="RESUBMIT" id="RESUBMIT">
 
                                         </p></td>
                                     <td width="80%" class="smalldata">
-                                        RESUBMISSION AFTER REJECTION <br>TTB ID. NO. ___<strong></strong>___
+                                        RESUBMISSION AFTER REJECTION <br>TTB ID. NO. <input placeholder="TTB Id" id="tbbid" name="tbbid" type="text" style="font-family: 'Ubuntu','Tahoma','Helvetica Neue','Helvetica','Arial','sans-serif'; font-size: 14px; line-height: 1.42857143;">
                                     </td>
                                 </tr>
                             </tbody></table>
@@ -269,6 +281,20 @@
                     <div class="label">11. WINE APPELLATION <i>(If on label)</i></div>
                     <div class="data">
                         <input id="wineAppelation" name="wineAppelation" class="form-control" placeholder="Wine Appelation" type="text">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%" colspan="1">
+                    <div class="label">11a. pH <i>(Wine Only)</i></div>
+                    <div class="data">
+                <input id="pH" name="pH" class="form-control" placeholder="pH" type="text">
+                    </div>
+                </td>
+                <td width="30%" colspan="1">
+                    <div class="label">11b. VINTAGE YEAR <i>(Wine Only</i></div>
+                    <div class="data">
+                <input id="vintage" name="vintage" class="form-control" placeholder="year" type="text">
                     </div>
                 </td>
             </tr>
@@ -292,10 +318,23 @@
                 <td colspan="4">
                     <div class="data">15.  SHOW ANY INFORMATION THAT IS BLOWN, BRANDED, OR EMBOSSED ON THE CONTAINER (e.g., net contents) ONLY IF IT DOES NOT 
                         APPEAR ON THE LABELS AFFIXED BELOW.  ALSO, SHOW TRANSLATIONS OF FOREIGN LANGUAGE TEXT APPEARING ON LABELS.<br>
-                        FRESHNESS DATE CODE AND CONSUMER INFORMATION (PHONE NUMBER, QR CODE, AND WEBSITE). KOSHER SYMBOL IF APPLICABLE TO BRAND. ANY WORDING REQUIRED BY STATES, SUCH AS, ALCOHOL CONTENT, DEPOSIT LANGUAGE, AND CONTAINS ALCOHOL MAY BE IMPRINTED ON THE LABEL OR OTHERWISE AFFIXED TO THE BOTTLE OR CAN. RETURNABLE OR NON-RETURNABLE MAY APPEAR ON BOTTLE LABELS. PLACE/DATE OF PRODUCTION AND/OR OTHER INTERNAL MANUFACTURER CODING IS USED BY ALL BREWERIES FOR ALL PRODUCTION RUNS.
+                        FRESHNESS DATE CODE AND CONSUMER INFORMATION (PHONE NUMBER, QR CODE, AND WEBSITE). KOSHER SYMBOL IF APPLICABLE TO BRAND. ANY WORDING REQUIRED BY STATES, SUCH AS, ALCOHOL CONTENT, DEPOSIT LANGUAGE, AND CONTAINS ALCOHOL MAY BE IMPRINTED ON THE LABEL OR OTHERWISE AFFIXED TO THE BOTTLE OR CAN. RETURNABLE OR NON-RETURNABLE MAY APPEAR ON BOTTLE LABELS. PLACE/DATE OF PRODUCTION AND/OR OTHER INTERNAL MANUFACTURER CODING IS USED BY ALL BREWERIES FOR ALL PRODUCTION RUNS. <br>
+                            <textarea id="generalInfo" name="generalInfo" class="form-control" rows="4"></textarea>
+
                     </div>
                 </td>
 
             </tr>
         </tbody></table>
+    
+    <input onclick="validateForm()" id="imgSelector" type="file" name="labelImageUpload" accept=".png,.jpg,.jpeg,image/png,image/jpeg" onchange="document.getElementById('lblImg').src = window.URL.createObjectURL(this.files[0]);">
+<div class="row">
+    <div class="col-sm-1 col-md-2">
+    </div>
+    <div class="col-sm-10 col-md-8">
+        <img id="lblImg" src="##LABEL_IMAGE_PATH" class="img-responsive" alt="Label Image">
+    </div>
+    <div class="col-sm-1 col-md-2">
+    </div>                
+</div>
 </div>

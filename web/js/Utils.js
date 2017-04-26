@@ -29,7 +29,8 @@ function getMessage()
 
 function unclickBox(id)
 {
-    document.getElementById("wineInfo").style.display= "none";
+    if (document.getElementById("wineInfo")!=null)
+        document.getElementById("wineInfo").style.display= "none";
     if (document.getElementById(id)!=null)
     {
         document.getElementById(id).checked = false;
@@ -42,6 +43,8 @@ function unclickBox(id)
 
 function clickBox(id)
 {
+    if (document.getElementById("wineInfo")!=null)
+        document.getElementById("wineInfo").style.display= "none";
     if (document.getElementById(id)!=null)
         document.getElementById(id).checked = true;
     if (document.getElementById(id+"-lbl")!=null)
