@@ -88,7 +88,7 @@ public class Address implements Serializable{
         if (this.zipCode!=-1)
             return line1 + "\n" + line2 + "\n" + city + " " + state + ", " + String.format("%05d", zipCode);
         else
-            return "";
+            return "Unknown";
     }
     
     public static Address tryParse(String addressBox)

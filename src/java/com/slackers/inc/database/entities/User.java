@@ -42,6 +42,7 @@ public class User implements IEntity{
     private UserType userType;
     private String firstName;
     private String lastName;
+    private String phoneNumber;
     private boolean isUpdate;
 
     public User(String firstName, String lastName, String email, String password) {
@@ -49,6 +50,7 @@ public class User implements IEntity{
         this.lastName = lastName;
         this.password = password;
         this.email = email;
+        this.phoneNumber = "";
         this.userType = UserType.UNKNOWN;
         this.isUpdate = false;
     }
@@ -59,6 +61,14 @@ public class User implements IEntity{
 
     public User() {
         this("", "", "", "");
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
     
     public String getFirstName() {

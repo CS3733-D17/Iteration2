@@ -14,12 +14,15 @@ import com.slackers.inc.Controllers.Filters.Filter;
  */
 public class SearchController {
 
+    private static final int RESULTS_PER_PAGE = 30;
     List<Filter> filters;
     DerbyConnection db;
+    private int page;
 
     public SearchController(){
         filters = new LinkedList<>();
         db = DerbyConnection.getInstance();
+        this.page = 0;
     }
 
     public void reset()
@@ -36,10 +39,19 @@ public class SearchController {
         filters.remove(filter);
     }
 
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    
+    
     public List<Label> runSearch(Label target) throws SQLException {
         
-        
-        return db.search(target,filters);
+        return db.search(target,filters, RESULTS_PER_PAGE, page*RESULTS_PER_PAGE);
     }
 
 
