@@ -96,18 +96,26 @@ public class LabelImageGenerator extends HttpServlet {
             if (request.getParameter("id") != null) {
                 long id = Long.parseLong(request.getParameter("id"));
                 LabelApplicationController appControl = new LabelApplicationController();
+                
+                if (appControl.getLabel().getLabelImageType().equalsIgnoreCase("none") || appControl.getLabel().getLabelImageType().length()<3) {
+                    String url = "http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg";
+                    response.sendRedirect(url);
+                    return;
+                }
+                
                 Label label = appControl.getLabelImage(id);
                 /*String mimeType = label.getLabelImageType();
                 if (mimeType==null)
                 {
                     mimeType = "image/png";
                 }*/
-
+                
                 if (label.getLabelImageType().equalsIgnoreCase("urlAbsolute")) {
                     String url = new String(label.getLabelImage(), StandardCharsets.US_ASCII);
                     response.sendRedirect(url);
                     return;
                 }
+                
 
                 response.setContentType(label.getLabelImageType());
                 boolean wrote = false;
@@ -135,7 +143,7 @@ public class LabelImageGenerator extends HttpServlet {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
     }
 

@@ -241,7 +241,7 @@ public class LabelApplicationController {
             
             if (this.application.getStatus()==ApplicationStatus.SENT_FOR_CORRECTIONS)// resubmit
             {
-                this.application.getComments().add(new LabelComment(this.getApplicant(), "<h4><span style=\"color:cyan;\"></span></h4>"));
+                this.application.getComments().add(new LabelComment(this.getApplicant(), "<h4><span style=\"color:cyan;\">Made Corrections</span></h4>"));
                 this.submitApplication(this.getApplicant());
             }
             else
@@ -815,9 +815,6 @@ public class LabelApplicationController {
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()));
-        for (LabelComment l : this.application.getComments()) {
-            System.out.println(l);
-        }
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
 
@@ -833,9 +830,6 @@ public class LabelApplicationController {
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()
                 + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
-        for (LabelComment l : this.application.getComments()) {
-            System.out.println(l);
-        }
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
 

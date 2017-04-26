@@ -86,6 +86,22 @@ public class ManufacturerSearchServlet extends HttpServlet {
             throws ServletException, IOException {
 
         SearchController search = new SearchController();
+        
+        if (request.getParameter("pg")!=null)
+        {
+            int page = 0;
+            try
+            {
+                page = Integer.parseInt(request.getParameter("pg"));
+            }catch (Exception e)
+            {}
+            if (page<0)
+                page=0;
+            search.setPage(page);
+        }
+        
+        
+        
         Label label = new Label();
         search.reset();
         Map<String, String[]> param = request.getParameterMap();
@@ -286,7 +302,15 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 }
 
                 results = results.replace("##Drinks", b);
-                //results = results.replace("##BrandName", drinkList.get(0).getBrandName() );
+                results = results.replace("##PAGE", "Page "+search.getPage());
+                if (drinkList.isEmpty())
+                    results = results.replace("##NEXT", "/SuperSlackers/search?subset="+request.getParameter("subset")+"&pg="+(search.getPage()+1));
+                else
+                    results = results.replace("##NEXT", "/SuperSlackers/search?subset="+request.getParameter("subset")+"&pg="+(search.getPage()+1));
+                if (search.getPage()<=1)
+                    results = results.replace("##PREV", "/SuperSlackers/search?subset="+request.getParameter("subset")+"&pg="+(0));
+                else
+                    results = results.replace("##PREV", "/SuperSlackers/search?subset="+request.getParameter("subset")+"&pg="+(search.getPage()-1));
 
                 List<String> params = new LinkedList<>();
                 for (String parameter : param.keySet()) {
