@@ -11,7 +11,6 @@
         var addressReg = new RegExp(/^.+?\n.+?\n.+$/);
         var brandNameReg = new RegExp(/\w/);
         var formulaReg = new RegExp(/\w/);
-        field = "formula";
         switch (field) { //yes, the switch cases don't break on purpose
             case "formula":
                 var formula = document.getElementById("formula").value;
@@ -75,7 +74,14 @@
                 } else {
                     document.getElementById("plantNumber").style.backgroundColor = "#ffffff";
                 }
-
+	    case "repId":
+		var repId = document.getElementById("representativeId").value;
+                if (!repIdReg.test(repId)) {
+                    document.getElementById("representativeId").style.backgroundColor = "#ff8888";
+                } else {
+                    document.getElementById("representativeId").style.backgroundColor = "#ffffff";
+                }
+		break;
         }
 
     }
