@@ -12,9 +12,11 @@ import java.util.LinkedList;
  * @author jestrada
  */
 public class CTList {
-    LinkedList ctList = new LinkedList();
-    public CTList list = null;
+    private final LinkedList ctList = new LinkedList();
     
+    private static class Helper {
+        private static final CTList instance = new CTList();
+    }
     
     public CTList(){
         ctList.add(new CT("0", "ADMINISTRATIVE WITHDRAWAL"));
@@ -526,10 +528,7 @@ public class CTList {
     }
     
     public CTList getCTList(){
-        if (list == null){
-            list = new CTList();
-        }
-        return list;
+        return Helper.instance;
     }
     
 }

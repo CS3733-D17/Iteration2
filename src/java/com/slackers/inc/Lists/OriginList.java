@@ -12,8 +12,9 @@ import java.util.LinkedList;
  * @author jestrada
  */
 public class OriginList {
-    public LinkedList originList = new LinkedList();
-    public OriginList list = null;
+    
+    private final LinkedList<Origin> originList = new LinkedList();
+    
     private OriginList(){
         originList.add(new Origin("00", "AMERICAN"));
         originList.add(new Origin("01", "CALIFORNIA"));
@@ -235,14 +236,18 @@ public class OriginList {
         originList.add(new Origin("MC", "MUTIPLE COUNTRIES"));
     }
     
-    public OriginList getOriginList(){
-        if  (list == null){
-            list = new OriginList();
-        } 
-        return list;
+    public OriginList getInstance(){
+        return helper.originList;
+        
     }
     
     public LinkedList getList(){
-        return originList;
+        return this.originList;
     }
+    
+    private static class helper{
+        private static final OriginList originList = new OriginList();
+    }
+    
+    
 }
