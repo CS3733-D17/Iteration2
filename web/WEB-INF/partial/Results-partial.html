@@ -30,7 +30,7 @@
             <div class="col-md-8">
                 <form action="/SuperSlackers/search" method="post">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-9">
                             <div class="input-group dropdown">
                                 <input name ="keywords" type="text" class="form-control" placeholder="Search" id="keywords" onkeypress="getSearches();" oninput="getSearches();" onchange="getSearches();" onfocus="showSuggestions(true)" onfocusout="showSuggestions(false)">
                                 <div class="input-group-btn">
@@ -51,6 +51,57 @@
                                     <li><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value = 'BEER'">Beer</a></li>
                                     <li><a href="#Distilled" data-toggle="tab" onclick="document.getElementById('bType').value = 'DISTILLED'">Distilled</a></li>
                                 </ul>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Search Type</label>
+                                            <select class="form-control" id="keywordType" name="keywordType">
+                                                <option selected value="BRAND">
+                                                    Brand Name
+                                                </option>
+                                                <option value="FANCIFUL">
+                                                    Fanciful Name
+                                                </option>
+                                                <option value="BOTH">
+                                                    Either
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Source of Product</label>
+                                            <select class="form-control" id="source" name="source">
+                                                <option selected value="na">
+                                                    Choose One:
+                                                </option>
+                                                <option value="Domestic">
+                                                    DOMESTIC
+                                                </option>
+                                                <option value="Imported">
+                                                    IMPORTED
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group dropdown" style="width:100%;" >
+                                            <input style="width:100%;" name = "TTB_OR-new" type="text" class="form-control" placeholder="Origin Code" id="TTB_OR-new" onkeypress="getOR();" oninput="getOR();" onchange="getOR();" onfocus="showOR(true)" onfocusout="showOR(false)">
+                                            <ul class="dropdown-menu open" id="OR-suggestions">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group dropdown" style="width:100%;" >
+                                            <input style="width:100%;" name = "TTB_CT-new" type="text" class="form-control" placeholder="Product Category Code" id="TTB_CT-new" onkeypress="getCT();" oninput="getCT();" onchange="getCT();" onfocus="showCT(true)" onfocusout="showCT(false)">
+                                            <ul class="dropdown-menu open" id="CT-suggestions">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br><br>
                                 <div class="form-group">
                                     <label>Alcohol Content</label>
                                     <select id="alcohol" name="alcoholSearchType" onchange="alcoholFunction()" >
@@ -58,13 +109,13 @@
                                         <option value="between">is between</option>
                                     </select>
                                     <div class="row">
-                                        <div class="col-md-5">
+                                        <div class="col-xs-5">
                                             <input type="text" name="alcohol_low" id="alcohol_low" placeholder="Values between 0.0 - 100.0%" class="form-control as-variable-input" value="">
                                         </div>
-                                        <div class="col-md-2" align="center" style="vertical-align: middle;">
+                                        <div class="col-xs-2" align="center" style="vertical-align: middle;">
                                             <span id="alcoholAnd" style="display: none; vertical-align: middle;" >and</span>
                                         </div>
-                                        <div class="col-md-5">
+                                        <div class="col-xs-5">
                                             <input type="text" name="alcohol_hi" id="alcohol_hi" placeholder="Values between 0.0 - 100.0%" class="form-control as-variable-input " value="" style="display: none;">
                                         </div>
                                     </div>
@@ -84,20 +135,7 @@
                                     <label>Origin Location</label>
                                     <input class="form-control" placeholder="Origin Location" type="text" id="originLocation" name="originLocation">
                                 </div>-->
-                                <div class="form-group">
-                                    <label>Source of Product</label>
-                                    <select class="form-control" id="source" name="source">
-                                        <option selected value="na">
-                                            Choose One:
-                                        </option>
-                                        <option value="Domestic">
-                                            DOMESTIC
-                                        </option>
-                                        <option value="Imported">
-                                            IMPORTED
-                                        </option>
-                                    </select>
-                                </div>
+
                                 <div class="tab-content" id="type">
                                     <div id = "Beer" class="tab-pane fade in active">
 
@@ -116,13 +154,13 @@
 
                                             </select>
                                             <div class="row">
-                                                <div class="col-md-5">
+                                                <div class="col-xs-5">
                                                     <input type="text" name="ph_low" id="ph_low" placeholder="pH Level: 0.0-14.0" class="form-control" value="">
                                                 </div>
-                                                <div class="col-md-2" align="center">
+                                                <div class="col-xs-2" align="center">
                                                     <span id="phAnd" style="display: none;">and</span>
                                                 </div>
-                                                <div class="col-md-5">
+                                                <div class="col-xs-5">
                                                     <input type="text" name="ph_hi" id="ph_hi" placeholder="pH Level: 0.0-14.0" class="form-control" value="" style="display: none;">
                                                 </div>
                                             </div>
@@ -141,13 +179,13 @@
 
                                             </select>
                                             <div class="row">
-                                                <div class="col-md-5">
+                                                <div class="col-xs-5">
                                                     <input type="text" name="vintage_low" id="vintage_low" placeholder="Year" class="form-control" value="">
                                                 </div>
-                                                <div class="col-md-2" align="center">
+                                                <div class="col-xs-2" align="center">
                                                     <span id="vintageAnd" style="display: none;">and</span>
                                                 </div>
-                                                <div class="col-md-5">
+                                                <div class="col-xs-5">
                                                     <input type="text" name="vintage_hi" id="vintage_hi" placeholder="Year" class="form-control" value="" style="display: none;">
                                                 </div>
                                             </div>
@@ -221,27 +259,26 @@
 
         }
     }
-    
+
     function showSuggestions(show)
     {
-        setTimeout(function(){
+        setTimeout(function () {
             if (show)
             {
                 document.getElementById('suggestions').style.display = 'block';
-            }
-            else
+            } else
             {
                 document.getElementById('suggestions').style.display = 'none';
             }
-        },1000);
+        }, 1000);
     }
-    
+
     function setSearchText(text)
     {
-        document.getElementById('keywords').value=text;
+        document.getElementById('keywords').value = text;
         getSearches();
     }
-    
+
     var xhttp = new XMLHttpRequest();
     function getSearches()
     {
@@ -252,15 +289,29 @@
             if (this.readyState == 4 && this.status == 200) {
                 var sug = JSON.parse(this.responseText);
                 var htm = "";
-                for (var i=0; i<sug.length; i++)
+                for (var i = 0; i < sug.length; i++)
                 {
-                    htm+="<li><a onclick=\"setSearchText('"+sug[i]+"');\">"+sug[i]+"</a></li>";
+                    var namestr;
+                    if (sug[i].fanciful === undefined)
+                    {
+                        namestr = "";
+                    } else
+                    {
+                        namestr = " (" + sug[i].fanciful + ")";
+                    }
+                    htm += "<li><a onclick=\"setSearchText('" + sug[i].brand + "');\">" + sug[i].brand + namestr + "</a></li>";
                 }
                 document.getElementById("suggestions").innerHTML = htm;
             }
         };
-        xhttp.open("GET", "/SuperSlackers/search/autocomplete?brand="+name, true);
-        xhttp.send();        
+        var type = document.getElementById('keywordType').value;
+        if (type == "BRAND")
+            xhttp.open("GET", "/SuperSlackers/search/autocomplete?brand=" + name, true);
+        else if (type == "FANCIFUL")
+            xhttp.open("GET", "/SuperSlackers/search/autocomplete?fancy=" + name, true);
+        else
+            xhttp.open("GET", "/SuperSlackers/search/autocomplete?brand=" + name + "&fancy=" + name, true);
+        xhttp.send();
     }
 
 

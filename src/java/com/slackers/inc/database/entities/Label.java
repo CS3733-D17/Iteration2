@@ -249,11 +249,10 @@ public class Label implements IEntity{
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
-        
+        values.put("labelImageType", this.labelImageType);
         if (this.labelImage!=null)
         {
-            values.put("labelImage", this.labelImage);
-            values.put("labelImageType", this.labelImageType);
+            values.put("labelImage", this.labelImage);            
         }
         
         values.putAll(this.approval.getEntityValues()); // approval
@@ -278,10 +277,10 @@ public class Label implements IEntity{
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
         
+        values.put("labelImageType", this.labelImageType);
         if (this.labelImage!=null)
         {
             values.put("labelImage", this.labelImage);
-            values.put("labelImageType", this.labelImageType);
         }
         values.putAll(this.approval.getEntityValues()); // approval
         return values;

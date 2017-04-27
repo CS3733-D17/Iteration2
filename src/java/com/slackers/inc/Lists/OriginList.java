@@ -236,12 +236,12 @@ public class OriginList {
         originList.add(new Origin("MC", "MUTIPLE COUNTRIES"));
     }
     
-    public OriginList getInstance(){
+    public static OriginList getInstance(){
         return helper.originList;
         
     }
     
-    public LinkedList getList(){
+    public LinkedList<Origin> getList(){
         return this.originList;
     }
     

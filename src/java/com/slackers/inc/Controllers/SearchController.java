@@ -60,5 +60,16 @@ public class SearchController {
         }
     }
 
+    public List<Label> runSearch(Label target, List<List<Filter>> combined, String... excuded) throws SQLException {
+        if (page==-5)
+        {
+            return db.search(target, combined, true, excuded);
+        }
+        else
+        {
+            return db.search(target, combined, RESULTS_PER_PAGE, page*RESULTS_PER_PAGE, true, excuded);
+        }
+    }
+
 
 }
