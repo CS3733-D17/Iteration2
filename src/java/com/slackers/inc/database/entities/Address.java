@@ -96,7 +96,6 @@ public class Address implements Serializable{
         try
         {
             String[] lines = addressBox.split("\n");
-            System.out.println(lines.length);
             if (lines.length!=3)
                 return null;
 

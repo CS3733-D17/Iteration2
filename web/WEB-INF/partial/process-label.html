@@ -39,15 +39,24 @@
             <div class="row">
                 <div class="col-xs-6">
                     <label for="TBB_CT-new">CT</label>
-                    <input name="TBB_CT-new" id="TBB_CT-new" type="text" class="form-control">
+                    <div class="input-group dropdown" style="width:100%;" >
+                        <input style="width:100%;" name = "TTB_CT-new" type="text" class="form-control" placeholder="Product Category Code" id="TTB_CT-new" onkeypress="getCT();" oninput="getCT();" onchange="getCT();" onfocus="showCT(true)" onfocusout="showCT(false)">
+                        <ul class="dropdown-menu open" id="CT-suggestions">
+                        </ul>
+                    </div>
+
                 </div>
                 <div class="col-xs-6">
                     <label for="TBB_OR-new">OR</label>
-                    <input name="TBB_OR-new" id="TBB_OR-new" type="text" class="form-control">
+                    <div class="input-group dropdown" style="width:100%;" >
+                        <input style="width:100%;" name = "TTB_OR-new" type="text" class="form-control" placeholder="Origin Code" id="TTB_OR-new" onkeypress="getOR();" oninput="getOR();" onchange="getOR();" onfocus="showOR(true)" onfocusout="showOR(false)">
+                        <ul class="dropdown-menu open" id="OR-suggestions">
+                        </ul>
+                    </div>
                 </div>  
             </div>
             <br>
-            
+
             <label for="cText">Comments:</label>
             <textarea id="cText" name="commentText" class="form-control"></textarea>
             <button name="action" value="accept" class="btn btn-success" style="width:100%; margin-top: 20px;">Accept</button>
@@ -63,8 +72,8 @@
                 <ul class="dropdown-menu open" id="suggestions">
                 </ul>
             </div>
-            
-            
+
+
         </form>
     </div>
     <script>
@@ -91,7 +100,7 @@
         var xhttp = new XMLHttpRequest();
         function getSearches()
         {
-            
+
             var name = document.getElementById('empEmail').value;
             xhttp.abort();
             xhttp = new XMLHttpRequest();
@@ -101,7 +110,7 @@
                     var htm = "";
                     for (var i = 0; i < sug.length; i++)
                     {
-                        htm += "<li><a onclick=\"setSearchText('" + sug[i].substring(0,sug[i].indexOf('(')-1) + "');\">" + sug[i] + "</a></li>";
+                        htm += "<li><a onclick=\"setSearchText('" + sug[i].substring(0, sug[i].indexOf('(') - 1) + "');\">" + sug[i] + "</a></li>";
                     }
                     document.getElementById("suggestions").innerHTML = htm;
                 }

@@ -156,6 +156,7 @@ public class LabelApplicationController {
         label.setTBB_CT(request.getParameter("TTB_CT"));
         if (request.getParameter("TTB_CT-new")!=null)
         {
+            System.out.println("CT:"+request.getParameter("TTB_CT-new"));
             label.setTBB_OR(request.getParameter("TTB_CT-new"));
         }
         if (request.getParameter("TTB_OR-new")!=null)
@@ -828,7 +829,8 @@ public class LabelApplicationController {
                 return l2;
             }
             l.setPullImageOut(getImage);
-            this.db.getEntity(l, l.getPrimaryKeyName());
+            if (l!=null && l.getPrimaryKeyName()!=null)
+                this.db.getEntity(l, l.getPrimaryKeyName());
             return l;
         } catch (SQLException ex) {
             return null;

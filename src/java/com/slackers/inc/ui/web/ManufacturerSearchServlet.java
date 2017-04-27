@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -81,165 +80,189 @@ public class ManufacturerSearchServlet extends HttpServlet {
 
         SearchController search = new SearchController();
         search.setPage(0);
-        if (request.getParameter("pg")!=null)
-        {
+        if (request.getParameter("pg") != null) {
             int page = 0;
-            try
-            {
+            try {
                 page = Integer.parseInt(request.getParameter("pg"));
-            }catch (Exception e)
-            {}
-            if (page<0)
-                page=0;
+            } catch (Exception e) {
+            }
+            if (page < 0) {
+                page = 0;
+            }
             search.setPage(page);
         }
-        
-        
-        
+
         Label label = new Label();
         search.reset();
+
+        List<List<Filter>> combined = new LinkedList<>();
+        if (request.getParameter("keywordType") != null && request.getParameter("keywordType").equals("BRAND")) {
+            String brand = request.getParameter("keywords") != null ? request.getParameter("keywords") : "";
+            List<Filter> filters = new LinkedList<>();
+            filters.add(new BrandNameRange(brand));
+            filters.add(new AcceptedFilter(true));
+            combined.add(filters);
+        } else if (request.getParameter("keywordType") != null && request.getParameter("keywordType").equals("FANCIFUL")) {
+            String fancy = request.getParameter("keywords") != null ? request.getParameter("keywords") : "";
+            List<Filter> filters = new LinkedList<>();
+            filters.add(new FancifulNameRange(fancy));
+            filters.add(new AcceptedFilter(true));
+            combined.add(filters);
+        } else { 
+            String brand = request.getParameter("keywords") != null ? request.getParameter("keywords") : "";
+            List<Filter> filters = new LinkedList<>();
+            filters.add(new BrandNameRange(brand));
+            filters.add(new AcceptedFilter(true));
+            combined.add(filters);
+            String fancy = request.getParameter("keywords") != null ? request.getParameter("keywords") : "";
+            filters = new LinkedList<>();
+            filters.add(new FancifulNameRange(fancy));
+            filters.add(new AcceptedFilter(true));
+            combined.add(filters);
+        }
         Map<String, String[]> param = request.getParameterMap();
         Filter filter;
-        for (String parameter : param.keySet()) {
-            switch (parameter) {
-                
-                // This produces all, but is there some empty ones?
-                case "keywords": 
+        for (List<Filter> f : combined) {
+            for (String parameter : param.keySet()) {
+                switch (parameter) {
+
+                    // This produces all, but is there some empty ones?
+                    /*case "keywords": 
                     //if (!(request.getParameter("keywords").equals(""))) {
                         filter = new BrandNameRange(request.getParameter("keywords"));
-                        search.addFilter(filter);
+                        f.add(filter);
                     //}
-                    break;
-                    
-                case "alcoholSearchType":
-                    if(request.getParameter("alcoholSearchType").equals("between")){
-                        if (!(request.getParameter("alcohol_low").equals("")) && !(request.getParameter("alcohol_hi").equals(""))) {
-                            double lo = Double.parseDouble(request.getParameter("alcohol_low"));
-                            double hi = Double.parseDouble(request.getParameter("alcohol_hi"));
-                            
-                            filter = new AlcoholRange(lo,hi);
-                            search.addFilter(filter);
+                    break;*/
+                    case "TTB_CT-new": 
+                        if (!(request.getParameter("TTB_CT-new").equals(""))) {
+                            filter = new CTFilter(request.getParameter("TTB_CT-new"));
+                            f.add(filter);
                         }
-                    } else {
-                        if (!(request.getParameter("alcohol_low")==null || request.getParameter("alcohol_low").equals(""))) {
+                        break;
+                    case "TTB_OR-new": 
+                        if (!(request.getParameter("TTB_OR-new").equals(""))) {
+                            filter = new ORFilter(request.getParameter("TTB_OR-new"));
+                            f.add(filter);
+                        }
+                        break;
+                    case "alcoholSearchType":
+                        if (request.getParameter("alcoholSearchType").equals("between")) {
+                            if (!(request.getParameter("alcohol_low").equals("")) && !(request.getParameter("alcohol_hi").equals(""))) {
+                                double lo = Double.parseDouble(request.getParameter("alcohol_low"));
+                                double hi = Double.parseDouble(request.getParameter("alcohol_hi"));
+
+                                filter = new AlcoholRange(lo, hi);
+                                f.add(filter);
+                            }
+                        } else if (!(request.getParameter("alcohol_low") == null || request.getParameter("alcohol_low").equals(""))) {
                             filter = new AlcoholFilter(Double.parseDouble(request.getParameter("alcohol_low")));
-                            
-                            search.addFilter(filter);
-                            
+
+                            f.add(filter);
 
                         }
-                    }
-                    break;
+                        break;
 
-                case "source":
-                    if (!(request.getParameter("source").equals("na"))) {
-                        ExactFilter source;
+                    case "source":
+                        if (!(request.getParameter("source").equals("na"))) {
+                            ExactFilter source;
 
-                        switch (request.getParameter("source")) {
-                            case "Domestic":
-                                source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC.name());
-                                
-                                search.addFilter(source);
-                                break;
-                            case "Imported":
-                                source = new ProductSourceFilter(Label.BeverageSource.IMPORTED.name());
-                                
-                                search.addFilter(source);
-                                break;
+                            switch (request.getParameter("source")) {
+                                case "Domestic":
+                                    source = new ProductSourceFilter(Label.BeverageSource.DOMESTIC.name());
+
+                                    f.add(source);
+                                    break;
+                                case "Imported":
+                                    source = new ProductSourceFilter(Label.BeverageSource.IMPORTED.name());
+
+                                    f.add(source);
+                                    break;
+                            }
                         }
-                    }
-                    break;
-                    
-                case "type":
-                    if (!(request.getParameter("type").equals("ALL"))) {
-                        ExactFilter source;
-                        switch (request.getParameter("type")) {
-                            case "WINE":
-                                label = new WineLabel();
-                                source = new TypeFilter(Label.BeverageType.WINE.name());
-                                search.addFilter(source);
-                                break;
-                            case "BEER":
-                                label = new BeerLabel();
-                                source = new TypeFilter(Label.BeverageType.BEER.name());
-                                search.addFilter(source);
-                                break;
-                            case "DISTILLED":
-                                label = new DistilledLabel();
-                                source = new TypeFilter(Label.BeverageType.DISTILLED.name());
-                                search.addFilter(source);
-                                break;
+                        break;
+
+                    case "type":
+                        if (!(request.getParameter("type").equals("ALL"))) {
+                            ExactFilter source;
+                            switch (request.getParameter("type")) {
+                                case "WINE":
+                                    label = new WineLabel();
+                                    source = new TypeFilter(Label.BeverageType.WINE.name());
+                                    f.add(source);
+                                    break;
+                                case "BEER":
+                                    label = new BeerLabel();
+                                    source = new TypeFilter(Label.BeverageType.BEER.name());
+                                    f.add(source);
+                                    break;
+                                case "DISTILLED":
+                                    label = new DistilledLabel();
+                                    source = new TypeFilter(Label.BeverageType.DISTILLED.name());
+                                    f.add(source);
+                                    break;
+                            }
                         }
-                    }
-                    break;
-                    
-                case "ph":
-                    if(request.getParameter("ph").equals("between")){
-                        if (!(request.getParameter("ph_low").equals("")) && !(request.getParameter("ph_hi").equals(""))) {
-                            double lo = Double.parseDouble(request.getParameter("ph_low"));
-                            double hi = Double.parseDouble(request.getParameter("ph_hi"));
-                            search.addFilter(new PHRange(lo, hi));
+                        break;
+
+                    case "ph":
+                        if (request.getParameter("ph").equals("between")) {
+                            if (!(request.getParameter("ph_low").equals("")) && !(request.getParameter("ph_hi").equals(""))) {
+                                double lo = Double.parseDouble(request.getParameter("ph_low"));
+                                double hi = Double.parseDouble(request.getParameter("ph_hi"));
+                                f.add(new PHRange(lo, hi));
+                            }
+                        } else if (!(request.getParameter("ph_low") == null || request.getParameter("ph_low").equals(""))) {
+
+                            f.add(new PHFilter(Double.parseDouble(request.getParameter("ph_low"))));
                         }
-                    } else {
-                        if (!(request.getParameter("ph_low")==null || request.getParameter("ph_low").equals(""))) {
-                            
-                            search.addFilter(new PHFilter(Double.parseDouble(request.getParameter("ph_low"))));
+                        break;
+
+                    case "vintage":
+                        if (request.getParameter("vintage").equals("between")) {
+                            if (!(request.getParameter("vintage_low").equals("")) && !(request.getParameter("vintage_hi").equals(""))) {
+                                int lo = Integer.parseInt(request.getParameter("vintage_low"));
+                                int hi = Integer.parseInt(request.getParameter("vintage_hi"));
+                                f.add(new VintageRange(lo, hi));
+                            }
+                        } else if (!(request.getParameter("vintage_low") == null || request.getParameter("vintage_low").equals(""))) {
+                            f.add(new VintageFilter(Integer.parseInt(request.getParameter("vintage_low"))));
                         }
-                    }
-                    break;
-                    
-                case "vintage":
-                    if(request.getParameter("vintage").equals("between")){
-                        if (!(request.getParameter("vintage_low").equals("")) && !(request.getParameter("vintage_hi").equals(""))) {
-                            int lo = Integer.parseInt(request.getParameter("vintage_low"));
-                            int hi = Integer.parseInt(request.getParameter("vintage_hi"));
-                            search.addFilter(new VintageRange(lo, hi));
+                        break;
+                    case "origin":
+                        if (request.getParameter("origin").equals("between")) {
+                            if (!(request.getParameter("origin_low").equals("")) && !(request.getParameter("origin_hi").equals(""))) {
+                                String lo = request.getParameter("origin_low");
+                                String hi = request.getParameter("origin_hi");
+                                f.add(new OriginRange(lo, hi));
+                            }
+                        } else if (!(request.getParameter("origin_low") == null || request.getParameter("origin_low").equals(""))) {
+                            f.add(new OriginFilter(request.getParameter("origin_low")));
                         }
-                    } else {
-                        if (!(request.getParameter("vintage_low")==null||request.getParameter("vintage_low").equals(""))) {
-                            search.addFilter(new VintageFilter(Integer.parseInt(request.getParameter("vintage_low"))));
-                        }
-                    }
-                    break;
-                case "origin":
-                    if(request.getParameter("origin").equals("between")){
-                        if (!(request.getParameter("origin_low").equals("")) && !(request.getParameter("origin_hi").equals(""))) {
-                            String lo = request.getParameter("origin_low");
-                            String hi = request.getParameter("origin_hi");
-                            search.addFilter(new OriginRange(lo, hi));
-                        }
-                    } else {
-                        if (!(request.getParameter("origin_low")==null||request.getParameter("origin_low").equals(""))) {
-                            search.addFilter(new OriginFilter(request.getParameter("origin_low")));
-                        }
-                    }
-                    break;
+                        break;
+                }
             }
         }
 
-        search.addFilter(new AcceptedFilter(true));
+        //f.add(new AcceptedFilter(true));
         List<Label> drinkList;
         try {
-            drinkList = search.runSearch(label);
+            drinkList = search.runSearch(label, combined, "labelImage");
         } catch (SQLException ex) {
             ex.printStackTrace();
             response.sendRedirect("/SuperSlackers/search");
             return;
         }
-        if (drinkList==null)
-        {
+        if (drinkList == null) {
             response.sendRedirect("/SuperSlackers/search");
             return;
         }
 
         if (request.getParameter("action") != null && request.getParameter("action").equals("download")) {
             IDelimiterFormat format = new CsvFormat();
-            if (request.getParameter("Dtype")!=null && request.getParameter("Dtype").equalsIgnoreCase("tsv"))
-            {
+            if (request.getParameter("Dtype") != null && request.getParameter("Dtype").equalsIgnoreCase("tsv")) {
                 format = new TsvFormat();
             }
-            if (request.getParameter("Dtype")!=null && request.getParameter("Dtype").equalsIgnoreCase("delimiter") && request.getParameter("delimiter")!=null)
-            {
+            if (request.getParameter("Dtype") != null && request.getParameter("Dtype").equalsIgnoreCase("delimiter") && request.getParameter("delimiter") != null) {
                 format = new CharFormat(request.getParameter("delimiter"));
             }
             try {
@@ -251,7 +274,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
             }
             response.setContentType(format.getMimeType());
             try (OutputStream outStream = response.getOutputStream()) {
-                DelimitedWriter out = new DelimitedWriter(outStream,format);
+                DelimitedWriter out = new DelimitedWriter(outStream, format);
 
                 out.init(com.slackers.inc.database.entities.Label.class);
                 out.initSubtype(com.slackers.inc.database.entities.BeerLabel.class);
@@ -270,9 +293,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 out.write(drinkList);
                 out.flush();
             }
-        }
-        else
-        {
+        } else {
             response.setContentType("text/html;charset=UTF-8");
             try (PrintWriter out = response.getWriter()) {
 
@@ -302,25 +323,26 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 }
 
                 results = results.replace("##Drinks", b);
-                results = results.replace("##PAGE", "Page "+(search.getPage()+1));
+                results = results.replace("##PAGE", "Page " + (search.getPage() + 1));
                 List<String> params = new LinkedList<>();
                 for (String parameter : param.keySet()) {
                     if (request.getParameter(parameter) != null && request.getParameter(parameter).length() > 0) {
-                        if (!parameter.equalsIgnoreCase("pg"))
+                        if (!parameter.equalsIgnoreCase("pg")) {
                             params.add(parameter + "=" + request.getParameter(parameter));
+                        }
                     }
                 }
-                if (drinkList.isEmpty())
-                    results = results.replace("##NEXT", "/SuperSlackers/search?"+String.join("&", params)+"&pg="+(search.getPage()));
-                else
-                    results = results.replace("##NEXT", "/SuperSlackers/search?"+String.join("&", params)+"&pg="+(search.getPage()+1));
-                if (search.getPage()<=1)
-                    results = results.replace("##PREV", "/SuperSlackers/search?"+String.join("&", params)+"&pg="+(0));
-                else
-                    results = results.replace("##PREV", "/SuperSlackers/search?"+String.join("&", params)+"&pg="+(search.getPage()-1));
+                if (drinkList.isEmpty()) {
+                    results = results.replace("##NEXT", "/SuperSlackers/search?" + String.join("&", params) + "&pg=" + (search.getPage()));
+                } else {
+                    results = results.replace("##NEXT", "/SuperSlackers/search?" + String.join("&", params) + "&pg=" + (search.getPage() + 1));
+                }
+                if (search.getPage() <= 1) {
+                    results = results.replace("##PREV", "/SuperSlackers/search?" + String.join("&", params) + "&pg=" + (0));
+                } else {
+                    results = results.replace("##PREV", "/SuperSlackers/search?" + String.join("&", params) + "&pg=" + (search.getPage() - 1));
+                }
 
-                
-                
                 if (!params.isEmpty()) {
                     params.add("action=download");
                     String downloadUrl = request.getRequestURL().append('?').append(String.join("&", params)).toString();

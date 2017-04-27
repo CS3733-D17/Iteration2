@@ -527,11 +527,11 @@ public class CTList {
         ctList.add(new CT("990", "NON ALCOHOL MIXES"));
     }
     
-    public CTList getCTList(){
+    public static CTList getInstance(){
         return Helper.instance;
     }
     
-    public LinkedList getList(){
+    public LinkedList<CT> getList(){
         return this.ctList;
     }
 }

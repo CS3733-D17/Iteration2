@@ -319,6 +319,7 @@ public class CsvApplicationImporter implements Runnable {
     private String sanitizeLine(String line) {
         line = line.replaceAll("\"+", "\"");
         line = line.replaceAll("\\\"([^,]+?)(,?)([^,]+?)\\\"", "$1$3");
+        line = line.replaceAll("\"", "").replaceAll("\\(", "").replaceAll("\\)", "");
         return line;
     }
 
