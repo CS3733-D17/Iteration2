@@ -41,7 +41,7 @@ public class WebComponentProvider {
                     "  <script src=\""+WEB_ROOT+"jquery-3.2.0.min.js\"></script>\n" +
                     "  <script src=\""+WEB_ROOT+"js/Utils.js\"></script>\n" +
                     "  <script src=\""+WEB_ROOT+"js/bootstrap.min.js\"></script>\n");
-        b.append("<title>").append(frame.getTitle()).append("</title><body background=\"background.jpg\" style=\"background-size: 100% auto;\">");
+        b.append("<title>").append(frame.getTitle()).append("</title><body background=\""+WEB_ROOT+"background.jpg\" style=\"background-size: 100%; background-attachment: fixed;\">");
         b.append(frame.getNavBar(request));
         b.append(frame.getBody());
         b.append("</body></html>");
