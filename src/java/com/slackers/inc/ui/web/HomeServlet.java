@@ -52,7 +52,7 @@ public class HomeServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             pg = WebComponentProvider.getCorrectFrame(request, "Super Slackers - Home");
             pg.setBody(WebComponentProvider.loadPartialPage(this, "home-partial.html"));
-            out.println(WebComponentProvider.buildFrontPage(pg, request));
+            out.println(WebComponentProvider.buildPage(pg, request));
         }
     }
 

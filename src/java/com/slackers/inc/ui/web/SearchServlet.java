@@ -36,7 +36,7 @@ public class SearchServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Cola Search");
             pg.setBody(WebComponentProvider.loadPartialPage(this, "home-partial.html"));
-            out.println(WebComponentProvider.buildFrontPage(pg, request));
+            out.println(WebComponentProvider.buildPage(pg, request));
 
         }
     }
