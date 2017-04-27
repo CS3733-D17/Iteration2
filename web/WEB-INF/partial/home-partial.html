@@ -1,182 +1,294 @@
-<div class="container-fluid">
-    <div align="center">
-        <img src="Slackers Inc.png" class="img-responsive" width="80%">
-        <br>
-        <div id="myCarousel" class="carousel slide" data-ride="carousel" align="center">
-            <!-- Indicators -->
-            <ol class="carousel-indicators">
-                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#myCarousel" data-slide-to="1"></li>
-                <li data-target="#myCarousel" data-slide-to="2"></li>
-            </ol>
-
-            <!-- Wrapper for slides -->
-            <div class="carousel-inner" role="listbox" style="height:600px;" align="center">
-                <div class="item active">
-                    <img src="beer header.jpg" alt="Beer" style="width: 100%; height: 100%;">
-                </div>
-                <div class="item">
-                    <img src="wine header.jpg" alt="wine" style="width: 100%; height: 100%;">
-                </div>
-                <div class="item">
-                    <img src="liquor header.jpg" alt="liquor" style="width: 100%; height: 100%;">
-                </div>
-            </div>
-
-            <!-- Left and right controls -->
-            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand page-scroll" href="/SuperSlackers/home">SUP3R SLACK3rs</a>
         </div>
-        <br>
-        <br>
-        <div class="btn-group" data-toggle="buttons"  align="center" >
-            <a href="#"  id = "how-it-works-input" class="btn btn-default"; style="border-color: #000000";
-               onclick="document.getElementById('how-it-works').style.display = 'block';
-                        document.getElementById('FAQ').style.display = 'none';
-                        document.getElementById('companies').style.display = 'none';
-                        document.getElementById('about').style.display = 'none';
-                        document.getElementById('thanks').style.display = 'none';" style="border-color: #000;">
-            How Does This Process Work?</a>
-            <a href="#"  id = "faq-input" class="btn btn-default"; style="border-color: #000000";
-               onclick="document.getElementById('how-it-works').style.display = 'none';
-                        document.getElementById('FAQ').style.display = 'block';
-                        document.getElementById('companies').style.display = 'none';
-                        document.getElementById('about').style.display = 'none';
-                        document.getElementById('thanks').style.display = 'none';" style="border-color: #000;">
-            FAQ </a>
-            <a href="#"  id = "companies-input" class="btn btn-default"; style="border-color: #000000";
-               onclick="document.getElementById('how-it-works').style.display = 'none';
-                        document.getElementById('FAQ').style.display = 'none';
-                        document.getElementById('companies').style.display = 'block';
-                        document.getElementById('about').style.display = 'none';
-                        document.getElementById('thanks').style.display = 'none';" style="border-color: #000;">
-            Companies We Have Serviced</a>
-            <a href="#"  id = "about-input" class="btn btn-default"; style="border-color: #000000";
-               onclick="document.getElementById('how-it-works').style.display = 'none';
-                        document.getElementById('FAQ').style.display = 'none';
-                        document.getElementById('companies').style.display = 'none';
-                        document.getElementById('about').style.display = 'block';
-                        document.getElementById('thanks').style.display = 'none';" style="border-color: #000;">
-            About Super Slackers</a>
-            <a href="#"  id = "thanks-input" class="btn btn-default"; style="border-color: #000000";
-               onclick="document.getElementById('how-it-works').style.display = 'none';
-                        document.getElementById('FAQ').style.display = 'none';
-                        document.getElementById('companies').style.display = 'none';
-                        document.getElementById('about').style.display = 'none';
-                        document.getElementById('thanks').style.display = 'block';" style="border-color: #000;">
-            Special Thanks</a>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="page-scroll" href="/SuperSlackers/search">Search</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/SuperSlackers/account/signup">Sign Up</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/SuperSlackers/account/login">Log In</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#">About Us / FAQ</a>
+                </li>
+            </ul>
         </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        <div id="how-it-works" style="display:none;">
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<header>
+    <div class="header-content">
+        <div class="header-content-inner">
+            <h1 id="homeHeading">SUP3R SLACK3rs - Redesigned</h1>
             <hr>
-            <h3>Search for a Beverage</h3>
-            <p>You can search for a beverage using the search page and filling out the search information.</p>
-            <h3>Create an Account</h3>
-            <p>You can sign up as a manufacurer or US employee in order to gain access to more function.</p>
-            <h3>Submiting a Label</h3>
-            <p>Once you have signed up as a manufacturer, you can then create an application and submit it to be reviewed by a US employee.</p>
-            <h3>Reviewing Applications</h3>
-            <p>As a US employee, you will be able to approve or reject applications made by manufacurers.</p>
-
-            <br>
-        </div>
-
-        <div id="FAQ" style="display:none;">
-            <hr>
-            <h3>I submitted a label application a week ago. Did it not go through?</h3>
-            <p>It may take several weeks to process your application. If
-            you are worried that it did not get through the system, go to our help page.</p>
-
-            <h3>There were errors in my label application. Can I edit it?</h3>
-            <p>Yes. You can revise your application by clicking the edit button on the application you would like to edit</p>
-
-            <h3>Is there a way to make sure my label was approved?</h3>
-            <p>You should be able to see if your application was approved or rejected. However, if
-            you are unsure, you can use the COLA search to look up your label.</p>
-
-            <h3>I'm having trouble submitting an application. What do I do?</h3>
-            <p>You can go to our help page or call 373-337-3337 for more information.</p>
-            <br>
-        </div>
-    
-        <div id="companies" style="display:none;">
-
-            <h1>Wong Industries</h1>
-            <h1>Valcourt Enterprise</h1>
-            <h1>Software Engineering</h1>
-            <br>
-        </div>
-
-        <div id="about" style="display:none;">
-            <h2>WPI Computer Science Department</h2>
-            <br>
-            <br>
-            <h2>CS3733 Software Engineering</h2>
-            <br>
-            <br>
-            <h2>Professor Wilson Wong</h2>
-            <p>CS3733 Software Engineering Professor</p>
-            <p>Helped our team significantly throughout the process by providing knowledge and insight</p>
-            <img src="wong.jpg" alt="wong">
-            <br>
-            <br>
-            <h2>Trevor Valcourt</h2>
-            
-            <p>Team Coach</p>
-            <p>Helped coach our team by providing his own personal experience with the course</p>
-            <img src="Trevor.png" alt="Trevor" width="250px">
-            <br>
-            <br>
-            <h2>The Team</h2>
-            <p>Our team is comprised of Juniors, Sophomores, Freshman and Mass Academy Students</p>
-            <p>We have a variety of majors that we study including Computer Science, Robotics Engineering, etc.</p>
-            <img src="team.png" alt="team" width="500px">
-            <dt>Lead Software Engineer</dt>
-            <p>John Stegman</p>
-            <dt>Assistant Lead Software Engineer</dt>
-            <p>Jeff Estrada</p>
-            <p>Srinu Lade (Not Pictured)</p>
-            <dt>Project Manager</dt>
-            <p>Alex Hard</p>
-            <dt>Product Owner</dt>
-            <p>Jason Abel</p>
-            <dt>Documentation Analyst</dt>
-            <p>Matthew Boros</p>
-            <p>Fabio Borges</p>
-            <dt>Test Engineer</dt>
-            <p>Michael Steidel (Not Pictured)</p>
-            <dt>Software Engineers</dt>
-            <p>Peter Luro</p>
-            <p>Ryan McA&#39Nulty (Not Pictured)</p>
-            <br>
-            <br>
-
-        </div>
-        <div id="thanks" style="display:none;">
-            <h1>Special Thanks</h1>
-            <p>People who have contributed substantially for their sponsorship, time, and input</p>
-            <br>
-            <br>
-            <h3>US Treasury&#39s Alcohol and Tobacco Tax and Trade Bureau</h3>
-            <p>Sponsor for this project</p>
-            <br>
-            <br>
-            <h3>Greg Greeley</h3>
-            <p>Assistant CIO and representative for the US Treasury&#39s Alcohol and Tobacco Tax and Trade Bureau</p>
-            <p>Provided a great amount of help in making this project a reality</p>
-            <img src="greg.jpg" alt="greg">
-            <br>
-            <br>
-            <br>
+            <p>Visit Our New Website For All Your Alcohol Needs</p>
+            <a href="" class="btn btn-primary btn-xl page-scroll">Login | Sign Up</a>
         </div>
     </div>
-</div>
+</header>
+
+<section id="services">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="service-box">
+                    <i class="fa fa-4x fa-list-alt text-primary sr-icons"></i>
+                    <h3>Label Applications</h3>
+                    <p class="text-muted">Sign In to Manage Applications for Labels</p>
+                    <br />
+                    <a href="#" class="link">Learn More</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="service-box">
+                    <i class="fa fa-4x fa-bar-chart text-primary sr-icons"></i>
+                    <h3>Enforcement</h3>
+                    <p class="text-muted">Check How We Enforce Our Policies to our Constituents</p>
+                    <br />
+                    <a href="#" class="link">Learn More</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="service-box">
+                    <i class="fa fa-4x fa-handshake-o text-primary sr-icons"></i>
+                    <h3>FAQ</h3>
+                    <p class="text-muted">Have any Questions? First Check the FAQ Before Asking</p>
+                    <br />
+                    <a href="#" class="link">Learn More</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="service-box">
+                    <i class="fa fa-4x fa-search text-primary sr-icons"></i>
+                    <h3>Search</h3>
+                    <p class="text-muted">Look for Labels and Info of Your Favorite Drinks</p>
+                    <br />
+                    <a href="#" class="link">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id ="news">
+    <div class="container">
+        <div class="row">
+            <div id="myCarousel" class="row carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <ul class="thumbnails">
+                            <li class="col-sm-3">
+                                <div class="thumbnail">
+                                    <a href="#"><img src="http://placehold.it/360x240" alt=""></a>
+                                </div>
+                                <div class="caption-box">
+                                    <h4>Illegal Importer of Cigarettes Incarcerated</h4>
+                                    <p>April 18, 2017</p>
+                                    <a class="btn btn-success btn-mini" href="#">Read More</a>
+                                </div>
+                            </li>
+                            <li class="col-sm-3">
+                                <div class="thumbnail">
+                                    <a href="#"><img src="http://placehold.it/360x240" alt=""></a>
+                                </div>
+                                <div class="caption-box">
+                                    <h4>Newsletter for 2nd Week of April</h4>
+                                    <p>April 14, 2017</p>
+                                    <a class="btn btn-success btn-mini" href="#">Read More</a>
+                                </div>
+                            </li>
+                            <li class="col-sm-3">
+                                <div class="thumbnail">
+                                    <a href="#"><img src="http://placehold.it/360x240" alt=""></a>
+                                </div>
+                                <div class="caption-box">
+                                    <h4>Upcoming Changes to Search: File Types</h4>
+                                    <p>April 14, 2017</p>
+                                    <a class="btn btn-success btn-mini" href="#">Read More</a>
+                                </div>
+                            </li>
+                            <li class="col-sm-3">
+                                <div class="thumbnail">
+                                    <a href="#"><img src="http://placehold.it/360x240" alt=""></a>
+                                </div>
+                                <div class="caption-box">
+                                    <h4>Newsletter for First Week of April</h4>
+                                    <p>April 07, 2017</p>
+                                    <a class="btn btn-success btn-mini" href="#">Read More</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div><!-- /Slide1 -->
+
+                    <div class="item">
+                        <ul class="thumbnails">
+                            <li class="col-sm-3">
+                                <div class="thumbnail">
+                                    <a href="#"><img src="http://placehold.it/300x300" alt=""></a>
+                                </div>
+                                <div class="caption-box">
+                                    <h4>Newsletter for Last Week of March</h4>
+                                    <p>March 31, 2017</p>
+                                    <a class="btn btn-success btn-mini" href="#">Read More</a>
+                                </div>
+                            </li>
+                            <li class="col-sm-3">
+                                <div class="thumbnail">
+                                    <a href="#"><img src="http://placehold.it/360x240" alt=""></a>
+                                </div>
+                                <div class="caption-box">
+                                    <h4>Important Web Browser Compatibility Notices</h4>
+                                    <p>March 30, 2017</p>
+                                    <a class="btn btn-success btn-mini" href="#">Read More</a>
+                                </div>
+                            </li>
+                            <li class="col-sm-3">
+                                <div class="thumbnail">
+                                    <a href="#"><img src="http://placehold.it/360x240" alt=""></a>
+                                </div>
+                                <div class="caption-box">
+                                    <h4>Newsletter for Third Week of March</h4>
+                                    <p>March 24, 2017</p>
+                                    <a class="btn btn-success btn-mini" href="#">Read More</a>
+                                </div>
+                            </li>
+                            <li class="col-sm-3">
+                                <div class="thumbnail">
+                                    <a href="#"><img src="http://placehold.it/360x240" alt=""></a>
+                                </div>
+                                <div class="caption-box">
+                                    <h4>Newsletter for Second Week of March</h4>
+                                    <p>March 17, 2017</p>
+                                    <a class="btn btn-success btn-mini" href="#">Read More</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div><!-- /Slide2 -->
+                </div><!-- /Wrapper for slides .carousel-inner -->
+
+                <!-- Control box -->
+                <div class="control-box">
+                    <a data-slide="prev" href="#myCarousel" class="carousel-control left">‹</a>
+                    <a data-slide="next" href="#myCarousel" class="carousel-control right">›</a>
+                </div><!-- /.control-box -->
+
+            </div><!-- /#myCarousel -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</section>
+
+
+<section class="no-padding" id="portfolio">
+    <div class="container-fluid">
+        <div class="row no-gutter popup-gallery">
+            <div class="col-lg-3 col-sm-6">
+                <a href="" class="portfolio-box">
+                    <img src="img/types/beveragealcohol.jpg" class="img-responsive" alt="">
+                    <div class="portfolio-box-caption">
+                        <div class="portfolio-box-caption-content">
+                            <div class="project-name">
+                                Beverage Alcohol
+                            </div>
+                            <div class="project-category text-faded">
+                                Resources for Beer, Wine, Distilled Spirits, Sake, and Kombucha
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <a href="" class="portfolio-box">
+                    <img src="img/types/nonbeveragealcohol.jpg" class="img-responsive" alt="">
+                    <div class="portfolio-box-caption">
+                        <div class="portfolio-box-caption-content">
+                            <div class="project-name">
+                                Non-Beverage Alcohol
+                            </div>
+                            <div class="project-category text-faded">
+                                Resources for Alcohol Fuel, Industrial Alcohol, Nonbeverage Products, and Tax-Free Alcohol
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <a href="" class="portfolio-box">
+                    <img src="img/types/tobacco.jpg" class="img-responsive" alt="">
+                    <div class="portfolio-box-caption">
+                        <div class="portfolio-box-caption-content">
+                            <div class="project-name">
+                                Non-Beverage Alcohol
+                            </div>
+                            <div class="project-category text-faded">
+                                Resources for Alcohol Fuel, Industrial Alcohol, Nonbeverage Products, and Tax-Free Alcohol
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <a href="" class="portfolio-box">
+                    <img src="img/types/firearmsandammunition.jpg" class="img-responsive" alt="">
+                    <div class="portfolio-box-caption">
+                        <div class="portfolio-box-caption-content">
+                            <div class="project-name">
+                                Non-Beverage Alcohol
+                            </div>
+                            <div class="project-category text-faded">
+                                Resources for Alcohol Fuel, Industrial Alcohol, Nonbeverage Products, and Tax-Free Alcohol
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <h2 class="section-heading">Let's Get In Touch!</h2>
+                <hr class="primary">
+                <p>Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
+            </div>
+            <div class="col-lg-4 col-lg-offset-2 text-center">
+                <i class="fa fa-phone fa-3x sr-contact"></i>
+                <p>123-456-6789</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fa fa-envelope-o fa-3x sr-contact"></i>
+                <p><a href="mailto:your-email@your-domain.com">feedback@startbootstrap.com</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- jQuery -->
+<script src="jquery-3.2.0.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script src="js/scrollreveal.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+
+<!-- Theme JavaScript -->
+<script src="js/creative.min.js"></script>
