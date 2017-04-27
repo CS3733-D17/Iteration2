@@ -35,19 +35,39 @@ public class WebComponentProvider {
         b.append("<!DOCTYPE html>\n" +
                     "<html lang=\"en\"><head> <meta charset=\"utf-8\">\n" +
                     "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
-                    "  <link rel=\"stylesheet\" href=\""+WEB_ROOT+"css/bootstrap.min.css\">\n" +
-                    "  <link rel=\"stylesheet\" href=\""+WEB_ROOT+"css/bootstrap-theme.min.css\">\n" +
+                    "  <link rel=\"stylesheet\" href=\""+WEB_ROOT+"css/green-bootstrap.min.css\">\n" +
+                    "  <link rel=\"stylesheet\" href=\""+WEB_ROOT+"css/green-bootstrap-theme.min.css\">\n" +
                     "  <link rel=\"stylesheet\" href=\""+WEB_ROOT+"css/inputStyles.css\">\n" +
                     "  <script src=\""+WEB_ROOT+"jquery-3.2.0.min.js\"></script>\n" +
                     "  <script src=\""+WEB_ROOT+"js/Utils.js\"></script>\n" +
                     "  <script src=\""+WEB_ROOT+"js/bootstrap.min.js\"></script>\n");
-        b.append("<title>").append(frame.getTitle()).append("</title><body background=\"background.jpg\" style=\"background-size: 100% auto;\">");
+        b.append("<title>").append(frame.getTitle()).append("</title><body background=\""+WEB_ROOT+"background.jpg\" style=\"background-size: 100%; background-attachment: fixed;\">");
         b.append(frame.getNavBar(request));
         b.append(frame.getBody());
         b.append("</body></html>");
         return b.toString();
     }
-    
+
+    public static String buildFrontPage(IPageFrame frame, HttpServletRequest request) {
+        StringBuilder b = new StringBuilder();
+        b.append("<!DOCTYPE html>\n" +
+                "   <html lang=\"en\"><head> <meta charset=\"utf-8\">\n" +
+                "   <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                "   <meta name=\"description\" content=\"\">\n" +
+                "   <meta name=\"author\" content=\"SUP3R SLACK3rs\">\n" +
+                "    <link href=\"css/normal.bootstrap.min.css\" rel=\"stylesheet\">\n" +
+                "    <link href=\"css/font-awesome.css\" rel=\"stylesheet\" type=\"text/css\">\n" +
+                "    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>\n" +
+                "    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>\n" +
+                "    <link href=\"css/magnific-popup.css\" rel=\"stylesheet\">\n" +
+                "    <link href=\"css/creative.css\" rel=\"stylesheet\">");
+        b.append("<title>").append(frame.getTitle()).append("</title><body id=\"page-top\">");
+        b.append(frame.getBody());
+        b.append("</body></html>");
+        return b.toString();
+    }
+
     public static String printParameters(HttpServletRequest request)
     {
         StringBuilder b = new StringBuilder();
