@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -241,10 +242,13 @@ public class CsvApplicationImporter implements Runnable {
                 String type = linArr[i].toLowerCase();
                 if (type.contains("wine")) {
                     this.application.setLabelType(Label.BeverageType.WINE, false);
+                    this.application.getLabel().setProductType(Label.BeverageType.WINE);
                 } else if (type.contains("distilled")) {
                     this.application.setLabelType(Label.BeverageType.DISTILLED, false);
+                    this.application.getLabel().setProductType(Label.BeverageType.DISTILLED);
                 } else {
                     this.application.setLabelType(Label.BeverageType.BEER, false);
+                    this.application.getLabel().setProductType(Label.BeverageType.BEER);
                 }
             } else if (hName.contains("PRODUCT_NAME")) {
                 this.application.getLabel().setBrandName(linArr[i]);
@@ -305,7 +309,8 @@ public class CsvApplicationImporter implements Runnable {
         }
 
         if (this.consumer!= null) {
-            this.application.getLabel().setLabelImageType("none");
+            this.application.getLabel().setLabelImageType("urlAbsolute");
+            this.application.getLabel().setLabelImage("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg".getBytes(StandardCharsets.US_ASCII));
             this.consumer.consume(this.application, this);
         }
         return line;

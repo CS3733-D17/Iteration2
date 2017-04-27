@@ -378,10 +378,10 @@ public class Label implements IEntity{
         pairs.put("TBB_CT", String.class); 
         pairs.put("TBB_OR", String.class);  
         pairs.put("generalInfo", String.class);
+        pairs.put("labelImageType", String.class);
         if (this.pullImageOut)
         {
             pairs.put("labelImage", byte[].class);
-            pairs.put("labelImageType", String.class);
         }
         pairs.putAll(this.approval.getEntityNameTypePairs());
         return pairs;

@@ -47,7 +47,15 @@ public class FormProcess extends HttpServlet {
             appControl.writeLabelToCookies(response);
             WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "process-label.html");
-            String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            String formTemplate;
+            if (WebComponentProvider.getCookieValue(request, "SSVIEW_MODE")!=null && WebComponentProvider.getCookieValue(request, "SSVIEW_MODE").equalsIgnoreCase("legacy"))
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form-partial-legacy.html"); 
+            }
+            else
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            }
             form = form.replace("##FORM_CONTENT", formTemplate); 
             form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, appControl));
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "View Label Application");
@@ -84,8 +92,8 @@ public class FormProcess extends HttpServlet {
             UsEmployee emp = (UsEmployee)AccountController.getPageUser(request);
             if (action!=null)
             {
-                String TBBCT = request.getParameter("TBBCT")!=null ? request.getParameter("TBBCT") : "";
-                String TBBOR = request.getParameter("TBBOR")!=null ? request.getParameter("TBBOR") : "";
+                String TBBCT = request.getParameter("TBB_CT-new")!=null ? request.getParameter("TBB_CT-new") : "";
+                String TBBOR = request.getParameter("TBB_OR-new")!=null ? request.getParameter("TBB_OR-new") : "";
                 String lblComment = request.getParameter("commentText")!=null ? request.getParameter("commentText") : "";
                 appControl.setTBB_CT(TBBCT);
                 appControl.setTBB_OR(TBBOR);
@@ -95,7 +103,7 @@ public class FormProcess extends HttpServlet {
                         appControl.approveApplication(emp, new Date(new java.util.Date().getTime()+63072000000L), lblComment);
                     else 
                         appControl.approveApplication(emp, new Date(new java.util.Date().getTime()+63072000000L));
-                    response.sendRedirect(WebComponentProvider.root(request));
+                    response.sendRedirect("/SuperSlackers/employee/applicationList");
                 }
                 else if (action.equals("reject"))
                 {
@@ -103,7 +111,7 @@ public class FormProcess extends HttpServlet {
                         appControl.rejectApplication(emp, lblComment);
                     else
                         appControl.rejectApplication(emp);
-                    response.sendRedirect(WebComponentProvider.root(request));
+                    response.sendRedirect("/SuperSlackers/employee/applicationList");
                 }
                 else if (action.equals("corrections"))
                 {
@@ -111,7 +119,7 @@ public class FormProcess extends HttpServlet {
                         appControl.sendForCorrections(emp, lblComment);
                     else
                         appControl.sendForCorrections(emp);
-                    response.sendRedirect(WebComponentProvider.root(request));
+                    response.sendRedirect("/SuperSlackers/employee/applicationList");
                 }
                 else if (action.equals("forward"))
                 {
@@ -124,17 +132,15 @@ public class FormProcess extends HttpServlet {
                         appControl.sendToAnotherEmployee(emp, email, lblComment);
                     else
                         appControl.sendToAnotherEmployee(emp, email);
-                    response.sendRedirect(WebComponentProvider.root(request));
+                    response.sendRedirect("/SuperSlackers/employee/applicationList");
                 }
                 else
                 {
-                    System.out.println("no Action");
                     response.sendRedirect("/SuperSlacker/form/process?id="+id);
                 }
             }
             else
             {
-                System.out.println("action is null");
                 response.sendRedirect("/SuperSlacker/form/process?id="+id);
             }           
         }catch (Exception e){

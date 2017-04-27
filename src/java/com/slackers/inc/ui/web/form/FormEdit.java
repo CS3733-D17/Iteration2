@@ -50,7 +50,15 @@ public class FormEdit extends HttpServlet {
             appControl.writeLabelToCookies(response);
             WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "edit-label.html");
-            String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            String formTemplate;
+            if (WebComponentProvider.getCookieValue(request, "SSVIEW_MODE")!=null && WebComponentProvider.getCookieValue(request, "SSVIEW_MODE").equalsIgnoreCase("legacy"))
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form-partial-legacy.html"); 
+            }
+            else
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            }
             form = form.replace("##FORM_CONTENT", formTemplate); 
             form = form.replace("##LABEL_IMAGE_PATH", LabelImageGenerator.getAccessStringForApplication(request, appControl));
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Edit Label Application");

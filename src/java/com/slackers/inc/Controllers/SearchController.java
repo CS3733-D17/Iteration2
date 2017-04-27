@@ -13,16 +13,16 @@ import com.slackers.inc.Controllers.Filters.Filter;
  * @author Created by SrinuL on 4/1/17.
  */
 public class SearchController {
-
-    private static final int RESULTS_PER_PAGE = 30;
-    List<Filter> filters;
-    DerbyConnection db;
+    public static final int PAGE_GET_ALL = -5;
+    private static final int RESULTS_PER_PAGE = 15;
+    private List<Filter> filters;
+    private DerbyConnection db;
     private int page;
 
     public SearchController(){
         filters = new LinkedList<>();
         db = DerbyConnection.getInstance();
-        this.page = 0;
+        this.page = -5;
     }
 
     public void reset()
@@ -50,8 +50,14 @@ public class SearchController {
     
     
     public List<Label> runSearch(Label target) throws SQLException {
-        
-        return db.search(target,filters, RESULTS_PER_PAGE, page*RESULTS_PER_PAGE);
+        if (page==-5)
+        {
+            return db.search(target,filters);
+        }
+        else
+        {
+            return db.search(target,filters, RESULTS_PER_PAGE, page*RESULTS_PER_PAGE);
+        }
     }
 
 

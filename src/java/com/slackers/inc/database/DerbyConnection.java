@@ -741,6 +741,74 @@ public class DerbyConnection {
         results.close();
         return entites;
     }
+    
+    /**
+     * Same as previous search, but only retrieves the given amount, with an
+     * offset. This allows for more efficient use of the DB. Allows union and intersect modes
+     */
+    public <T extends IEntity> List<T> search(T entity, List<List<Filter>> filtersList, int numberOfResults, int offset, boolean union) throws SQLException
+    {
+        List<Object> vals = new LinkedList<>();
+        List<String> statementList = new LinkedList<>();
+        for (List<Filter> filters : filtersList)
+        {
+            String stmt;
+            List<String> statements = new LinkedList<>();            
+            if (!filters.isEmpty())
+            {
+                for (Filter f : filters)
+                {
+                    if (f instanceof ExactFilter)
+                    {
+                        statements.add(f.getColumn()+" =(?)");
+                        vals.add(((ExactFilter)f).getValue());
+                    }
+                    if (f instanceof RangeFilter)
+                    {
+                        statements.add(f.getColumn()+" between (?) and (?)");
+                        vals.add(((RangeFilter)f).getValueMin());
+                        vals.add(((RangeFilter)f).getValueMax());
+                    }
+                }
+                stmt = String.format("SELECT * FROM %s WHERE %s", entity.getTableName(), String.join(" and ", statements));
+            }
+            else
+            {
+                stmt = String.format("SELECT * FROM %s", entity.getTableName());
+            }
+        }
+        String st = String.format("%s OFFSET %d rows fetch first %d rows only ", String.join(" UNION ", statementList), offset, numberOfResults);
+        PreparedStatement call = con.prepareStatement(st);
+        int i = 1;
+        for (Object o : vals)
+        {
+            DerbyConnection.setStatementValue(con, call, i, o);
+            i++;
+        }
+        ResultSet results = call.executeQuery();
+        
+        int c=0;
+        Map<String,Object> valMap = new HashMap<>();
+        List<T> entites = new LinkedList<>();
+        while (results.next())
+        {
+            valMap.clear();
+            c++;
+            try {
+                T ent = (T) entity.getClass().newInstance();
+                for (String s : entity.getEntityNameTypePairs().keySet())
+                {
+                    DerbyConnection.getStatementValue(con, results, s, entity, valMap);
+                }
+                ent.setEntityValues(valMap);
+                entites.add(ent);
+            } catch (Exception ex) {
+                Logger.getLogger(DerbyConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        results.close();
+        return entites;
+    }
 
     /**
      * Use this to add entities to the database.

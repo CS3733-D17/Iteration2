@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -63,14 +64,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
-        try (PrintWriter out = response.getWriter()) {
-            IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Search");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "search-partial.html"));
-            out.println(WebComponentProvider.buildPage(pg, request));
-
-        }
+        doPost(request, response);
     }
 
     /**
@@ -86,7 +80,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
             throws ServletException, IOException {
 
         SearchController search = new SearchController();
-        
+        search.setPage(0);
         if (request.getParameter("pg")!=null)
         {
             int page = 0;
@@ -248,7 +242,13 @@ public class ManufacturerSearchServlet extends HttpServlet {
             {
                 format = new CharFormat(request.getParameter("delimiter"));
             }
-
+            try {
+                search.setPage(SearchController.PAGE_GET_ALL);
+                drinkList = search.runSearch(label);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return;
+            }
             response.setContentType(format.getMimeType());
             try (OutputStream outStream = response.getOutputStream()) {
                 DelimitedWriter out = new DelimitedWriter(outStream,format);
@@ -292,7 +292,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                             "                                   </div>\n"
                             + "                               </div>\n"
                             + "                           </div>\n"
-                            + "                       <div id=\"collapse" + i + "\" class=\"panel-collapse collapse in\">\n"
+                            + "                       <div id=\"collapse" + i + "\" class=\"panel-collapse collapse\">\n"
                             + "                           <div class=\"panel-body\">\n"
                             + renderLabel(this, request, drinkList.get(i))
                             + "\n</div>\n"
@@ -302,22 +302,25 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 }
 
                 results = results.replace("##Drinks", b);
-                results = results.replace("##PAGE", "Page "+search.getPage());
-                if (drinkList.isEmpty())
-                    results = results.replace("##NEXT", "/SuperSlackers/search?subset="+request.getParameter("subset")+"&pg="+(search.getPage()+1));
-                else
-                    results = results.replace("##NEXT", "/SuperSlackers/search?subset="+request.getParameter("subset")+"&pg="+(search.getPage()+1));
-                if (search.getPage()<=1)
-                    results = results.replace("##PREV", "/SuperSlackers/search?subset="+request.getParameter("subset")+"&pg="+(0));
-                else
-                    results = results.replace("##PREV", "/SuperSlackers/search?subset="+request.getParameter("subset")+"&pg="+(search.getPage()-1));
-
+                results = results.replace("##PAGE", "Page "+(search.getPage()+1));
                 List<String> params = new LinkedList<>();
                 for (String parameter : param.keySet()) {
                     if (request.getParameter(parameter) != null && request.getParameter(parameter).length() > 0) {
-                        params.add(parameter + "=" + request.getParameter(parameter));
+                        if (!parameter.equalsIgnoreCase("pg"))
+                            params.add(parameter + "=" + request.getParameter(parameter));
                     }
                 }
+                if (drinkList.isEmpty())
+                    results = results.replace("##NEXT", "/SuperSlackers/search?"+String.join("&", params)+"&pg="+(search.getPage()));
+                else
+                    results = results.replace("##NEXT", "/SuperSlackers/search?"+String.join("&", params)+"&pg="+(search.getPage()+1));
+                if (search.getPage()<=1)
+                    results = results.replace("##PREV", "/SuperSlackers/search?"+String.join("&", params)+"&pg="+(0));
+                else
+                    results = results.replace("##PREV", "/SuperSlackers/search?"+String.join("&", params)+"&pg="+(search.getPage()-1));
+
+                
+                
                 if (!params.isEmpty()) {
                     params.add("action=download");
                     String downloadUrl = request.getRequestURL().append('?').append(String.join("&", params)).toString();

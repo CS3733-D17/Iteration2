@@ -52,8 +52,9 @@ public class SearchBackend extends HttpServlet {
             Label l = new Label();
             
             String brand = request.getParameter("brand") != null ? request.getParameter("brand") : "";
+            String fancy = request.getParameter("fancy") != null ? request.getParameter("fancy") : "";
             
-            List<Filter> filters = new LinkedList<>();;
+            List<Filter> filters = new LinkedList<>();
             filters.add(new BrandNameRange(brand));
             filters.add(new AcceptedFilter(true));
             List<Label> labels = null;
@@ -70,13 +71,19 @@ public class SearchBackend extends HttpServlet {
                 out.println(Json.createArrayBuilder().build().toString());
                 return;
             }
-            List<String> searches = labels.stream().map((m)->m.getBrandName()).collect(Collectors.toList());
+            List<String> searches = labels.stream().map((m)->m.getBrandName()+":::"+m.getFancifulName()).collect(Collectors.toList());
             Collections.sort(searches);
             
             JsonArrayBuilder array = Json.createArrayBuilder();
             for (String s : searches)
             {
-                array = array.add(s);
+                String[] split = s.split(":::");
+                JsonObjectBuilder var = Json.createObjectBuilder().add("brand", split[0]);
+                if (split.length==2 && split[1]!=null)
+                {
+                    var.add("fanciful", split[1]);
+                }
+                array = array.add(var);
             }
             out.println(array.build().toString());
         }

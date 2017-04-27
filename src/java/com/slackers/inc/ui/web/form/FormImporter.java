@@ -47,6 +47,11 @@ public class FormImporter {
     public FormImporter(String id) {
         this.tbbId = id;
     }
+    
+    public String getTTBid()
+    {
+        return this.tbbId;
+    }
 
     public String getImageUrl() {
         HttpRequest request = new HttpRequest(COLAURL + this.tbbId);//16309001000410
@@ -189,16 +194,15 @@ public class FormImporter {
             Matcher matchedNames = names.matcher(resp);
 
             while (matchedNames.find()) {
-
                 if (matchedNames.group(1).contains("REP. ID. NO.")) {
                     app.setRepresentativeId(matchedNames.group(2).trim());
                     lbl.setRepresentativeIdNumber(matchedNames.group(2).trim());
                 }
                 if (matchedNames.group(1).equalsIgnoreCase("CT")) {
-                    app.setTBB_CT(matchedNames.group(2).trim());
+                    lbl.setTBB_CT(matchedNames.group(2).trim());
                 }
                 if (matchedNames.group(1).equalsIgnoreCase("OR")) {
-                    app.setTBB_OR(matchedNames.group(2).trim());
+                    lbl.setTBB_OR(matchedNames.group(2).trim());
                 }
                 if (matchedNames.group(1).contains("PLANT REGISTRY/BASIC PERMIT/BREWER'S NO.")) {
                     lbl.setPlantNumber(matchedNames.group(2).trim().replace("<br>", "").trim());

@@ -41,7 +41,7 @@ public class WebComponentProvider {
                     "  <script src=\""+WEB_ROOT+"jquery-3.2.0.min.js\"></script>\n" +
                     "  <script src=\""+WEB_ROOT+"js/Utils.js\"></script>\n" +
                     "  <script src=\""+WEB_ROOT+"js/bootstrap.min.js\"></script>\n");
-        b.append("<title>").append(frame.getTitle()).append("</title><body>");
+        b.append("<title>").append(frame.getTitle()).append("</title><body background=\"background.jpg\" style=\"background-size: 100% auto;\">");
         b.append(frame.getNavBar(request));
         b.append(frame.getBody());
         b.append("</body></html>");
@@ -98,5 +98,16 @@ public class WebComponentProvider {
         }
         out.setUser(pageUser);
         return out;
+    }
+    
+    public static String getCookieValue(HttpServletRequest request, String cookieName)
+    {
+        Cookie[] cookies = request.getCookies();
+        for (int i=0;i<cookies.length; i++)
+        {
+            if (cookies[i].getName().equals(cookieName))
+                return cookies[i].getValue();
+        }
+        return null;
     }
 }

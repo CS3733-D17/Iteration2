@@ -5,6 +5,13 @@ function getCookie(name) {
   else return "";
 }
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 function getEmail()
 {
     console.log("Getting cookie\n");
@@ -35,6 +42,10 @@ function unclickBox(id)
     {
         document.getElementById(id).checked = false;
     }
+    if (document.getElementById(id+"-old")!=null)
+    {
+        document.getElementById(id+"-old").checked = false;
+    }
     if (document.getElementById(id+"-lbl")!=null)
     {
         document.getElementById(id+"-lbl").className = "btn btn-default";
@@ -47,11 +58,14 @@ function clickBox(id)
         document.getElementById("wineInfo").style.display= "none";
     if (document.getElementById(id)!=null)
         document.getElementById(id).checked = true;
+    if (document.getElementById(id+"-old")!=null)
+        document.getElementById(id+"-old").checked = true;
     if (document.getElementById(id+"-lbl")!=null)
         document.getElementById(id+"-lbl").className += " active";
     if (id=="WINE")
     {
-        document.getElementById("wineInfo").style.display = "block";
+        if (document.getElementById("wineInfo")!=null)
+            document.getElementById("wineInfo").style.display = "block";
     }
 }
 
@@ -62,6 +76,10 @@ function __fillForm_SUB()
         if (document.getElementById("imgSelector")!=null)
         {
             document.getElementById("imgSelector").style.display = "none";
+        }
+        if (document.getElementById("imgSelector-old")!=null)
+        {
+            document.getElementById("imgSelector-old").style.display = "none";
         }
     }
     unclickBox("BEER");
@@ -86,10 +104,11 @@ function __fillForm_SUB()
         {
             if (document.getElementById(k)!=null)
                 document.getElementById(k).checked = true;
+            if (document.getElementById(k+"-old")!=null)
+                document.getElementById(k+"-old").checked = true;
         }
         else
         {
-            console.log(k + " -> "+out[k]);
             if (document.getElementById(k)!=null)
             {
                 document.getElementById(k).value = out[k];
@@ -98,16 +117,21 @@ function __fillForm_SUB()
             {
                 document.getElementById(k+"-new").value = out[k];
             }
+            if (document.getElementById(k+"-old")!=null)
+            {
+                document.getElementById(k+"-old").value = out[k];
+            }
         }
     });
     if (document.getElementById("appSubmitNew")!=null)
     {
         if (document.getElementById("TBB_ID")!=null)
             document.getElementById("TBB_ID").value = "xxxxxxxxxxxx";
+        if (document.getElementById("TBB_ID-old")!=null)
+            document.getElementById("TBB_ID-old").value = "xxxxxxxxxxxx";
     }
     out = JSON.parse(atob(getCookie("SSINCAP_DATA")));
     Object.keys(out).forEach(function(k){
-        console.log(k+"->"+out[k]);
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);
@@ -127,11 +151,15 @@ function __fillForm_SUB()
             {
                 document.getElementById(k+"-new").value = out[k];
             }
+            if (document.getElementById(k+"-old")!=null)
+            {
+                document.getElementById(k+"-old").value = out[k];
+            }
         }
     });
     out = JSON.parse(atob(getCookie("SSINCAP_LBL")));
     Object.keys(out).forEach(function(k){
-        console.log(k+"->"+out[k]);
+        console.log(k +" -> "+out[k]);
         if (k=="source" || k=="type")
         {
             clickBox(out[k]);
@@ -145,6 +173,10 @@ function __fillForm_SUB()
             if (document.getElementById(k+"-new")!=null)
             {
                 document.getElementById(k+"-new").value = out[k];
+            }
+            if (document.getElementById(k+"-old")!=null)
+            {
+                document.getElementById(k+"-old").value = out[k];
             }
         }
     });

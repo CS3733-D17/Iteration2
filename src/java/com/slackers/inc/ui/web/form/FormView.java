@@ -48,7 +48,15 @@ public class FormView extends HttpServlet {
             appControl.writeLabelToCookies(response);
             WebComponentProvider.setSuccessMessage(response, null);
             String form = WebComponentProvider.loadPartialPage(this, "view-label.html");
-            String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            String formTemplate;
+            if (WebComponentProvider.getCookieValue(request, "SSVIEW_MODE")!=null && WebComponentProvider.getCookieValue(request, "SSVIEW_MODE").equalsIgnoreCase("legacy"))
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form-partial-legacy.html"); 
+            }
+            else
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            }
             form = form.replace("##FORM_CONTENT", formTemplate);
             boolean prev = false;
             if (request.getParameter("type")!=null && request.getParameter("type").equalsIgnoreCase("previous") && request.getParameter("labelId")!=null)
