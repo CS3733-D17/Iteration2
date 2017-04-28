@@ -949,6 +949,11 @@ public class LabelApplicationController {
         boolean res = db.writeEntity(this.application, this.application.getPrimaryKeyName());
         submitter.addApplications(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
+        if (!submitter.isBot())
+        {
+            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            notify.sendApproved(this.application.getLabel().getBrandName());
+        }
         //this.autoSelectReviewer();
         return res;
     }
@@ -965,8 +970,11 @@ public class LabelApplicationController {
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()));
         
-        NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
-        notify.sendApproved(this.application.getLabel().getBrandName());
+        if (!submitter.isBot())
+        {
+            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            notify.sendApproved(this.application.getLabel().getBrandName());
+        }
         
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
@@ -983,8 +991,11 @@ public class LabelApplicationController {
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()
                 + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
-        NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
-        notify.sendApproved(this.application.getLabel().getBrandName());
+        if (!submitter.isBot())
+        {
+            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            notify.sendApproved(this.application.getLabel().getBrandName());
+        }
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
     public boolean approveApplication(UsEmployee submitter, Date experationDate, String comment, Date forcedDate) throws SQLException {
@@ -1011,8 +1022,12 @@ public class LabelApplicationController {
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:red;\">Application Rejected</span></h4>"));
-        NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
-        notify.sendRejected(this.application.getLabel().getBrandName());
+        
+        if (!submitter.isBot())
+        {
+            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            notify.sendRejected(this.application.getLabel().getBrandName());
+        }
         return this.saveApplication();
     }
 
@@ -1026,8 +1041,11 @@ public class LabelApplicationController {
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:red;\">Application Rejected</span></h4>"
                 + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
-        NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
-        notify.sendRejected(this.application.getLabel().getBrandName());
+        if (!submitter.isBot())
+        {
+            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            notify.sendRejected(this.application.getLabel().getBrandName());
+        }
         return this.saveApplication();
     }
 
@@ -1104,8 +1122,11 @@ public class LabelApplicationController {
         this.application.setStatus(LabelApplication.ApplicationStatus.SENT_FOR_CORRECTIONS);
         this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
 
-        NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
-        notify.sendRevision(this.application.getLabel().getBrandName());
+        if (!emp.isBot())
+        {
+            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            notify.sendRevision(this.application.getLabel().getBrandName());
+        }
 
         emp.getApplications().remove(this.application);
         this.db.writeEntity(emp, emp.getPrimaryKeyName());
@@ -1118,9 +1139,12 @@ public class LabelApplicationController {
         this.application.setStatus(LabelApplication.ApplicationStatus.SENT_FOR_CORRECTIONS);
         this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
 
-        NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
-        notify.sendRevision(this.application.getLabel().getBrandName());
-
+        if (!emp.isBot())
+        {
+            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            notify.sendRevision(this.application.getLabel().getBrandName());
+        }
+        
         emp.getApplications().remove(this.application);
         this.db.writeEntity(emp, emp.getPrimaryKeyName());
         return this.saveApplication();
