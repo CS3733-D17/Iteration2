@@ -131,6 +131,7 @@ public class FormImport extends HttpServlet {
             appControl.writeApplicationToCookies(response);
             appControl.writeLabelToCookies(response);
             String error = appControl.validateApplication();
+            System.out.println("Im here");
             if (error==null)
             {
                 try

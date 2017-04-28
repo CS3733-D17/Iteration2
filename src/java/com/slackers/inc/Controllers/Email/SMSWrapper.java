@@ -35,7 +35,7 @@ public class SMSWrapper {
     String msg;
     String from;
     String pwd;
-    String[] workingAddress;
+    String workingAddress;
     EmailWrapper method;
     
     public SMSWrapper(String from, String pwd, String phone, Provider provider, String msg){
@@ -45,7 +45,7 @@ public class SMSWrapper {
         this.from = from;
         this.pwd = pwd;
         
-        this.workingAddress[0] = phoneNumber + providers.get(provider);
+        this.workingAddress = phoneNumber + providers.get(provider);
         
         
         
@@ -58,9 +58,9 @@ public class SMSWrapper {
         this.phoneNumber = phone;
         this.provider = provider;
         this.msg = msg;
-        this.workingAddress = new String[1];
+       
         
-        this.workingAddress[0] = phoneNumber + providers.get(provider);
+        this.workingAddress = phoneNumber + providers.get(provider);
         
         
         
