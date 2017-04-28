@@ -58,8 +58,8 @@ function unclickBox(id)
 
 function clickBox(id)
 {
-    if (document.getElementById("wineInfo") != null)
-        document.getElementById("wineInfo").style.display = "none";
+    /*if (document.getElementById("wineInfo") != null)
+        document.getElementById("wineInfo").style.display = "none";*/
     if (document.getElementById(id) != null)
         document.getElementById(id).checked = true;
     if (document.getElementById(id + "-old") != null)
@@ -188,9 +188,9 @@ function __fillForm_SUB()
 function fillForm()
 {
     if (window.addEventListener) {
-        window.addEventListener('load', __fillForm_SUB)
+        window.addEventListener('load', setTimeout(__fillForm_SUB, 50));
     } else {
-        window.attachEvent('onload', __fillForm_SUB)
+        window.attachEvent('onload', setTimeout(__fillForm_SUB, 50))
     }
 
 }
