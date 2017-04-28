@@ -1,5 +1,23 @@
 <div class="container">
     <div class="well">
+        <div class="row">
+            <div class="col-xs-6">
+            </div>
+            <div class="col-xs-6" align="right">
+                <div class="dropdown" style="float: right;">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Change Form View
+                        <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button class="btn btn-warning" type="button" style="width:100%;" data-toggle="dropdown" onClick="setCookie('SSVIEW_MODE', 'legacy', 5); location.reload();" >Legacy View</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-warning" type="button" style="width:100%;" data-toggle="dropdown" onClick="setCookie('SSVIEW_MODE', 'modern', 5); location.reload();">Modern View</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <form action="/SuperSlackers/form/edit" method="post">
             <fieldset id="appForm" disabled>
                 ##FORM_CONTENT
@@ -20,16 +38,25 @@
             <br>
             <div class="row">
                 <div class="col-xs-6">
-                    <label for="tbCt">CT</label>
-                    <input name="TBBCT" id="tbCt" type="text" class="form-control">
+                    <label for="TBB_CT-new">CT</label>
+                    <div class="input-group dropdown" style="width:100%;" >
+                        <input style="width:100%;" name = "TTB_CT-new" type="text" class="form-control" placeholder="Product Category Code" id="TTB_CT-new" onkeypress="getCT();" oninput="getCT();" onchange="getCT();" onfocus="showCT(true)" onfocusout="showCT(false)">
+                        <ul class="dropdown-menu open" id="CT-suggestions">
+                        </ul>
+                    </div>
+
                 </div>
                 <div class="col-xs-6">
-                    <label for="tbOr">OR</label>
-                    <input name="TBBOR" id="tbOr" type="text" class="form-control">
+                    <label for="TBB_OR-new">OR</label>
+                    <div class="input-group dropdown" style="width:100%;" >
+                        <input style="width:100%;" name = "TTB_OR-new" type="text" class="form-control" placeholder="Origin Code" id="TTB_OR-new" onkeypress="getOR();" oninput="getOR();" onchange="getOR();" onfocus="showOR(true)" onfocusout="showOR(false)">
+                        <ul class="dropdown-menu open" id="OR-suggestions">
+                        </ul>
+                    </div>
                 </div>  
             </div>
             <br>
-            
+
             <label for="cText">Comments:</label>
             <textarea id="cText" name="commentText" class="form-control"></textarea>
             <button name="action" value="accept" class="btn btn-success" style="width:100%; margin-top: 20px;">Accept</button>
@@ -45,8 +72,8 @@
                 <ul class="dropdown-menu open" id="suggestions">
                 </ul>
             </div>
-            
-            
+
+
         </form>
     </div>
     <script>
@@ -73,7 +100,7 @@
         var xhttp = new XMLHttpRequest();
         function getSearches()
         {
-            
+
             var name = document.getElementById('empEmail').value;
             xhttp.abort();
             xhttp = new XMLHttpRequest();
@@ -83,7 +110,7 @@
                     var htm = "";
                     for (var i = 0; i < sug.length; i++)
                     {
-                        htm += "<li><a onclick=\"setSearchText('" + sug[i].substring(0,sug[i].indexOf('(')-1) + "');\">" + sug[i] + "</a></li>";
+                        htm += "<li><a onclick=\"setSearchText('" + sug[i].substring(0, sug[i].indexOf('(') - 1) + "');\">" + sug[i] + "</a></li>";
                     }
                     document.getElementById("suggestions").innerHTML = htm;
                 }

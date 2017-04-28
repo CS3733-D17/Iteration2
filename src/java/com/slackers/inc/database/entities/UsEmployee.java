@@ -53,6 +53,8 @@ public class UsEmployee extends User{
     @Override
     public void setEntityValues(Map<String, Object> values) {
         super.setEntityValues(values);
+        if (this.isBot()) // avoid large loads
+            return;
         if (values.containsKey("applications"))
         {
             this.applications.clear();

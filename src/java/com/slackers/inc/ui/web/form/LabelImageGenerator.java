@@ -96,12 +96,11 @@ public class LabelImageGenerator extends HttpServlet {
             if (request.getParameter("id") != null) {
                 long id = Long.parseLong(request.getParameter("id"));
                 LabelApplicationController appControl = new LabelApplicationController();
-                
-                if (appControl.getLabel().getLabelImageType().equalsIgnoreCase("none") || appControl.getLabel().getLabelImageType().length()<3) {
+                /*if (appControl.getLabel().getLabelImageType().equalsIgnoreCase("none") || appControl.getLabel().getLabelImageType().length()<3) {
                     String url = "http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg";
                     response.sendRedirect(url);
                     return;
-                }
+                }*/
                 
                 Label label = appControl.getLabelImage(id);
                 /*String mimeType = label.getLabelImageType();
@@ -110,14 +109,29 @@ public class LabelImageGenerator extends HttpServlet {
                     mimeType = "image/png";
                 }*/
                 
+                
+                
                 if (label.getLabelImageType().equalsIgnoreCase("urlAbsolute")) {
                     String url = new String(label.getLabelImage(), StandardCharsets.US_ASCII);
                     response.sendRedirect(url);
                     return;
                 }
                 
-
                 response.setContentType(label.getLabelImageType());
+                if (label.getLabelImageType().equals("image/jpg")|| label.getLabelImageType().equals("image/jpeg"))
+                {
+                    try (ByteArrayInputStream bis = new ByteArrayInputStream(label.getLabelImage())) {
+                        OutputStream outStream = response.getOutputStream();
+                        byte[] b = new byte[256];
+                        int off = 0;
+                        int len = 0;
+                        while ((len = bis.read(b)) != -1) {
+                            outStream.write(b, off, b.length);
+                        }
+                    }
+                    return;
+                }
+
                 boolean wrote = false;
                 if (request.getParameter("targetWidth") != null) {
                     try {

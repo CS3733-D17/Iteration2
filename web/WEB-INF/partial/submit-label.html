@@ -74,31 +74,49 @@
                 } else {
                     document.getElementById("plantNumber").style.backgroundColor = "#ffffff";
                 }
-	    case "repId":
-		var repId = document.getElementById("representativeId").value;
+            case "repId":
+                var repId = document.getElementById("representativeId").value;
                 if (!repIdReg.test(repId)) {
                     document.getElementById("representativeId").style.backgroundColor = "#ff8888";
                 } else {
                     document.getElementById("representativeId").style.backgroundColor = "#ffffff";
                 }
-		break;
+                break;
         }
 
     }
 </script>
 <div class="container">
     <div class="well">
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Import from existing form
-                <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-                <li>
-                    <form action="/SuperSlackers/form/import" method="GET">
-                        <input placeholder="Existing TBB ID" type="text" name="existingId" class="form-control">
-                        <button type="submit" class="btn btn-warning" style="width:100%;">Import</button>
-                    </form>
-                </li>
-            </ul>
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Import from existing form
+                        <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <form action="/SuperSlackers/form/import" method="GET">
+                                <input placeholder="Existing TBB ID" type="text" name="existingId" class="form-control">
+                                <button type="submit" class="btn btn-warning" style="width:100%;">Import</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-6" align="right">
+                <div class="dropdown" style="float: right;">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Change Form View
+                        <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button class="btn btn-warning" type="button" style="width:100%;" data-toggle="dropdown" onClick="setCookie('SSVIEW_MODE', 'legacy', 5); location.reload();" >Legacy View</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-warning" type="button" style="width:100%;" data-toggle="dropdown" onClick="setCookie('SSVIEW_MODE', 'modern', 5); location.reload();">Modern View</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <form action="/SuperSlackers/form/create" method="post" enctype="multipart/form-data">
             ##FORM_CONTENT

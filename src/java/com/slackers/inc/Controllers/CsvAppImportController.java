@@ -7,6 +7,8 @@ package com.slackers.inc.Controllers;
 
 import com.slackers.inc.Controllers.Csv.CsvApplicationImporter;
 import com.slackers.inc.Controllers.Csv.CsvApplicationImporter.ApplicationConsumer;
+import com.slackers.inc.database.entities.Label.BeverageSource;
+import com.slackers.inc.database.entities.Label.BeverageType;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.database.entities.LabelApplication.ApplicationStatus;
 import java.sql.Date;
@@ -36,12 +38,15 @@ public class CsvAppImportController implements ApplicationConsumer {
 
     @Override
     public void consume(LabelApplication app, CsvApplicationImporter importer) {
+        if (app.getLabel().getProductSource()==BeverageSource.UNKNOWN || app.getLabel().getProductType() == BeverageType.UNKNOWN)
+            return;
         try {
             if (app.getStatus()==ApplicationStatus.APPROVED)
             {
+                Date temp = new Date(app.getApplicationDate().getTime());
                 controller.setApplication(app);
                 controller.submitApplication(importer.getSubmitter());
-                controller.approveApplication(importer.getApprover(), new Date(app.getApplicationDate().getTime()+(31536000000L*2)), "<h4>Loaded from csv</h4>");
+                controller.approveApplication(importer.getApprover(), new Date(temp.getTime()+(31536000000L*2)), "<h4>Loaded from csv</h4>", temp);
             }
         } catch (SQLException ex) {
             Logger.getLogger(CsvAppImportController.class.getName()).log(Level.SEVERE, null, ex);

@@ -1,11 +1,11 @@
 <div style="float:right; display:none;"><span id="appStatus" style="color:red; font-size: 20px;"></span></div>
-<div style="float:right;" align="right">
-    <label for="TBB_ID">TTB ID:</label>
-    <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_ID" type="text" size="10" disabled><br>
-    <label for="TBB_CT">CT:</label>
-    <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_CT" type="text" size="4" disabled><br>
-    <label for="TBB_OR">OR:</label>
-    <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_OR" type="text" size="4" disabled><br>
+<div style="float:right; margin-top: 25px;" align="right">
+    <label for="TTB_ID">TTB ID:</label>
+    <input style="margin-left: 5px; border: none; text-align:right;" id="TBB_ID" type="text" size="10" readonly><br>
+    <label for="TTB_CT">CT:</label>
+    <input style="margin-left: 5px; border: none; text-align:right;" id="TTB_CT" name="TTB_CT" type="text" size="4" readonly><br>
+    <label for="TTB_OR">OR:</label>
+    <input style="margin-left: 5px; border: none; text-align:right;" id="TTB_OR" name="TTB_OR" type="text" size="4" readonly><br>
 </div>
 <div class="alert alert-danger" id = "errOut" style="display: none;" align = "center">
 </div>
@@ -86,6 +86,7 @@
 </div>
 <div class="funkyradio">
     <div class="funkyradio-success">
+<<<<<<< HEAD
         <input class="tag-new-label" type="checkbox" name="NEW" id="NEW">
         <label for="NEW">Certificate of Label Application</label>
     </div>
@@ -99,6 +100,21 @@
     </div>
     <div class="funkyradio-success">
         <input class="tag-new-label" type="checkbox" name="RESUBMIT" id="RESUBMIT">
+=======
+        <input class="" type="checkbox" name="NEW" id="NEW">
+        <label for="NEW">Certificate of Label Application</label>
+    </div>
+    <div class="funkyradio-success">
+        <input class="" type="checkbox" name="EXEMPT" id="EXEMPT">
+        <label for="EXEMPT">Certificate of Label Application Exception in <input name="state" id="state" type="text" size="2" maxlength="2" placeholder="State" style="font-family: 'Ubuntu','Tahoma','Helvetica Neue','Helvetica','Arial','sans-serif'; font-size: 14px; line-height: 1.42857143;"></label>
+    </div>
+    <div class="funkyradio-success">
+        <input class="" type="checkbox" name="DISTINCT" id="DISTINCT">
+        <label for="DISTINCT">Distinctive bottle approval.   Bottle capacity before closure: <input placeholder="Capacity" id="capacity" name="capacity" type="text" size="6" maxlength="6" style="font-family: 'Ubuntu','Tahoma','Helvetica Neue','Helvetica','Arial','sans-serif'; font-size: 14px; line-height: 1.42857143;"></label>
+    </div>
+    <div class="funkyradio-success">
+        <input class="" type="checkbox" name="RESUBMIT" id="RESUBMIT">
+>>>>>>> 37cf0934d4f6df1731cddc6043ada97c06bb7780
         <label for="RESUBMIT">Resubmit.  TTB id: <input placeholder="TTB Id" id="tbbid" name="tbbid" type="text" style="font-family: 'Ubuntu','Tahoma','Helvetica Neue','Helvetica','Arial','sans-serif'; font-size: 14px; line-height: 1.42857143;"></label>
     </div>
 </div>
@@ -131,7 +147,7 @@
     <label>Write any information below, not on the label that is on the container.</label>
     <textarea id="generalInfo" name="generalInfo" class="form-control" rows="4"></textarea>
 </div>
-<div id="wineInfo" style="display:none;">
+<div id="wineInfo" style="display: none;">
     <hr>
     <h3>Wine Specific Information</h3><br>
 

@@ -21,14 +21,12 @@ import com.slackers.inc.database.entities.Manufacturer;
 import com.slackers.inc.database.entities.UsEmployee;
 import com.slackers.inc.database.entities.User;
 import com.slackers.inc.database.entities.WineLabel;
+import com.slackers.inc.ui.web.form.FormImporter;
 import com.slackers.inc.ui.web.form.LabelImageGenerator;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -94,7 +92,8 @@ public class LabelApplicationController {
 
     /**
      * Creates a new label application according to an HTTP request
-     * @param context 
+     *
+     * @param context
      * @param request HTTP request to create label application from
      * @return The created application
      */
@@ -137,6 +136,7 @@ public class LabelApplicationController {
 
     /**
      * Creates a new label according to an HTTP request
+     *
      * @param context
      * @param request The HTTP request to create label from
      * @return The created label
@@ -152,6 +152,22 @@ public class LabelApplicationController {
         label.setGeneralInfo(request.getParameter("generalInfo"));
         label.setSerialNumber(request.getParameter("serialNumber"));
         label.setFormula(request.getParameter("formula"));
+        if (request.getParameter("TTB_OR")!=null)
+        {
+            label.setTBB_OR(request.getParameter("TTB_OR"));
+        }
+        if (request.getParameter("TTB_CT")!=null)
+        {
+            label.setTBB_CT(request.getParameter("TTB_CT"));
+        }
+        if (request.getParameter("TTB_CT-new")!=null && !request.getParameter("TTB_CT-new").equals(""))
+        {
+            label.setTBB_OR(request.getParameter("TTB_CT-new"));
+        }
+        if (request.getParameter("TTB_OR-new")!=null && !request.getParameter("TTB_OR-new").equals(""))
+        {
+            label.setTBB_OR(request.getParameter("TTB_OR-new"));
+        }
 
         label.setRepresentativeIdNumber(request.getParameter("representativeId"));
         try {
@@ -183,46 +199,45 @@ public class LabelApplicationController {
                 label.setLabelImageType(context.getMimeType(img.getSubmittedFileName()));
                 try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
                     BufferedImage imgBuffered = ImageIO.read(img.getInputStream());
-                    if (imgBuffered.getWidth() > 1000) {
-                        Image temp = imgBuffered.getScaledInstance(1000, -1, Image.SCALE_DEFAULT);
-                        BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
-                        toSave.getGraphics().drawImage(temp, 0, 0, null);
-                        ImageIO.write(toSave, "png", buffer);
-                        buffer.flush();
-                        toSave.getGraphics().dispose();
-                    } else {
-                        ImageIO.write(imgBuffered, "png", buffer);
-                        buffer.flush();
-                    }
-                    label.setLabelImage(buffer.toByteArray());
-                    label.setLabelImageType("image/png");
-                }
-            } else if (request.getParameter("useUrl") != null) {
-                try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-                    HttpURLConnection connection = (HttpURLConnection) new URL(request.getParameter("useUrl")).openConnection();
-                    connection.connect();
-                    try (InputStream input = connection.getInputStream()) {
-                        BufferedImage imgBuffered = ImageIO.read(input);
-                        if (imgBuffered != null) {
-                            if (imgBuffered.getWidth() > 1000) {
-                                Image temp = imgBuffered.getScaledInstance(1000, -1, Image.SCALE_DEFAULT);
-                                BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
-                                toSave.getGraphics().drawImage(temp, 0, 0, null);
-                                ImageIO.write(toSave, "png", buffer);
-                                buffer.flush();
-                                toSave.getGraphics().dispose();
-                            } else {
-                                ImageIO.write(imgBuffered, "png", buffer);
-                                buffer.flush();
-                            }
-                            label.setLabelImage(buffer.toByteArray());
-                            label.setLabelImageType("image/png");
+                    if (imgBuffered != null) {
+                        if (imgBuffered.getWidth() > 1000) {
+                            Image temp = imgBuffered.getScaledInstance(1000, -1, Image.SCALE_DEFAULT);
+                            BufferedImage toSave = new BufferedImage(temp.getWidth(null), temp.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                            toSave.getGraphics().drawImage(temp, 0, 0, null);
+                            ImageIO.write(toSave, "png", buffer);
+                            buffer.flush();
+                            toSave.getGraphics().dispose();
                         } else {
-                            label.setLabelImage(new URL(request.getParameter("useUrl")).toString().getBytes(StandardCharsets.US_ASCII));
-                            label.setLabelImageType("urlAbsolute");
+                            ImageIO.write(imgBuffered, "png", buffer);
+                            buffer.flush();
+                        }
+                        label.setLabelImage(buffer.toByteArray());
+                        label.setLabelImageType("image/png");
+                    } else if (request.getParameter("useUrl") != null) {
+                        FormImporter importer = new FormImporter(request.getParameter("useUrl"));
+                        FormImporter.ImageData imageData = importer.getImageData();
+                        if (imageData != null) {
+                            label.setLabelImage(imageData.getBytes());
+                            if (imageData.getType() == FormImporter.ImageData.TYPE_PNG) {
+                                label.setLabelImageType("image/png");
+                            }
+                            if (imageData.getType() == FormImporter.ImageData.TYPE_JPEG) {
+                                label.setLabelImageType("image/jpeg");
+                            }
                         }
                     }
-                    connection.disconnect();
+                }
+            } else if (request.getParameter("useUrl") != null) {
+                FormImporter importer = new FormImporter(request.getParameter("useUrl"));
+                FormImporter.ImageData imageData = importer.getImageData();
+                if (imageData != null) {
+                    label.setLabelImage(imageData.getBytes());
+                    if (imageData.getType() == FormImporter.ImageData.TYPE_PNG) {
+                        label.setLabelImageType("image/png");
+                    }
+                    if (imageData.getType() == FormImporter.ImageData.TYPE_JPEG) {
+                        label.setLabelImageType("image/jpeg");
+                    }
                 }
             }
             return label;
@@ -234,6 +249,7 @@ public class LabelApplicationController {
 
     /**
      * Edits this label application according to an HTTP request
+     *
      * @param context
      * @param request HTTP request to edit this application from
      * @return The edited application
@@ -256,14 +272,12 @@ public class LabelApplicationController {
             Label l = this.editLabelFromRequest(context, request);
             //DerbyConnection.getInstance().createEntity(l);
             this.application.setLabel(l);
-            
-            if (this.application.getStatus()==ApplicationStatus.SENT_FOR_CORRECTIONS)// resubmit
+
+            if (this.application.getStatus() == ApplicationStatus.SENT_FOR_CORRECTIONS)// resubmit
             {
                 this.application.getComments().add(new LabelComment(this.getApplicant(), "<h4><span style=\"color:cyan;\">Made Corrections</span></h4>"));
                 this.submitApplication(this.getApplicant());
-            }
-            else
-            {
+            } else {
                 this.saveApplication();
             }
         } catch (Exception e) {
@@ -275,6 +289,7 @@ public class LabelApplicationController {
 
     /**
      * Edits this label according to an HTTP request
+     *
      * @param context
      * @param request The HTTP request to edit this label from
      * @return The edited label
@@ -477,6 +492,7 @@ public class LabelApplicationController {
 
     /**
      * Check for any invalid fields in this application
+     *
      * @return Message detailing which field is invalid
      */
     public String validateApplication() {
@@ -521,6 +537,7 @@ public class LabelApplicationController {
 
     /**
      * Checks for invalid fields in this label
+     *
      * @return Message detailing which field is invalid, if any
      */
     public String validateLabel() {
@@ -546,7 +563,7 @@ public class LabelApplicationController {
         if (l.getProductType() == null || l.getProductType() == BeverageType.UNKNOWN) {
             return "Invalid beverage type";
         }
-        if ((l.getAlcoholContent() < 0 || l.getAlcoholContent() > 100) && l.getAlcoholContent()!=-1) {
+        if ((l.getAlcoholContent() < 0 || l.getAlcoholContent() > 100) && l.getAlcoholContent() != -1) {
             return "Invalid alchohol content";
         }
         if (l.getFormula() == null || l.getFormula().length() < 2) {
@@ -568,6 +585,7 @@ public class LabelApplicationController {
 
     /**
      * Remove this application from the cookies
+     *
      * @param response HTTP response to remove from
      */
     public void removeApplicationFromCookies(HttpServletResponse response) {
@@ -590,14 +608,13 @@ public class LabelApplicationController {
 
     /**
      * Write this application to the cookies
+     *
      * @param response HTTP response to write to
      */
     public void writeApplicationToCookies(HttpServletResponse response) {
         JsonObjectBuilder generalObj = Json.createObjectBuilder().add("email", this.application.getEmailAddress())
                 .add("phone", this.application.getPhoneNumber())
                 .add("TBB_ID", String.format("%012d", this.application.getApplicationId()))
-                .add("TBB_OR", this.application.getTBB_OR())
-                .add("TBB_CT", this.application.getTBB_CT())
                 .add("representativeId", this.application.getRepresentativeId());
         if (this.application.getApplicantAddress() != null) {
             generalObj.add("address", this.application.getApplicantAddress().toString());
@@ -637,6 +654,7 @@ public class LabelApplicationController {
 
     /**
      * Write this label to the cookies
+     *
      * @param response HTTP response to write to
      */
     public void writeLabelToCookies(HttpServletResponse response) {
@@ -645,6 +663,7 @@ public class LabelApplicationController {
 
     /**
      * Write a label to the cookies
+     *
      * @param response HTTP response to write to
      * @param l Label to write
      */
@@ -656,7 +675,11 @@ public class LabelApplicationController {
                 .add("type", l.getProductType().name())
                 .add("source", l.getProductSource().name())
                 .add("alcoholContent", Double.toString(l.getAlcoholContent()));
-
+        if (l.getTTB_OR()!=null)
+            labelObj = labelObj.add("TTB_OR", l.getTTB_OR());
+        if (l.getTTB_CT()!=null)
+            labelObj = labelObj.add("TTB_CT", l.getTTB_CT());
+        
         if (l instanceof WineLabel) {
             labelObj.add("pH", Double.toString(((WineLabel) l).getPhLevel()));
             labelObj.add("vintage", Integer.toString(((WineLabel) l).getVintage()));
@@ -701,6 +724,7 @@ public class LabelApplicationController {
 
     /**
      * Render all the comments on this application
+     *
      * @param request
      * @return HTML code with rendered comments
      */
@@ -718,6 +742,7 @@ public class LabelApplicationController {
 
     /**
      * Renders a label comment
+     *
      * @param request
      * @param comment Comment to be rendered
      * @return HTML code with rendered comment
@@ -740,6 +765,7 @@ public class LabelApplicationController {
 
     /**
      * Builds comment detailing all revisions made to this application
+     *
      * @param applicationId The application ID
      * @param newLabelId The revised label ID
      * @param prevLabelId The previous label ID
@@ -776,6 +802,7 @@ public class LabelApplicationController {
 
     /**
      * Pull a label's image from database
+     *
      * @param labelId ID of the label whose image will be pulled
      * @return The same label with the image pulled
      */
@@ -809,7 +836,8 @@ public class LabelApplicationController {
                 return l2;
             }
             l.setPullImageOut(getImage);
-            this.db.getEntity(l, l.getPrimaryKeyName());
+            if (l!=null && l.getPrimaryKeyName()!=null)
+                this.db.getEntity(l, l.getPrimaryKeyName());
             return l;
         } catch (SQLException ex) {
             return null;
@@ -835,8 +863,9 @@ public class LabelApplicationController {
 
     /**
      * Write this application to the database
+     *
      * @return Whether the write succeeded
-     * @throws SQLException 
+     * @throws SQLException
      */
     public boolean saveApplication() throws SQLException {
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
@@ -844,8 +873,9 @@ public class LabelApplicationController {
 
     /**
      * Update this application's label and write the change to the database
+     *
      * @return Whether the edit succeeded
-     * @throws SQLException 
+     * @throws SQLException
      */
     public boolean editApplication() throws SQLException {
         this.application.updateLabel();
@@ -854,8 +884,9 @@ public class LabelApplicationController {
 
     /**
      * Delete this application from the database
+     *
      * @return Whether the delete succeeded
-     * @throws SQLException 
+     * @throws SQLException
      */
     public boolean deleteApplication() throws SQLException {
         return db.deleteEntity(this.application, this.application.getPrimaryKeyName());
@@ -863,8 +894,9 @@ public class LabelApplicationController {
 
     /**
      * Create this application in the database
+     *
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     public boolean createApplication() throws SQLException {
         this.application.setStatus(LabelApplication.ApplicationStatus.NOT_COMPLETE);
@@ -876,9 +908,10 @@ public class LabelApplicationController {
 
     /**
      * Load an application from the database
+     *
      * @param id ID for the application
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     public boolean loadApplication(long id) throws SQLException {
         this.application.setApplicationId(id);
@@ -888,9 +921,10 @@ public class LabelApplicationController {
 
     /**
      * Set this application to a given application and create in the database
+     *
      * @param application Desired application
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     public boolean createApplication(LabelApplication application) throws SQLException {
         this.application = application;
@@ -899,9 +933,10 @@ public class LabelApplicationController {
 
     /**
      * Submit this application to a US employee
+     *
      * @param submitter Manufacturer submitting the application
      * @return Whether the submission succeeded
-     * @throws SQLException 
+     * @throws SQLException
      */
     public boolean submitApplication(Manufacturer submitter) throws SQLException {
         this.application.setApplicant(submitter);
@@ -950,6 +985,20 @@ public class LabelApplicationController {
                 + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
         NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
         notify.sendApproved(this.application.getLabel().getBrandName());
+        return db.writeEntity(this.application, this.application.getPrimaryKeyName());
+    }
+    public boolean approveApplication(UsEmployee submitter, Date experationDate, String comment, Date forcedDate) throws SQLException {
+        ApplicationApproval approval = new ApplicationApproval(submitter, forcedDate, experationDate);
+        approval.setApplication(application);
+        this.application.setStatus(LabelApplication.ApplicationStatus.APPROVED);
+        this.application.getLabel().setApproval(approval);
+        this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
+        this.application.setSubmitter(submitter);
+        this.application.setApplicationDate(forcedDate);
+        submitter.getApplications().remove(this.application);
+        this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
+        this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()
+                + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
     }
 
@@ -1012,41 +1061,40 @@ public class LabelApplicationController {
     public boolean sendToAnotherEmployee(UsEmployee emp, String emailToSendTo) throws SQLException {
 
         this.application.getComments().add(new LabelComment(emp, "<h4><span style=\"color:orange;\">Application Sent for Second Opinion</span></h4>"));
-        
+
         UsEmployee reciever = this.getBestMatch(emailToSendTo, emp);
-        if (reciever.getEmail().equals(UsEmployee.NULL_EMPLOYEE.getEmail()))
-        {
+        if (reciever.getEmail().equals(UsEmployee.NULL_EMPLOYEE.getEmail())) {
             this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED); // put back into main pool
             this.application.setSubmitter(emp);
             this.application.setReviewer(reciever);
-        }
-        else
-        {
+        } else {
             this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED_FOR_REVIEW);
             this.application.setSubmitter(emp);
             this.application.setReviewer(reciever);
         }
+        emp.getApplications().remove(this.application);
+        this.db.writeEntity(emp, emp.getPrimaryKeyName());
         this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
         return this.saveApplication();
     }
+
     public boolean sendToAnotherEmployee(UsEmployee emp, String emailToSendTo, String comment) throws SQLException {
 
         this.application.getComments().add(new LabelComment(emp, "<h4><span style=\"color:orange;\">Application Sent for Second Opinion</span></h4>"
-        + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
-        
+                + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
+
         UsEmployee reciever = this.getBestMatch(emailToSendTo, emp);
-        if (reciever.getEmail().equals(UsEmployee.NULL_EMPLOYEE.getEmail()))
-        {
+        if (reciever.getEmail().equals(UsEmployee.NULL_EMPLOYEE.getEmail())) {
             this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED); // put back into main pool
             this.application.setSubmitter(emp);
             this.application.setReviewer(reciever);
-        }
-        else
-        {
+        } else {
             this.application.setStatus(LabelApplication.ApplicationStatus.SUBMITTED_FOR_REVIEW);
             this.application.setSubmitter(emp);
             this.application.setReviewer(reciever);
         }
+        emp.getApplications().remove(this.application);
+        this.db.writeEntity(emp, emp.getPrimaryKeyName());
         this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
         return this.saveApplication();
     }
@@ -1055,8 +1103,12 @@ public class LabelApplicationController {
         this.application.getComments().add(new LabelComment(emp, "<h4><span style=\"color:orange;\">Application Sent for Corrections</span></h4>"));
         this.application.setStatus(LabelApplication.ApplicationStatus.SENT_FOR_CORRECTIONS);
         this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
+
         NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
         notify.sendRevision(this.application.getLabel().getBrandName());
+
+        emp.getApplications().remove(this.application);
+        this.db.writeEntity(emp, emp.getPrimaryKeyName());
         return this.saveApplication();
     }
 
@@ -1065,8 +1117,12 @@ public class LabelApplicationController {
                 + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
         this.application.setStatus(LabelApplication.ApplicationStatus.SENT_FOR_CORRECTIONS);
         this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
+
         NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
         notify.sendRevision(this.application.getLabel().getBrandName());
+
+        emp.getApplications().remove(this.application);
+        this.db.writeEntity(emp, emp.getPrimaryKeyName());
         return this.saveApplication();
     }
 

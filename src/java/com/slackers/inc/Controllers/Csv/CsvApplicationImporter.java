@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,8 +36,8 @@ import java.util.stream.Collectors;
 public class CsvApplicationImporter implements Runnable {
     private static final String MEM_FILE = "importer.mem";
     private static final SimpleDateFormat DATE_PARSER = new SimpleDateFormat("MM/dd/yyyy");
-    private static final UsEmployee EMPLOYEE_BOT = new UsEmployee("Importer", "Bot", "agent-bot@superslackers.com", "agent-bot");
-    private static final Manufacturer MANUFACTURER_BOT = new Manufacturer("Submitter", "Bot", "submitter-bot@superslackers.com", "submitter-bot");
+    private static final UsEmployee EMPLOYEE_BOT = (UsEmployee) new UsEmployee("Importer", "Bot", "agent-bot@superslackers.com", "agent-bot").setBot();
+    private static final Manufacturer MANUFACTURER_BOT = (Manufacturer) new Manufacturer("Submitter", "Bot", "submitter-bot@superslackers.com", "submitter-bot").setBot();
     private BufferedReader file;
     private String currentFile;
     private List<String> files;
@@ -241,10 +242,13 @@ public class CsvApplicationImporter implements Runnable {
                 String type = linArr[i].toLowerCase();
                 if (type.contains("wine")) {
                     this.application.setLabelType(Label.BeverageType.WINE, false);
+                    this.application.getLabel().setProductType(Label.BeverageType.WINE);
                 } else if (type.contains("distilled")) {
                     this.application.setLabelType(Label.BeverageType.DISTILLED, false);
+                    this.application.getLabel().setProductType(Label.BeverageType.DISTILLED);
                 } else {
                     this.application.setLabelType(Label.BeverageType.BEER, false);
+                    this.application.getLabel().setProductType(Label.BeverageType.BEER);
                 }
             } else if (hName.contains("PRODUCT_NAME")) {
                 this.application.getLabel().setBrandName(linArr[i]);
@@ -305,7 +309,8 @@ public class CsvApplicationImporter implements Runnable {
         }
 
         if (this.consumer!= null) {
-            this.application.getLabel().setLabelImageType("none");
+            this.application.getLabel().setLabelImageType("urlAbsolute");
+            this.application.getLabel().setLabelImage("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg".getBytes(StandardCharsets.US_ASCII));
             this.consumer.consume(this.application, this);
         }
         return line;
@@ -314,6 +319,7 @@ public class CsvApplicationImporter implements Runnable {
     private String sanitizeLine(String line) {
         line = line.replaceAll("\"+", "\"");
         line = line.replaceAll("\\\"([^,]+?)(,?)([^,]+?)\\\"", "$1$3");
+        line = line.replaceAll("\"", "").replaceAll("\\(", "").replaceAll("\\)", "");
         return line;
     }
 

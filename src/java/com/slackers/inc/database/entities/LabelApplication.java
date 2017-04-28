@@ -357,7 +357,7 @@ public class LabelApplication implements IEntity{
     }
 
     public String getTBB_CT() {
-        return label.getTBB_CT();
+        return label.getTTB_CT();
     }
 
     public void setTBB_CT(String TBB_CT) {
@@ -365,7 +365,7 @@ public class LabelApplication implements IEntity{
     }
 
     public String getTBB_OR() {
-        return label.getTBB_OR();
+        return label.getTTB_OR();
     }
 
     public void setTBB_OR(String TBB_OR) {

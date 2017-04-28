@@ -5,6 +5,7 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.Controllers.ApplicationRenderer;
 import com.slackers.inc.Controllers.Filters.ExactFilter;
 import com.slackers.inc.Controllers.Filters.Filter;
 import com.slackers.inc.database.DerbyConnection;
@@ -134,7 +135,9 @@ public class AdminApplicationViewList extends HttpServlet {
             StringBuilder b = new StringBuilder();
             for (LabelApplication a : apps)
             {
-                b.append(this.buildApp(a, i++));
+                System.out.println(a);
+                b.append(ApplicationRenderer.getInstance().renderApplication(this, a, pg.getUser()));
+                //b.append(this.buildApp(a, i++));
             }
             
             /*for(int i = 0; i < apps.size(); i++){

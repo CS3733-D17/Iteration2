@@ -5,6 +5,7 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.Controllers.ApplicationRenderer;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.database.entities.LabelApplication.ApplicationStatus;
 import com.slackers.inc.database.entities.Manufacturer;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.ServletException;
@@ -26,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ApplicationsPageServlet", urlPatterns = {"/myApplications"})
 public class ApplicationsPageServlet extends HttpServlet {
-
+    private static final int RESULTS_PER_PAGE = 15;
     IPageFrame pg;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -53,14 +55,23 @@ public class ApplicationsPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
         try (PrintWriter out = response.getWriter()) {
             pg = WebComponentProvider.getCorrectFrame(request, "Application Page");
             String applications = WebComponentProvider.loadPartialPage(this, "applicationList-partial.html");
-            
+            int page=0;
+            if (request.getParameter("pg")!=null)
+            {
+                try
+                {
+                    page = Integer.parseInt(request.getParameter("pg"));
+                }catch (Exception e)
+                {}
+                if (page<0)
+                    page=0;
+            }
             Manufacturer manufacturer = (Manufacturer) (pg.getUser());
             StringBuilder b = new StringBuilder();
-            List<LabelApplication> apps = new ArrayList<>(manufacturer.getApplications());
+            List<LabelApplication> allApps = new ArrayList<>(manufacturer.getApplications());
             Set<ApplicationStatus> targetStatus = new HashSet<>();
             targetStatus.add(ApplicationStatus.UNKNOWN);
             if (request.getParameter("subset")!=null)
@@ -69,35 +80,60 @@ public class ApplicationsPageServlet extends HttpServlet {
                 {
                     targetStatus.add(ApplicationStatus.NOT_COMPLETE);
                 }
-                if (request.getParameter("subset").equalsIgnoreCase("submitted"))
+                else if (request.getParameter("subset").equalsIgnoreCase("submitted"))
                 {
                     targetStatus.add(ApplicationStatus.SUBMITTED);
                     targetStatus.add(ApplicationStatus.UNDER_REVIEW);
                     targetStatus.add(ApplicationStatus.SUBMITTED_FOR_REVIEW);
                 }
-                if (request.getParameter("subset").equalsIgnoreCase("underReview"))
+                else if (request.getParameter("subset").equalsIgnoreCase("underReview"))
                 {
                     targetStatus.add(ApplicationStatus.UNDER_REVIEW);
                     targetStatus.add(ApplicationStatus.SUBMITTED_FOR_REVIEW);
                 }
-                if (request.getParameter("subset").equalsIgnoreCase("accepted"))
+                else if (request.getParameter("subset").equalsIgnoreCase("accepted"))
                 {
                     targetStatus.add(ApplicationStatus.APPROVED);
                 }
-                if (request.getParameter("subset").equalsIgnoreCase("rejected"))
+                else if (request.getParameter("subset").equalsIgnoreCase("rejected"))
                 {
                     targetStatus.add(ApplicationStatus.REJECTED);
                 }
-                if (request.getParameter("subset").equalsIgnoreCase("corrections"))
+                else if (request.getParameter("subset").equalsIgnoreCase("corrections"))
                 {
                     targetStatus.add(ApplicationStatus.SENT_FOR_CORRECTIONS);
                 }
+                else
+                {
+                    targetStatus.add(ApplicationStatus.APPROVED);
+                    targetStatus.add(ApplicationStatus.NOT_COMPLETE);
+                    targetStatus.add(ApplicationStatus.REJECTED);
+                    targetStatus.add(ApplicationStatus.SENT_FOR_CORRECTIONS);
+                    targetStatus.add(ApplicationStatus.SUBMITTED);
+                    targetStatus.add(ApplicationStatus.SUBMITTED_FOR_REVIEW);
+                    targetStatus.add(ApplicationStatus.UNDER_REVIEW);
+                }
             }
+            else
+            {
+                targetStatus.add(ApplicationStatus.APPROVED);
+                targetStatus.add(ApplicationStatus.NOT_COMPLETE);
+                targetStatus.add(ApplicationStatus.REJECTED);
+                targetStatus.add(ApplicationStatus.SENT_FOR_CORRECTIONS);
+                targetStatus.add(ApplicationStatus.SUBMITTED);
+                targetStatus.add(ApplicationStatus.SUBMITTED_FOR_REVIEW);
+                targetStatus.add(ApplicationStatus.UNDER_REVIEW);
+            }
+            List<LabelApplication> apps = new ArrayList<>();
+            for(int i = page*RESULTS_PER_PAGE; i < allApps.size() && i < (page+1)*RESULTS_PER_PAGE; i++){
+                apps.add(allApps.get(i));
+            }            
             
             for(int i = 0; i < apps.size(); i++){
                 if (targetStatus.contains(apps.get(i).getStatus()))
                 {
-                b.append("<div class=\"panel panel-default\">\n" +
+                    b.append(ApplicationRenderer.getInstance().renderApplication(this, apps.get(i), manufacturer));
+                /*b.append("<div class=\"panel panel-default\">\n" +
 "                           <div class=\"panel-heading\">\n" +
 "                               <div class=\"row\">\n" +
 "                                   <div class=\"col-md-10\">\n" +
@@ -113,15 +149,28 @@ public class ApplicationsPageServlet extends HttpServlet {
 "                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse\">\n" +
 "                           <div class=\"panel-body\">"+ManufacturerSearchServlet.renderLabel(this, request, apps.get(i).getLabel())+"</div>\n" +
 "                           </div>\n" +
-"                       </div>");
+"                       </div>");*/
                 }
             }
-            
+            List<String> params = new LinkedList<>();
+            for (String parameter : request.getParameterMap().keySet()) {
+                if (request.getParameter(parameter) != null && request.getParameter(parameter).length() > 0) {
+                    if (!parameter.equalsIgnoreCase("pg"))
+                        params.add(parameter + "=" + request.getParameter(parameter));
+                }
+            }
             applications = applications.replace("##Applications", b);
+            applications = applications.replace("##PAGE", "Page "+(page+1));
+            if (apps.isEmpty())
+                    applications = applications.replace("##NEXT", "/SuperSlackers/myApplications?"+String.join("&", params)+"&pg="+(page));
+                else
+                    applications = applications.replace("##NEXT", "/SuperSlackers/myApplications?"+String.join("&", params)+"&pg="+(page+1));
+                if (page<=1)
+                    applications = applications.replace("##PREV", "/SuperSlackers/myApplications?"+String.join("&", params)+"&pg="+(0));
+                else
+                    applications = applications.replace("##PREV", "/SuperSlackers/myApplications?"+String.join("&", params)+"&pg="+(page-1));
             pg.setBody(applications);
-            out.println(WebComponentProvider.buildPage(pg, request));
-            
-           
+            out.println(WebComponentProvider.buildPage(pg, request));           
         }    
   
     }

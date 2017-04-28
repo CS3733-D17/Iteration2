@@ -249,11 +249,10 @@ public class Label implements IEntity{
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
-        
+        values.put("labelImageType", this.labelImageType);
         if (this.labelImage!=null)
         {
-            values.put("labelImage", this.labelImage);
-            values.put("labelImageType", this.labelImageType);
+            values.put("labelImage", this.labelImage);            
         }
         
         values.putAll(this.approval.getEntityValues()); // approval
@@ -278,10 +277,10 @@ public class Label implements IEntity{
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
         
+        values.put("labelImageType", this.labelImageType);
         if (this.labelImage!=null)
         {
             values.put("labelImage", this.labelImage);
-            values.put("labelImageType", this.labelImageType);
         }
         values.putAll(this.approval.getEntityValues()); // approval
         return values;
@@ -378,10 +377,10 @@ public class Label implements IEntity{
         pairs.put("TBB_CT", String.class); 
         pairs.put("TBB_OR", String.class);  
         pairs.put("generalInfo", String.class);
+        pairs.put("labelImageType", String.class);
         if (this.pullImageOut)
         {
             pairs.put("labelImage", byte[].class);
-            pairs.put("labelImageType", String.class);
         }
         pairs.putAll(this.approval.getEntityNameTypePairs());
         return pairs;
@@ -441,7 +440,7 @@ public class Label implements IEntity{
         return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource=" + productSource + ", productType=" + productType + ", brandName=" + brandName + ", general=" + generalInfo+ ", labelimage=" + labelImageType +": "+ (labelImage!=null) + '}';
     }
     
-    public String getTBB_CT() {
+    public String getTTB_CT() {
         return TBB_CT;
     }
 
@@ -449,7 +448,7 @@ public class Label implements IEntity{
         this.TBB_CT = TBB_CT;
     }
 
-    public String getTBB_OR() {
+    public String getTTB_OR() {
         return TBB_OR;
     }
 

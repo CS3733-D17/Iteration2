@@ -55,7 +55,15 @@ public class FormImport extends HttpServlet {
             }
             
             String form = WebComponentProvider.loadPartialPage(this, "submit-label.html");
-            String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            String formTemplate;
+            if (WebComponentProvider.getCookieValue(request, "SSVIEW_MODE")!=null && WebComponentProvider.getCookieValue(request, "SSVIEW_MODE").equalsIgnoreCase("legacy"))
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form-partial-legacy.html"); 
+            }
+            else
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            }
             
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Import Label Application");
             
@@ -74,7 +82,7 @@ public class FormImport extends HttpServlet {
                 formTemplate = formTemplate.replace("<img id=\"lblImg\" src=\"##LABEL_IMAGE_PATH\" class=\"img-responsive\" alt=\"Label Image\">",
                         "<img id=\"lblImg\" src=\"##LABEL_IMAGE_PATH\" class=\"img-responsive\" alt=\"Label Image\">"+
                                 "<a target=\"_blank\" href=\""+importer.getExistingApplicationURL()+"\" class=\"btn btn-danger\">Go to existing form to download image</a>"+
-                                "<input type=\"hidden\" name=\"useUrl\" value=\"##LABEL_IMAGE_PATH\">");
+                                "<input type=\"hidden\" name=\"useUrl\" value=\""+importer.getTTBid()+"\">");
                 formTemplate = formTemplate.replace("##LABEL_IMAGE_PATH",LabelImageGenerator.getAccessStringForExistingApplication(request, importId));
             }
             else
@@ -122,7 +130,6 @@ public class FormImport extends HttpServlet {
             appControl.createApplicationFromRequest(this.getServletContext(), request);
             appControl.writeApplicationToCookies(response);
             appControl.writeLabelToCookies(response);
-            System.out.println(appControl.getApplication());
             String error = appControl.validateApplication();
             System.out.println("Im here");
             if (error==null)
