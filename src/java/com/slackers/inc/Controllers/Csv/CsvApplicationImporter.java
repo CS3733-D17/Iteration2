@@ -309,6 +309,7 @@ public class CsvApplicationImporter implements Runnable {
         }
 
         if (this.consumer!= null) {
+            this.application.addApplicationType(LabelApplication.ApplicationType.NEW, null);
             this.application.getLabel().setLabelImageType("urlAbsolute");
             this.application.getLabel().setLabelImage("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg".getBytes(StandardCharsets.US_ASCII));
             this.consumer.consume(this.application, this);

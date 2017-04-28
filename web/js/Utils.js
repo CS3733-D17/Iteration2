@@ -16,7 +16,6 @@ function setCookie(cname, cvalue, exdays) {
 
 function getEmail()
 {
-    console.log("Getting cookie\n");
     var out = getCookie("SSINCPN");
     console.log("Got" + out);
     return out;
@@ -57,7 +56,8 @@ function unclickBox(id)
 }
 
 function clickBox(id)
-{
+{    
+    console.log("Click "+id);
     /*if (document.getElementById("wineInfo") != null)
         document.getElementById("wineInfo").style.display = "none";*/
     if (document.getElementById(id) != null)

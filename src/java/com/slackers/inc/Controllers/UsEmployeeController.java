@@ -106,17 +106,56 @@ public class UsEmployeeController {
 
     public static void fillApplicationList(UsEmployee employee)
     {
+        
         if (employee.getApplications().isEmpty())
         {
+            System.out.println("GET NEW APPLICATIONS");
             LabelApplication target = new LabelApplication();
             LabelApplication target2 = new LabelApplication();
             target.setStatus(LabelApplication.ApplicationStatus.SUBMITTED);
             target2.setStatus(LabelApplication.ApplicationStatus.SUBMITTED_FOR_REVIEW);
             target2.setReviewer(employee);
             try {
-                List<LabelApplication> forms = DerbyConnection.getInstance().getAllEntites_Typed(target, "status");
-                List<LabelApplication> forms2 = DerbyConnection.getInstance().getAllEntites_Typed(target, "status", "reviewer");
+                //List<LabelApplication> forms = DerbyConnection.getInstance().getAllEntites_Typed(target, "status");
+                //List<LabelApplication> forms2 = DerbyConnection.getInstance().getAllEntites_Typed(target, "status", "reviewer");
 
+                List<Filter> filters = new LinkedList<>();
+                filters.add(new ExactFilter(){
+                    @Override
+                    public Object getValue() {
+                        return  LabelApplication.ApplicationStatus.SUBMITTED;
+                    }
+
+                    @Override
+                    public String getColumn() {
+                        return "status";
+                    }
+                });
+                List<Filter> filters2 = new LinkedList<>();
+                filters2.add(new ExactFilter(){
+                    @Override
+                    public Object getValue() {
+                        return LabelApplication.ApplicationStatus.SUBMITTED_FOR_REVIEW;
+                    }
+
+                    @Override
+                    public String getColumn() {
+                        return "status";
+                    }
+                });
+                filters2.add(new ExactFilter(){
+                    @Override
+                    public Object getValue() {
+                        return employee.getEmail();
+                    }
+
+                    @Override
+                    public String getColumn() {
+                        return "reviewer";
+                    }
+                });
+                List<LabelApplication> forms = DerbyConnection.getInstance().search(new LabelApplication(), filters);
+                List<LabelApplication> forms2 = DerbyConnection.getInstance().search(new LabelApplication(), filters2);
                 //forms = forms.stream().filter((e) -> {return e.getLabel().getProductType()==bevType && e.getReceiver().equals(receiver);}).collect(Collectors.toList());
 
                 // sort by date older is first
@@ -137,6 +176,7 @@ public class UsEmployeeController {
                 int i=0;
                 for (LabelApplication app : forms2)
                 {
+                    System.out.println(app);
                     if (i==10)
                         break;
                     newforms.add(app);
@@ -144,6 +184,7 @@ public class UsEmployeeController {
                 i=0;
                 while (newforms.size()<10 && i<forms.size())
                 {
+                    System.out.println(forms.get(i));
                     newforms.add(forms.get(i));
                     i++;
                 }

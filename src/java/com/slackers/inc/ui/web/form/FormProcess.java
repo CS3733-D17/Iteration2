@@ -92,8 +92,8 @@ public class FormProcess extends HttpServlet {
             UsEmployee emp = (UsEmployee)AccountController.getPageUser(request);
             if (action!=null)
             {
-                String TBBCT = request.getParameter("TBB_CT-new")!=null ? request.getParameter("TBB_CT-new") : "";
-                String TBBOR = request.getParameter("TBB_OR-new")!=null ? request.getParameter("TBB_OR-new") : "";
+                String TBBCT = request.getParameter("TTB_CT-new")!=null ? request.getParameter("TTB_CT-new") : "";
+                String TBBOR = request.getParameter("TTB_OR-new")!=null ? request.getParameter("TTB_OR-new") : "";
                 String lblComment = request.getParameter("commentText")!=null ? request.getParameter("commentText") : "";
                 appControl.setTBB_CT(TBBCT);
                 appControl.setTBB_OR(TBBOR);
