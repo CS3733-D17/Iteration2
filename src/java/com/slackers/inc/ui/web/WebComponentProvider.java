@@ -31,7 +31,7 @@ public class WebComponentProvider {
 
     public static String buildPage(IPageFrame frame, HttpServletRequest request) {
         String theme = getCookieValue(request, THEME_COOKIE);
-        if (theme == null) {
+        if (theme == null || theme.length()<3) {
             theme = "";
         } else {
             theme = theme + "-";

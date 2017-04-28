@@ -54,7 +54,7 @@ public class LabelRenderer {
                 + "                           </div>\n"
                 + "                       <div id=\"collapse" + randId + "\" class=\"panel-collapse collapse\">\n"
                 + "                           <div class=\"panel-body\">\n"
-                + this.renderLabelContent(servlet, label).replace("##ADITIONAL", "")
+                + this.renderLabelContent(servlet, label).replace("##ADDITIONAL", "")
                 + "\n</div>\n"
                 + "                           </div>\n"
                 + "                       </div>";
