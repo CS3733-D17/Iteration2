@@ -22,7 +22,7 @@ import javax.mail.internet.*;
 public class EmailWrapper {
     // Information about the email, such as who it is sent to
     // who it is from, the subject and message, etc
-    String[] to;
+    String to;
     String from;
     String[] cc;
     String pwd;
@@ -35,7 +35,7 @@ public class EmailWrapper {
     
 
 
-    public EmailWrapper(String from, String pwd, String sub, String msg, String[] to){
+    public EmailWrapper(String from, String pwd, String sub, String msg, String to){
         this.to = to;
         this.from = from;
         this.pwd = pwd;
@@ -65,7 +65,7 @@ public class EmailWrapper {
         
     }
     
-    public EmailWrapper(String from, String pwd, String sub, String msg, String[] cc, String[] to){
+    public EmailWrapper(String from, String pwd, String sub, String msg, String[] cc, String to){
         this.to = to;
         this.from = from;
         this.pwd = pwd;
@@ -94,7 +94,7 @@ public class EmailWrapper {
           
     }
     
-    public EmailWrapper(String sub, String msg, String[] to){
+    public EmailWrapper(String sub, String msg, String to){
         this.to = to;
         this.from = "superslackersinc@gmail.com";
         this.pwd = "super123";
@@ -103,14 +103,17 @@ public class EmailWrapper {
         
         this.props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");    
-        props.put("mail.smtp.socketFactory.port", "465");    
+        props.put("mail.smtp.socketFactory.port", "587");    
         props.put("mail.smtp.socketFactory.class",    
                         "javax.net.ssl.SSLSocketFactory");    
-        props.put("mail.smtp.auth", "true");    
-        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.auth", "true");   
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.connectiontimeout", "100000");
+        props.put("mail.smtp.timeout", "100000");
+        props.put("mail.smtp.starttls.enable","true"); 
+        props.put("mail.smtp.EnableSSL.enable","true");
         
-        
-        this.session = Session.getDefaultInstance(props,    
+        this.session = Session.getInstance(props,    
             new javax.mail.Authenticator() {    
                 //@Override
                 protected PasswordAuthentication getPasswordAuthentication() {    
@@ -149,33 +152,32 @@ public class EmailWrapper {
     // Sends the email according to the informtion held
     // in this class via javax.mail
     public void sendEmail(){
+        System.out.println("message should be sending");    
 
         try {    
             // Checks if theres anyone to send to
             // Assume that inputs are actual emails
-            if (to.length > 0){
-                for (String to1 : to) {
-                    
-                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(to1)); 
-                }
-            }else {
-                System.out.println("No recipient available");
-                throw new MessagingException();
-            }   
             
-            if (cc != null && cc.length > 0){
-                for (String cc1 : cc){
-                    message.addRecipient(Message.RecipientType.CC, new InternetAddress(cc1));
-                }
-            }
+            System.out.println("Email exist");
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to)); 
+            System.out.println(to);
+             
+            
+            
             message.setSubject(sub);    
             message.setText(msg);    
             //send message  
+            System.out.println("Plz work");
+            
             Transport.send(message);    
             System.out.println("message sent successfully");    
             } catch (MessagingException e) {
+                e.printStackTrace();
+                System.out.println("Timeout");
                 //throw new RuntimeException(e);
-            }    
+            } catch (Exception e){
+                System.out.println("Something broke");
+            }
     }    
     
     

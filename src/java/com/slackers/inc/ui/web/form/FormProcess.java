@@ -142,7 +142,6 @@ public class FormProcess extends HttpServlet {
             try 
             {
                 long id = Long.parseLong(idStr);
-                System.out.println("shit");
                 response.sendRedirect("/SuperSlacker/form/process?id="+id);
             }
             catch (Exception ex)

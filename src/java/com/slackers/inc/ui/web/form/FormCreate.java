@@ -68,6 +68,7 @@ public class FormCreate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            System.out.println("Do something");
             LabelApplicationController appControl = new LabelApplicationController();
             appControl.createApplicationFromRequest(this.getServletContext(), request);
             appControl.writeApplicationToCookies(response);
@@ -98,6 +99,9 @@ public class FormCreate extends HttpServlet {
             }
         } catch (SQLException ex) {
             Logger.getLogger(FormCreate.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e){
+            System.out.println("It broke");
+            e.printStackTrace();
         }
     }
 
