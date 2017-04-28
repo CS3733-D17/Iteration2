@@ -130,7 +130,6 @@ public class FormImport extends HttpServlet {
             appControl.createApplicationFromRequest(this.getServletContext(), request);
             appControl.writeApplicationToCookies(response);
             appControl.writeLabelToCookies(response);
-            System.out.println(appControl.getApplication());
             String error = appControl.validateApplication();
             if (error==null)
             {

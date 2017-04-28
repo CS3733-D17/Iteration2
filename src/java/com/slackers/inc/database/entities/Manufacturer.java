@@ -77,6 +77,8 @@ public class Manufacturer extends User{
     @Override
     public void setEntityValues(Map<String, Object> values) {
         super.setEntityValues(values);
+        if (this.isBot()) // avoid large loads
+            return;
         if (values.containsKey("applications"))
         {
             List<LabelApplication> appList = LabelApplication.applicationListFromString((String)values.get("applications"));

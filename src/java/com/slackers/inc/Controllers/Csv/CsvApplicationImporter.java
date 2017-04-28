@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 public class CsvApplicationImporter implements Runnable {
     private static final String MEM_FILE = "importer.mem";
     private static final SimpleDateFormat DATE_PARSER = new SimpleDateFormat("MM/dd/yyyy");
-    private static final UsEmployee EMPLOYEE_BOT = new UsEmployee("Importer", "Bot", "agent-bot@superslackers.com", "agent-bot");
-    private static final Manufacturer MANUFACTURER_BOT = new Manufacturer("Submitter", "Bot", "submitter-bot@superslackers.com", "submitter-bot");
+    private static final UsEmployee EMPLOYEE_BOT = (UsEmployee) new UsEmployee("Importer", "Bot", "agent-bot@superslackers.com", "agent-bot").setBot();
+    private static final Manufacturer MANUFACTURER_BOT = (Manufacturer) new Manufacturer("Submitter", "Bot", "submitter-bot@superslackers.com", "submitter-bot").setBot();
     private BufferedReader file;
     private String currentFile;
     private List<String> files;

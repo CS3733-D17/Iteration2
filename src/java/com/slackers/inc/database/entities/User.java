@@ -42,17 +42,19 @@ public class User implements IEntity{
     private UserType userType;
     private String firstName;
     private String lastName;
-    private String phoneNumber;
+    private String phone;
     private boolean isUpdate;
+    private boolean isBot;
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
-        this.phoneNumber = "";
+        this.phone = "";
         this.userType = UserType.UNKNOWN;
         this.isUpdate = false;
+        this.isBot = false;
     }
     
     public User(String email) {
@@ -63,12 +65,23 @@ public class User implements IEntity{
         this("", "", "", "");
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public User setBot()
+    {
+        this.isBot = true;
+        return this;
+    }
+    
+    public boolean isBot()
+    {
+        return isBot;
+    }
+    
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
     
     public String getFirstName() {
@@ -122,7 +135,9 @@ public class User implements IEntity{
         temp.put("firstName", this.firstName);
         temp.put("lastName", this.lastName);
         temp.put("password", this.password);
+        temp.put("phone", this.phone);
         temp.put("email", this.email);
+        temp.put("isBot", this.isBot);
         temp.put("userType", this.userType.name());
         return temp;
     }
@@ -133,6 +148,8 @@ public class User implements IEntity{
         temp.put("firstName", this.firstName);
         temp.put("lastName", this.lastName);
         temp.put("password", this.password);
+        temp.put("phone", this.phone);
+        temp.put("isBot", this.isBot);
         if (!this.isUpdate)
             temp.put("email", this.email);
         temp.put("userType", this.userType.name());
@@ -151,6 +168,10 @@ public class User implements IEntity{
             this.email = (String)values.get("email");
         if (values.containsKey("userType"))
             this.userType = UserType.valueOf((String)values.get("userType"));
+        if (values.containsKey("isBot"))
+            this.isBot = (Boolean)values.get("isBot");
+        if (values.containsKey("phone"))
+            this.phone = (String)values.get("phone");
     }
 
     @Override
@@ -164,6 +185,8 @@ public class User implements IEntity{
         pairs.put("previousApplications", String.class);
         pairs.put("templateApplication", Long.class);
         pairs.put("userType", String.class);
+        pairs.put("phone", String.class);
+        pairs.put("isBot", Boolean.class);
         return pairs;
     }
 
@@ -194,6 +217,8 @@ public class User implements IEntity{
         cols.add("previousApplications long varchar");
         cols.add("templateApplication varchar(8192)");
         cols.add("userType varchar(512)");
+        cols.add("phone varchar(32)");
+        cols.add("isBot boolean");
         return cols;
     }
 

@@ -440,7 +440,7 @@ public class Label implements IEntity{
         return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource=" + productSource + ", productType=" + productType + ", brandName=" + brandName + ", general=" + generalInfo+ ", labelimage=" + labelImageType +": "+ (labelImage!=null) + '}';
     }
     
-    public String getTBB_CT() {
+    public String getTTB_CT() {
         return TBB_CT;
     }
 
@@ -448,7 +448,7 @@ public class Label implements IEntity{
         this.TBB_CT = TBB_CT;
     }
 
-    public String getTBB_OR() {
+    public String getTTB_OR() {
         return TBB_OR;
     }
 

@@ -11,6 +11,7 @@ import com.slackers.inc.Controllers.Csv.CharFormat;
 import com.slackers.inc.Controllers.Csv.DelimitedWriter;
 import com.slackers.inc.Controllers.Csv.IDelimiterFormat;
 import com.slackers.inc.Controllers.Filters.*;
+import com.slackers.inc.Controllers.LabelRenderer;
 import com.slackers.inc.Controllers.SearchController;
 import com.slackers.inc.database.entities.BeerLabel;
 import com.slackers.inc.database.entities.DistilledLabel;
@@ -302,7 +303,8 @@ public class ManufacturerSearchServlet extends HttpServlet {
 
                 StringBuilder b = new StringBuilder();
                 for (int i = 0; i < drinkList.size(); i++) {
-                    b.append("<div class=\"panel panel-default\">\n"
+                    b.append(LabelRenderer.getInstance().renderLabel(this, drinkList.get(i)));
+                    /*b.append("<div class=\"panel panel-default\">\n"
                             + "                           <div class=\"panel-heading\">\n"
                             + "                               <div class=\"row\">\n"
                             + "                                   <div class=\"col-md-10\">\n"
@@ -318,7 +320,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                             + renderLabel(this, request, drinkList.get(i))
                             + "\n</div>\n"
                             + "                           </div>\n"
-                            + "                       </div>");
+                            + "                       </div>");*/
 
                 }
 

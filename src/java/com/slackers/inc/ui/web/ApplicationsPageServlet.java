@@ -5,6 +5,7 @@
  */
 package com.slackers.inc.ui.web;
 
+import com.slackers.inc.Controllers.ApplicationRenderer;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.database.entities.LabelApplication.ApplicationStatus;
 import com.slackers.inc.database.entities.Manufacturer;
@@ -131,7 +132,8 @@ public class ApplicationsPageServlet extends HttpServlet {
             for(int i = 0; i < apps.size(); i++){
                 if (targetStatus.contains(apps.get(i).getStatus()))
                 {
-                b.append("<div class=\"panel panel-default\">\n" +
+                    b.append(ApplicationRenderer.getInstance().renderApplication(this, apps.get(i), manufacturer));
+                /*b.append("<div class=\"panel panel-default\">\n" +
 "                           <div class=\"panel-heading\">\n" +
 "                               <div class=\"row\">\n" +
 "                                   <div class=\"col-md-10\">\n" +
@@ -147,7 +149,7 @@ public class ApplicationsPageServlet extends HttpServlet {
 "                       <div id=\"collapse"+ i + "\" class=\"panel-collapse collapse\">\n" +
 "                           <div class=\"panel-body\">"+ManufacturerSearchServlet.renderLabel(this, request, apps.get(i).getLabel())+"</div>\n" +
 "                           </div>\n" +
-"                       </div>");
+"                       </div>");*/
                 }
             }
             List<String> params = new LinkedList<>();

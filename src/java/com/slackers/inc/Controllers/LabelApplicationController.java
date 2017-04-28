@@ -152,14 +152,19 @@ public class LabelApplicationController {
         label.setGeneralInfo(request.getParameter("generalInfo"));
         label.setSerialNumber(request.getParameter("serialNumber"));
         label.setFormula(request.getParameter("formula"));
-        label.setTBB_OR(request.getParameter("TTB_OR"));
-        label.setTBB_CT(request.getParameter("TTB_CT"));
-        if (request.getParameter("TTB_CT-new")!=null)
+        if (request.getParameter("TTB_OR")!=null)
         {
-            System.out.println("CT:"+request.getParameter("TTB_CT-new"));
+            label.setTBB_OR(request.getParameter("TTB_OR"));
+        }
+        if (request.getParameter("TTB_CT")!=null)
+        {
+            label.setTBB_CT(request.getParameter("TTB_CT"));
+        }
+        if (request.getParameter("TTB_CT-new")!=null && !request.getParameter("TTB_CT-new").equals(""))
+        {
             label.setTBB_OR(request.getParameter("TTB_CT-new"));
         }
-        if (request.getParameter("TTB_OR-new")!=null)
+        if (request.getParameter("TTB_OR-new")!=null && !request.getParameter("TTB_OR-new").equals(""))
         {
             label.setTBB_OR(request.getParameter("TTB_OR-new"));
         }
@@ -669,10 +674,12 @@ public class LabelApplicationController {
                 .add("serialNumber", l.getSerialNumber())
                 .add("type", l.getProductType().name())
                 .add("source", l.getProductSource().name())
-                .add("TBB_OR", l.getTBB_OR())
-                .add("TBB_CT", l.getTBB_CT())
                 .add("alcoholContent", Double.toString(l.getAlcoholContent()));
-
+        if (l.getTTB_OR()!=null)
+            labelObj = labelObj.add("TTB_OR", l.getTTB_OR());
+        if (l.getTTB_CT()!=null)
+            labelObj = labelObj.add("TTB_CT", l.getTTB_CT());
+        
         if (l instanceof WineLabel) {
             labelObj.add("pH", Double.toString(((WineLabel) l).getPhLevel()));
             labelObj.add("vintage", Integer.toString(((WineLabel) l).getVintage()));
@@ -968,6 +975,20 @@ public class LabelApplicationController {
         this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
         this.application.setSubmitter(submitter);
         this.application.setApplicationDate(new Date(new java.util.Date().getTime()));
+        submitter.getApplications().remove(this.application);
+        this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
+        this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()
+                + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
+        return db.writeEntity(this.application, this.application.getPrimaryKeyName());
+    }
+    public boolean approveApplication(UsEmployee submitter, Date experationDate, String comment, Date forcedDate) throws SQLException {
+        ApplicationApproval approval = new ApplicationApproval(submitter, forcedDate, experationDate);
+        approval.setApplication(application);
+        this.application.setStatus(LabelApplication.ApplicationStatus.APPROVED);
+        this.application.getLabel().setApproval(approval);
+        this.application.setReviewer(UsEmployee.NULL_EMPLOYEE);
+        this.application.setSubmitter(submitter);
+        this.application.setApplicationDate(forcedDate);
         submitter.getApplications().remove(this.application);
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         this.application.getComments().add(new LabelComment(submitter, "<h4><span style=\"color:green;\">Application Approved</span></h4><br><br>Expires: " + experationDate.toString()

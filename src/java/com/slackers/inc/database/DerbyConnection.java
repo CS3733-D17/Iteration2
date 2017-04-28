@@ -406,6 +406,8 @@ public class DerbyConnection {
         ResultSet results = call.executeQuery();
         int c = 0;
         Map<String, Object> valMap = new HashMap<>();
+        if (results.isClosed())
+            return;
         while (results.next()) {
             valMap.clear();
             c++;
@@ -467,6 +469,8 @@ public class DerbyConnection {
         int c = 0;
         Map<String, Object> valMap = new HashMap<>();
         List<IEntity> entites = new LinkedList<>();
+        if (results.isClosed())
+            return entites;
         while (results.next()) {
             valMap.clear();
             c++;
@@ -520,6 +524,8 @@ public class DerbyConnection {
         int c = 0;
         Map<String, Object> valMap = new HashMap<>();
         List<T> entites = new LinkedList<>();
+        if (results.isClosed())
+            return entites;
         while (results.next()) {
             valMap.clear();
             c++;
@@ -552,6 +558,8 @@ public class DerbyConnection {
         int c = 0;
         Map<String, Object> valMap = new HashMap<>();
         List<T> entites = new LinkedList<>();
+        if (results.isClosed())
+            return entites;
         while (results.next()) {
             valMap.clear();
             c++;
@@ -610,6 +618,8 @@ public class DerbyConnection {
         int c = 0;
         Map<String, Object> valMap = new HashMap<>();
         List<T> entites = new LinkedList<>();
+        if (results.isClosed())
+            return entites;
         while (results.next()) {
             valMap.clear();
             c++;
@@ -663,6 +673,8 @@ public class DerbyConnection {
         int c = 0;
         Map<String, Object> valMap = new HashMap<>();
         List<T> entites = new LinkedList<>();
+        if (results.isClosed())
+            return entites;
         while (results.next()) {
             valMap.clear();
             c++;
@@ -714,7 +726,6 @@ public class DerbyConnection {
             statementList.add(stmt);
         }
         String st = String.format("%s OFFSET %d rows fetch first %d rows only ", String.join(" UNION ", statementList), offset, numberOfResults);
-        System.out.println(st);
         PreparedStatement call = con.prepareStatement(st);
         int i = 1;
         for (Object o : vals) {
@@ -726,6 +737,8 @@ public class DerbyConnection {
         int c = 0;
         Map<String, Object> valMap = new HashMap<>();
         List<T> entites = new LinkedList<>();
+        if (results.isClosed())
+            return entites;
         while (results.next()) {
             valMap.clear();
             c++;
@@ -794,6 +807,8 @@ public class DerbyConnection {
         int c = 0;
         Map<String, Object> valMap = new HashMap<>();
         List<T> entites = new LinkedList<>();
+        if (results.isClosed())
+            return entites;
         while (results.next()) {
             valMap.clear();
             c++;
@@ -857,6 +872,8 @@ public class DerbyConnection {
         int c = 0;
         Map<String, Object> valMap = new HashMap<>();
         List<T> entites = new LinkedList<>();
+        if (results.isClosed())
+            return entites;
         while (results.next()) {
             valMap.clear();
             c++;

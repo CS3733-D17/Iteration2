@@ -5,6 +5,8 @@
  */
 package com.slackers.inc.ui.web.liveUpdate;
 
+import com.slackers.inc.Lists.CT;
+import com.slackers.inc.Lists.CTList;
 import com.slackers.inc.Lists.Origin;
 import com.slackers.inc.Lists.OriginList;
 import java.io.IOException;
@@ -44,15 +46,17 @@ public class ORBackend extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             
             List<Origin> list = new LinkedList<>();
-            
-            if (request.getParameter("code")!=null)
-            {
-                list.addAll(OriginList.getInstance().getList().stream().filter((e)->e.getOC().startsWith(request.getParameter("code"))).collect(Collectors.toList()));
-            }
-            if (request.getParameter("desc")!=null)
-            {
-                list.addAll(OriginList.getInstance().getList().stream().filter((e)->e.getDescription().startsWith(request.getParameter("desc"))).collect(Collectors.toList()));
-            }            
+            if ((request.getParameter("code") == null || request.getParameter("code").equals(""))
+                    && (request.getParameter("desc") == null || request.getParameter("desc").equals(""))) {
+                list.addAll(OriginList.getInstance().getList());
+            } else {
+                if (request.getParameter("code") != null) {
+                    list.addAll(OriginList.getInstance().getList().stream().filter((e) -> e.getOC().startsWith(request.getParameter("code"))).collect(Collectors.toList()));
+                }
+                if (request.getParameter("desc") != null) {
+                    list.addAll(OriginList.getInstance().getList().stream().filter((e) -> e.getDescription().startsWith(request.getParameter("desc"))).collect(Collectors.toList()));
+                }
+            }   
             List<String> searches = list.stream().map((o)->o.getOC()+":::"+o.getDescription()).collect(Collectors.toList());
             Collections.sort(searches);            
             JsonArrayBuilder array = Json.createArrayBuilder();

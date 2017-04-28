@@ -42,26 +42,26 @@ public class CTBackend extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
+
             List<CT> list = new LinkedList<>();
-            
-            if (request.getParameter("code")!=null)
-            {
-                list.addAll(CTList.getInstance().getList().stream().filter((e)->e.getCT().startsWith(request.getParameter("code"))).collect(Collectors.toList()));
+            if ((request.getParameter("code") == null || request.getParameter("code").equals(""))
+                    && (request.getParameter("desc") == null || request.getParameter("desc").equals(""))) {
+                list.addAll(CTList.getInstance().getList());
+            } else {
+                if (request.getParameter("code") != null) {
+                    list.addAll(CTList.getInstance().getList().stream().filter((e) -> e.getCT().startsWith(request.getParameter("code"))).collect(Collectors.toList()));
+                }
+                if (request.getParameter("desc") != null) {
+                    list.addAll(CTList.getInstance().getList().stream().filter((e) -> e.getDescription().startsWith(request.getParameter("desc"))).collect(Collectors.toList()));
+                }
             }
-            if (request.getParameter("desc")!=null)
-            {
-                list.addAll(CTList.getInstance().getList().stream().filter((e)->e.getDescription().startsWith(request.getParameter("desc"))).collect(Collectors.toList()));
-            }            
-            List<String> searches = list.stream().map((o)->o.getCT()+":::"+o.getDescription()).collect(Collectors.toList());
-            Collections.sort(searches);            
+            List<String> searches = list.stream().map((o) -> o.getCT() + ":::" + o.getDescription()).collect(Collectors.toList());
+            Collections.sort(searches);
             JsonArrayBuilder array = Json.createArrayBuilder();
-            for (String s : searches)
-            {
+            for (String s : searches) {
                 String[] split = s.split(":::");
                 JsonObjectBuilder var = Json.createObjectBuilder().add("code", split[0]);
-                if (split.length==2 && split[1]!=null)
-                {
+                if (split.length == 2 && split[1] != null) {
                     var.add("desc", split[1]);
                 }
                 array = array.add(var);

@@ -43,9 +43,10 @@ public class CsvAppImportController implements ApplicationConsumer {
         try {
             if (app.getStatus()==ApplicationStatus.APPROVED)
             {
+                Date temp = new Date(app.getApplicationDate().getTime());
                 controller.setApplication(app);
                 controller.submitApplication(importer.getSubmitter());
-                controller.approveApplication(importer.getApprover(), new Date(app.getApplicationDate().getTime()+(31536000000L*2)), "<h4>Loaded from csv</h4>");
+                controller.approveApplication(importer.getApprover(), new Date(temp.getTime()+(31536000000L*2)), "<h4>Loaded from csv</h4>", temp);
             }
         } catch (SQLException ex) {
             Logger.getLogger(CsvAppImportController.class.getName()).log(Level.SEVERE, null, ex);
