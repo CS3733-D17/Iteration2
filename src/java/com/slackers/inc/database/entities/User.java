@@ -167,7 +167,7 @@ public class User implements IEntity{
         temp.put("phone", this.phone);
         temp.put("email", this.email);
         temp.put("isBot", this.isBot);
-        temp.put("isBot", this.emailAllowed);
+        temp.put("emailAllowed", this.emailAllowed);
         temp.put("provider", this.provider.name());
         temp.put("userType", this.userType.name());
         return temp;
@@ -181,7 +181,7 @@ public class User implements IEntity{
         temp.put("password", this.password);
         temp.put("phone", this.phone);
         temp.put("isBot", this.isBot);
-        temp.put("isBot", this.emailAllowed);
+        temp.put("emailAllowed", this.emailAllowed);
         temp.put("provider", this.provider.name());
         if (!this.isUpdate)
             temp.put("email", this.email);

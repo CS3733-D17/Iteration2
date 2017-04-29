@@ -89,6 +89,10 @@ public class ManufacturerSettingServlet extends HttpServlet {
                         settings = settings.replace("value=\"DO_NOT_CONTACT\"", "value=\"DO_NOT_CONTACT\" selected");
                         break;
                 }
+                if (manufacturer.isEmailAllowed())
+                    settings = settings.replace("value=\"YES\"", "value=\"YES\" selected");
+                else
+                    settings = settings.replace("value=\"NO\"", "value=\"NO\" selected");
             }
             else if(type == User.UserType.US_EMPLOYEE){
                 settings = settings.replace("##Manufacturer", "");
@@ -115,6 +119,10 @@ public class ManufacturerSettingServlet extends HttpServlet {
                         settings = settings.replace("value=\"DO_NOT_CONTACT\"", "value=\"DO_NOT_CONTACT\" selected");
                         break;
                 }
+                if (employee.isEmailAllowed())
+                    settings = settings.replace("value=\"YES\"", "value=\"YES\" selected");
+                else
+                    settings = settings.replace("value=\"NO\"", "value=\"NO\" selected");
             }
             else if(type == User.UserType.ADMIN){
                 settings = settings.replace("##Manufacturer", "");
@@ -141,6 +149,10 @@ public class ManufacturerSettingServlet extends HttpServlet {
                         settings = settings.replace("value=\"DO_NOT_CONTACT\"", "value=\"DO_NOT_CONTACT\" selected");
                         break;
                 }
+                if (admn.isEmailAllowed())
+                    settings = settings.replace("value=\"YES\"", "value=\"YES\" selected");
+                else
+                    settings = settings.replace("value=\"NO\"", "value=\"NO\" selected");
             }
             pg.setBody(settings);
             out.println(WebComponentProvider.buildPage(pg, request));
@@ -166,6 +178,11 @@ public class ManufacturerSettingServlet extends HttpServlet {
             pg.getUser().setLastName(request.getParameter("lastName"));
             pg.getUser().setEmail(request.getParameter("email"));
             pg.getUser().setPhone(request.getParameter("phoneNumber"));
+            if (request.getParameter("emailNotifications").equalsIgnoreCase("YES"))
+                pg.getUser().setEmailAllowed(true);
+            else
+                pg.getUser().setEmailAllowed(false);
+            
             try
             {
                 pg.getUser().setProvider(Provider.valueOf(request.getParameter("provider")));
