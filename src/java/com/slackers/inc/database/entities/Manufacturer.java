@@ -101,18 +101,36 @@ public class Manufacturer extends User{
     @Override
     public Map<String, Object> getUpdatableEntityValues() {
         Map<String, Object> values = super.getUpdatableEntityValues();
-        values.put("applications", LabelApplication.applicationListToString(this.applications));
-        if (this.templateApplication!=null)
-            values.put("templateApplication", this.templateApplication.getPrimaryKeyValue());
+        if (this.isBot())
+        {
+            values.put("applications", "");
+            if (this.templateApplication!=null)
+                values.put("templateApplication", this.templateApplication.getPrimaryKeyValue());
+        }
+        else
+        {
+            values.put("applications", LabelApplication.applicationListToString(this.applications));
+            if (this.templateApplication!=null)
+                values.put("templateApplication", this.templateApplication.getPrimaryKeyValue());
+        }
         return values;
     }
 
     @Override
     public Map<String, Object> getEntityValues() {
         Map<String, Object> values = super.getEntityValues();
-        values.put("applications", LabelApplication.applicationListToString(this.applications));
-        if (this.templateApplication!=null)
-            values.put("templateApplication", this.templateApplication.getPrimaryKeyValue());
+        if (this.isBot())
+        {
+            values.put("applications", "");
+            if (this.templateApplication!=null)
+                values.put("templateApplication", this.templateApplication.getPrimaryKeyValue());
+        }
+        else
+        {        
+            values.put("applications", LabelApplication.applicationListToString(this.applications));
+            if (this.templateApplication!=null)
+                values.put("templateApplication", this.templateApplication.getPrimaryKeyValue());
+        }
         return values;
     }
 

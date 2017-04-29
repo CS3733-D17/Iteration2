@@ -74,16 +74,22 @@ public class UsEmployee extends User{
     @Override
     public Map<String, Object> getUpdatableEntityValues() {
         Map<String, Object> values = super.getUpdatableEntityValues();
-        values.put("applications", LabelApplication.applicationListToString(this.applications));
-        values.put("previousApplications", LabelApplication.applicationListToString(this.previousApplications));
+        if (!this.isBot())
+        {
+            values.put("applications", LabelApplication.applicationListToString(this.applications));
+            values.put("previousApplications", LabelApplication.applicationListToString(this.previousApplications));
+        }
         return values;
     }
 
     @Override
     public Map<String, Object> getEntityValues() {
         Map<String, Object> values = super.getEntityValues();
-        values.put("applications", LabelApplication.applicationListToString(this.applications));
-        values.put("previousApplications", LabelApplication.applicationListToString(this.previousApplications));
+        if (!this.isBot())
+        {
+            values.put("applications", LabelApplication.applicationListToString(this.applications));
+            values.put("previousApplications", LabelApplication.applicationListToString(this.previousApplications));
+        }
         return values;
     }
 

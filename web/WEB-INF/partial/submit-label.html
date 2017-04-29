@@ -3,85 +3,67 @@
 
         //regular expressions to check if the fields are valid
         var repIdReg = new RegExp(/\d+$/);
-        var plantNumberReg = new RegExp(/\d+$/);
+        var plantNumberReg = new RegExp(/\d+/);
         var phoneReg = new RegExp(/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/);
         var serialReg = new RegExp(/\w{1,10}/);
         var emailReg = new RegExp(/[/\S|\s]+?@[/\S|\s]+/);
         var alcoholContentReg = new RegExp(/^\d{1,3}$/);
         var addressReg = new RegExp(/^.+?\n.+?\n.+$/);
         var brandNameReg = new RegExp(/\w/);
-        var formulaReg = new RegExp(/\w/);
-        switch (field) { //yes, the switch cases don't break on purpose
-            case "formula":
-                var formula = document.getElementById("formula").value;
-                if (formula === "") {
-                    document.getElementById("formula").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("formula").style.backgroundColor = "#ffffff";
-                }
-            case "brandName":
-                var brandName = document.getElementById("brandName").value;
-                if (brandName === "") {
-                    document.getElementById("brandName").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("brandName").style.backgroundColor = "#ffffff";
-                }
-            case "alcoholContent":
-                var alcoholContent = document.getElementById("alcoholContent").value;
-                if (!alcoholContentReg.test(alcoholContent)) {
-                    document.getElementById("alcoholContent").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("alcoholContent").style.backgroundColor = "#ffffff";
-                }
-            case "serialNumber":
-                var serialNumber = document.getElementById("serialNumber").value;
-                if (!serialReg.test(serialNumber)) {
-                    document.getElementById("serialNumber").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("serialNumber").style.backgroundColor = "#ffffff";
-                }
-            case "address":
-                var address = document.getElementById("address").value;
-                if (!addressReg.test(address)) {
-                    document.getElementById("address").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("address").style.backgroundColor = "#ffffff";
-                }
-                var mailAddress = document.getElementById("mailAddress").value;
-                if (!addressReg.test(mailAddress) && mailAddress != "") {
-                    document.getElementById("mailAddress").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("mailAddress").style.backgroundColor = "#ffffff";
-                }
-            case "email":
-                var email = document.getElementById("email").value;
-                if (!emailReg.test(email)) {
-                    document.getElementById("email").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("email").style.backgroundColor = "#ffffff";
-                }
-            case "phone":
-                var phone = document.getElementById("phone").value;
-                if (!phoneReg.test(phone)) {
-                    document.getElementById("phone").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("phone").style.backgroundColor = "#ffffff";
-                }
-            case "plantNumber":
-                var plantNumber = document.getElementById("plantNumber").value;
-                if (!plantNumberReg.test(plantNumber)) {
-                    document.getElementById("plantNumber").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("plantNumber").style.backgroundColor = "#ffffff";
-                }
-            case "repId":
-                var repId = document.getElementById("representativeId").value;
-                if (!repIdReg.test(repId)) {
-                    document.getElementById("representativeId").style.backgroundColor = "#ff8888";
-                } else {
-                    document.getElementById("representativeId").style.backgroundColor = "#ffffff";
-                }
-                break;
+        var formulaReg = new RegExp(/\w{3}/);
+        var formula = document.getElementById("formula").value;
+        if (formula.length < 3) {
+            document.getElementById("formula").style.backgroundColor = "#ff8888";
+        } else {
+            document.getElementById("formula").style.backgroundColor = "#ffffff";
+        }
+        var brandName = document.getElementById("brandName").value;
+        if (brandName === "") {
+            document.getElementById("brandName").style.backgroundColor = "#ff8888";
+        } else {
+            document.getElementById("brandName").style.backgroundColor = "#ffffff";
+        }
+        var alcoholContent = document.getElementById("alcoholContent").value;
+        if (!alcoholContentReg.test(alcoholContent)) {
+            document.getElementById("alcoholContent").style.backgroundColor = "#ff8888";
+        } else {
+            document.getElementById("alcoholContent").style.backgroundColor = "#ffffff";
+        }
+        var serialNumber = document.getElementById("serialNumber").value;
+        if (!serialReg.test(serialNumber)) {
+            document.getElementById("serialNumber").style.backgroundColor = "#ff8888";
+        } else {
+            document.getElementById("serialNumber").style.backgroundColor = "#ffffff";
+        }
+        var address = document.getElementById("address").value;
+        if (!addressReg.test(address)) {
+            document.getElementById("address").style.backgroundColor = "#ff8888";
+        } else {
+            document.getElementById("address").style.backgroundColor = "#ffffff";
+        }
+        var mailAddress = document.getElementById("mailAddress").value;
+        if (!addressReg.test(mailAddress) && mailAddress != "") {
+            document.getElementById("mailAddress").style.backgroundColor = "#ff8888";
+        } else {
+            document.getElementById("mailAddress").style.backgroundColor = "#ffffff";
+        }
+        var email = document.getElementById("email").value;
+        if (!emailReg.test(email)) {
+            document.getElementById("email").style.backgroundColor = "#ff8888";
+        } else {
+            document.getElementById("email").style.backgroundColor = "#ffffff";
+        }
+        var phone = document.getElementById("phone").value;
+        if (!phoneReg.test(phone)) {
+            document.getElementById("phone").style.backgroundColor = "#ff8888";
+        } else {
+            document.getElementById("phone").style.backgroundColor = "#ffffff";
+        }
+        var plantNumber = document.getElementById("plantNumber").value;
+        if (!plantNumberReg.test(plantNumber)) {
+            document.getElementById("plantNumber").style.backgroundColor = "#ff8888";
+        } else {
+            document.getElementById("plantNumber").style.backgroundColor = "#ffffff";
         }
 
     }

@@ -1,5 +1,6 @@
 package com.slackers.inc.Controllers.Csv;
 
+import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.database.entities.Manufacturer;
@@ -360,6 +361,7 @@ public class CsvApplicationImporter implements Runnable {
         if (!this.shouldRun) {
             this.shouldRun = true;
             this.loadFiles();
+            DerbyConnection.getInstance().setAutoCommit(false);
             Thread t = new Thread(this);
             t.start();
         }
@@ -383,6 +385,8 @@ public class CsvApplicationImporter implements Runnable {
             Logger.getLogger(CsvApplicationImporter.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
+        DerbyConnection.getInstance().setAutoCommit(true);
+        DerbyConnection.getInstance().commitChanges();
         this.saveProgress();
 
     }
