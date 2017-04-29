@@ -4,9 +4,28 @@
         <div class="row">
             <div class="page-header col-md-10 col-md-offset-1">
                 <h3>General Information</h3>      
-            </div>        
-            <div class="col-md-5 col-md-offset-1">
+            </div> 
+        </div>
+        <div class="row">
+            <div class="col-md-1 col-hidden-sm"></div>
+            <div class="col-sm-6 col-md-5">                
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                        <input name="email" type="email" class="form-control" id="email" value="##userEmail" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-5" style="vertical-align: bottom;">
+            </div>
+            <div class="col-md-1 col-hidden-sm"></div>
 
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-md-1 col-hidden-sm"></div>
+            <div class="col-sm-6 col-md-5">                
                 <div class="form-group">
                     <label for="firstName">First Name:</label>
                     <div class="input-group">
@@ -14,15 +33,8 @@
                         <input name="firstName" type="text" class="form-control" id="firstName" value="##userFirstName">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email Address:</label>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                        <input name="email" type="email" class="form-control" id="email" value="##userEmail">
-                    </div>
-                </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-sm-6 col-md-5">  
                 <div class="form-group">
                     <label for="lastName">Last Name:</label>
                     <div class="input-group">
@@ -31,14 +43,42 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-1 col-hidden-sm"></div>
         </div>
+
+        <div class="row">
+            <div class="col-md-1 col-hidden-sm"></div>
+            <div class="col-sm-6 col-md-5">                
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number: </label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                        <input name="phoneNumber" type="text" class="form-control" id="phoneNumber" value="##phoneNumber">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-5">  
+                <div class="form-group">
+                    <label for="provider">Cellular Provider:</label>
+                    <select class="form-control" id="provider" name="provider">                        
+                        <option value="VERIZON">Verizon</option>
+                        <option value="ATT">AT&T</option>
+                        <option value="TMOBILE">T-Mobile</option>
+                        <option value="SPRINT">Sprint</option>
+                        <option value="DO_NOT_CONTACT">Do Not Contact Me</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-1 col-hidden-sm"></div>
+        </div>
+
         <div class="row">
             <div class="col-md-1 col-md-offset-10">
                 <button type="submit" class="btn btn-primary btn-block">Update</button>
             </div>
         </div>
     </form>
-    <div class="row">
+    <!--<div class="row">
         <div class="page-header col-md-10 col-md-offset-1">
             <h3>Change Password</h3>      
         </div>
@@ -69,7 +109,7 @@
         <div class="col-md-1 col-md-offset-10">
             <button type="button" class="btn btn-primary btn-block">Update</button>
         </div>
-    </div>
+    </div>-->
     ##Manufacturer
     <br>
     </br>

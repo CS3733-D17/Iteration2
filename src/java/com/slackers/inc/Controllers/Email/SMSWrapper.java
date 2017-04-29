@@ -18,7 +18,8 @@ public class SMSWrapper {
         VERIZON,
         ATT,
         TMOBILE,
-        SPRINT
+        SPRINT,
+        DO_NOT_CONTACT;
     }
     
     public static Map<Provider, String> providers = new EnumMap<Provider, String>(Provider.class);

@@ -51,7 +51,13 @@ public class HomeServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             pg = WebComponentProvider.getCorrectFrame(request, "Super Slackers - Home");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "home-partial.html"));
+            String home = WebComponentProvider.loadPartialPage(this, "home-partial.html");
+            String theme = WebComponentProvider.getCookieValue(request, WebComponentProvider.THEME_COOKIE);
+            if ("paper".equals(theme) || "lumen".equals(theme) || "blue".equals(theme))
+            {
+                home = home.replace("Slackers Inc.png", "Slackers Inc-dark.png");
+            }
+            pg.setBody(home);
             out.println(WebComponentProvider.buildPage(pg, request));
         }
     }

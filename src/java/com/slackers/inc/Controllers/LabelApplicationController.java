@@ -952,7 +952,7 @@ public class LabelApplicationController {
         this.db.writeEntity(submitter, submitter.getPrimaryKeyName());
         if (!submitter.isBot())
         {
-            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            NotificationController notify = new NotificationController(this.application.getApplicant());
             notify.sendApproved(this.application.getLabel().getBrandName());
         }
         //this.autoSelectReviewer();
@@ -973,7 +973,7 @@ public class LabelApplicationController {
         
         if (!submitter.isBot())
         {
-            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            NotificationController notify = new NotificationController(this.application.getApplicant());
             notify.sendApproved(this.application.getLabel().getBrandName());
         }
         
@@ -994,7 +994,7 @@ public class LabelApplicationController {
                 + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
         if (!submitter.isBot())
         {
-            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            NotificationController notify = new NotificationController(this.application.getApplicant());
             notify.sendApproved(this.application.getLabel().getBrandName());
         }
         return db.writeEntity(this.application, this.application.getPrimaryKeyName());
@@ -1026,7 +1026,7 @@ public class LabelApplicationController {
         
         if (!submitter.isBot())
         {
-            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            NotificationController notify = new NotificationController(this.application.getApplicant());
             notify.sendRejected(this.application.getLabel().getBrandName());
         }
         return this.saveApplication();
@@ -1044,7 +1044,7 @@ public class LabelApplicationController {
                 + "<br><br><h5><strong>Comment:</strong></h5>" + comment));
         if (!submitter.isBot())
         {
-            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            NotificationController notify = new NotificationController(this.application.getApplicant());
             notify.sendRejected(this.application.getLabel().getBrandName());
         }
         return this.saveApplication();
@@ -1125,7 +1125,7 @@ public class LabelApplicationController {
 
         if (!emp.isBot())
         {
-            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            NotificationController notify = new NotificationController(this.application.getApplicant());
             notify.sendRevision(this.application.getLabel().getBrandName());
         }
 
@@ -1142,7 +1142,7 @@ public class LabelApplicationController {
 
         if (!emp.isBot())
         {
-            NotificationController notify = new NotificationController(this.application.getApplicant().getEmail());
+            NotificationController notify = new NotificationController(this.application.getApplicant());
             notify.sendRevision(this.application.getLabel().getBrandName());
         }
         

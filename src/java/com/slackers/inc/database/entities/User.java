@@ -5,6 +5,8 @@
  */
 package com.slackers.inc.database.entities;
 
+import com.slackers.inc.Controllers.Email.SMSWrapper;
+import com.slackers.inc.Controllers.Email.SMSWrapper.Provider;
 import com.slackers.inc.database.IEntity;
 import java.io.Serializable;
 import java.util.*;
@@ -25,6 +27,7 @@ public class User implements IEntity{
 
     // The table in our database for this class
     private static final String TABLE = "USERS";
+    
 
     // What type of user is this?
     public static enum UserType
@@ -45,6 +48,8 @@ public class User implements IEntity{
     private String phone;
     private boolean isUpdate;
     private boolean isBot;
+    private boolean emailAllowed;
+    private Provider provider;
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -55,6 +60,8 @@ public class User implements IEntity{
         this.userType = UserType.UNKNOWN;
         this.isUpdate = false;
         this.isBot = false;
+        this.emailAllowed = false;
+        this.provider = Provider.DO_NOT_CONTACT;
     }
     
     public User(String email) {
@@ -65,6 +72,28 @@ public class User implements IEntity{
         this("", "", "", "");
     }
 
+    public boolean isEmailAllowed() {
+        return emailAllowed;
+    }
+
+    public void setEmailAllowed(boolean emailAllowed) {
+        this.emailAllowed = emailAllowed;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+    
+    public User setNotBot()
+    {
+        this.isBot = false;
+        return this;
+    }
+    
     public User setBot()
     {
         this.isBot = true;
@@ -138,6 +167,8 @@ public class User implements IEntity{
         temp.put("phone", this.phone);
         temp.put("email", this.email);
         temp.put("isBot", this.isBot);
+        temp.put("isBot", this.emailAllowed);
+        temp.put("provider", this.provider.name());
         temp.put("userType", this.userType.name());
         return temp;
     }
@@ -150,6 +181,8 @@ public class User implements IEntity{
         temp.put("password", this.password);
         temp.put("phone", this.phone);
         temp.put("isBot", this.isBot);
+        temp.put("isBot", this.emailAllowed);
+        temp.put("provider", this.provider.name());
         if (!this.isUpdate)
             temp.put("email", this.email);
         temp.put("userType", this.userType.name());
@@ -170,8 +203,12 @@ public class User implements IEntity{
             this.userType = UserType.valueOf((String)values.get("userType"));
         if (values.containsKey("isBot"))
             this.isBot = (Boolean)values.get("isBot");
+        if (values.containsKey("emailAllowed"))
+            this.emailAllowed = (Boolean)values.get("emailAllowed");
         if (values.containsKey("phone"))
             this.phone = (String)values.get("phone");
+        if (values.containsKey("provider"))
+            this.provider = Provider.valueOf((String)values.get("provider"));
     }
 
     @Override
@@ -185,8 +222,10 @@ public class User implements IEntity{
         pairs.put("previousApplications", String.class);
         pairs.put("templateApplication", Long.class);
         pairs.put("userType", String.class);
-        pairs.put("phone", String.class);
+        pairs.put("phone", String.class);        
         pairs.put("isBot", Boolean.class);
+        pairs.put("emailAllowed", Boolean.class);
+        pairs.put("provider", String.class);
         return pairs;
     }
 
@@ -219,6 +258,8 @@ public class User implements IEntity{
         cols.add("userType varchar(512)");
         cols.add("phone varchar(32)");
         cols.add("isBot boolean");
+        cols.add("emailAllowed boolean");
+        cols.add("provider varchar(32)");
         return cols;
     }
 
