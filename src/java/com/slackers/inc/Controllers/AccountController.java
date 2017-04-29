@@ -352,12 +352,4 @@ public class AccountController {
     public User getUser() {
         return this.user;
     }
-
-    public void deleteTable() {
-        try {
-            db.deleteTable(this.user.getTableName());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -1,12 +1,12 @@
     <div class="row">
-        <div class="page-header col-md-10 col-md-offset-1">
+        <div class="page-header col-md-offset-1">
             <h3>Manufacturer Information</h3>      
         </div>
         <div class="col-md-5 col-md-offset-1">
             <form>
                 <div class="form-group">
                     <label for="repID">Representative ID Number:</label>
-                    <input type="text" class="form-control" id="repID">
+                    <input type="text" class="form-control" id="repID" required>
                 </div>
             </form>
         </div>
@@ -14,7 +14,10 @@
             <form>
                 <div class="form-group">
                     <label for="PBBnumber">Basic Permit / Brewers Number:</label>
-                    <input type="text" class="form-control" id="PBBnumber">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-shield"></i></span>
+                        <input type="text" class="form-control" id="PBBnumber" required>
+                    </div>
                 </div>
             </form>
         </div>
@@ -39,7 +42,7 @@
                     <label for="phone">Phone Number:</label>
                      <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                        <input type="text" class="form-control" id="phone">
+                        <input type="text" class="form-control" id="phone" required>
                     </div>
                 </div>
             </form>

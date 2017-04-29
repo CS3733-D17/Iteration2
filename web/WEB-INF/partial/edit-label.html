@@ -22,8 +22,7 @@
             <fieldset id="appForm" disabled>
                 ##FORM_CONTENT
             </fieldset>
-        </form>
-        <div id="hideUpload" style="display:none;"></div>
+        </form>  
         <!--<div class="row">
             <div class="col-sm-1 col-md-2">
             </div>
@@ -152,19 +151,19 @@
             <div id="tag-wine-vintage-div">
                 <div class="form-group">
                     <label>Vintage</label>
-                    <input id="vintage-new" name="vintage-new" class="form-control tag-wine-vingage-div-input" placeholder="year" type="text">
+                    <input id="vintage-new" name="vintage-new" class="form-control tag-wine-vingage-div-input" placeholder="year" type="text" required>
                 </div>
             </div>
             <div id="tag-wine-ph-div">
                 <div class="form-group">
                     <label>pH Level</label>
-                    <input id="pH-new" name="pH-new" class="form-control tag-wine-ph-div-input" placeholder="pH" type="text">
+                    <input id="pH-new" name="pH-new" class="form-control tag-wine-ph-div-input" placeholder="pH" type="text" required>
                 </div>
             </div>
             <div id="tag-wine-blend-div">
                 <div class="form-group">
                     <label>Grape Varietal</label>
-                    <input id="grapeVarietal-new" name="grapeVarietal-new" class="form-control tag-wine-blend-div-input" placeholder="Grape Varietal" type="text">
+                    <input id="grapeVarietal-new" name="grapeVarietal-new" class="form-control tag-wine-blend-div-input" placeholder="Grape Varietal" type="text" required>
                 </div>
                 <div class="form-group">
                     <label>Wine Appellation</label>
@@ -185,16 +184,7 @@
             </div>
             <div id="tag-new-label-div"> 
                 <label for="imgSelector-new">Label Image</label>
-                <input id="imgSelector-new" class="tag-new-label-div-input" type="file" name="labelImageUpload-new" accept=".png,.jpg,.jpeg,image/png,image/jpeg" onchange="document.getElementById('lblImg-new').src = window.URL.createObjectURL(this.files[0])">
-                <div class="row">
-                    <div class="col-sm-1 col-md-2">
-                    </div>
-                    <div class="col-sm-10 col-md-8">
-                        <img id="lblImg-new" src="##LABEL_IMAGE_PATH_NEW" class="img-responsive" alt="New Label Image">
-                    </div>
-                    <div class="col-sm-1 col-md-2">
-                    </div>                
-                </div>
+                <input id="imgSelector-new" class="tag-new-label-div-input" type="file" name="labelImageUpload-new" accept=".png,.jpg,.jpeg,image/png,image/jpeg" required>
             </div>
             <button id="submitRevisions" class="btn btn-success" style="width:100%; margin-top: 30px;">Submit Revisions</button>
         </form>
