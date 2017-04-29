@@ -953,7 +953,7 @@ public class LabelApplicationController {
         if (!submitter.isBot())
         {
             NotificationController notify = new NotificationController(this.application.getApplicant());
-            notify.sendApproved(this.application.getLabel().getBrandName());
+            notify.sendSubmit(this.application.getLabel().getBrandName());
         }
         //this.autoSelectReviewer();
         return res;
