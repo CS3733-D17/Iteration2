@@ -9,6 +9,7 @@
                 <ul class="list-group">
                     <li class="list-group-item">Current File<span class="badge" id="file">Unknown</span></li>
                     <li class="list-group-item">Files Left to Process<span class="badge" id="remaining">Unknown</span></li> 
+                    <li class="list-group-item">Entries Processed<span class="badge" id="lines">Unknown</span></li> 
                     <li class="list-group-item">Current File Progress <br><br><div class="progress">
                             <div class="progress-bar progress-bar-striped" role="progressbar" id="progressBar" style="width:0%">
                             </div></li> 
@@ -37,6 +38,7 @@
                     var progress = parseFloat(resp.percent).toFixed(2)+"%";
                     document.getElementById("file").innerHTML = resp.file;
                     document.getElementById("remaining").innerHTML = resp.filesToProcess;
+                    document.getElementById("lines").innerHTML = resp.entries;
                     document.getElementById("progressBar").innerHTML = progress;
                     document.getElementById("progressBar").style.width = progress;
                     if (resp.running)

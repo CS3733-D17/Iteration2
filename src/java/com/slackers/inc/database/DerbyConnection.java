@@ -51,6 +51,7 @@ public class DerbyConnection {
     // Tables in this database
     private Set<String> tables;
     private boolean isOpen;
+    private boolean isAuto;
 
     // On construction, a connection to the database is open
     private DerbyConnection() throws SQLException {
@@ -76,6 +77,7 @@ public class DerbyConnection {
             this.con = DriverManager.getConnection(makeConnectionString(properties));
             this.tables = new HashSet<>();
             isOpen = true;
+            this.isAuto = true;
         }
     }
 
@@ -196,7 +198,7 @@ public class DerbyConnection {
                 entity.setPrimaryKeyValue(results.getLong(1));
             }
         }
-        con.commit();
+        if (this.isAuto) con.commit();
         results.close();
         return res;
     }
@@ -243,7 +245,7 @@ public class DerbyConnection {
             i++;
         }
         boolean res = call.execute();
-        con.commit();
+        if (this.isAuto) con.commit();
         call.close();
         return res;
     }
@@ -259,12 +261,11 @@ public class DerbyConnection {
      */
     public boolean updateEntity(IEntity entity, String... searchColumns) throws SQLException {
         if (!checkForTable(entity)) { // create table if non existant
-
             return false;
         }
 
         if (searchColumns.length <= 0) {
-
+            System.out.println("no Cols");
             return false; // avoid table deletion
         }
         Set<String> cols = new HashSet<>(Arrays.asList(searchColumns));
@@ -310,7 +311,7 @@ public class DerbyConnection {
             i++;
         }
         boolean res = call.execute();
-        con.commit();
+        if (this.isAuto) con.commit();
         call.close();
         return res;
     }
@@ -1040,6 +1041,26 @@ public class DerbyConnection {
             return true;
         }
         return false;
+    }
+    
+    public void setAutoCommit(boolean autocommit)
+    {
+        try {
+            this.con.setAutoCommit(autocommit);
+            this.isAuto = autocommit;
+        } catch (SQLException ex) {
+            Logger.getLogger(DerbyConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public boolean commitChanges()
+    {
+        try {
+            this.con.commit();
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
     }
 
     public static String collectionToString(List<String> collection) {

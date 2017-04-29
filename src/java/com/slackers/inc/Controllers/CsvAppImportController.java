@@ -7,6 +7,7 @@ package com.slackers.inc.Controllers;
 
 import com.slackers.inc.Controllers.Csv.CsvApplicationImporter;
 import com.slackers.inc.Controllers.Csv.CsvApplicationImporter.ApplicationConsumer;
+import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.entities.Label.BeverageSource;
 import com.slackers.inc.database.entities.Label.BeverageType;
 import com.slackers.inc.database.entities.LabelApplication;
@@ -47,6 +48,11 @@ public class CsvAppImportController implements ApplicationConsumer {
                 controller.setApplication(app);
                 controller.submitApplication(importer.getSubmitter());
                 controller.approveApplication(importer.getApprover(), new Date(temp.getTime()+(31536000000L*2)), "<h4>Loaded from csv</h4>", temp);
+                if (importer.getLineNumber()%1000 == 0)
+                {
+                    if (!DerbyConnection.getInstance().commitChanges())
+                        DerbyConnection.getInstance().setAutoCommit(true);
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(CsvAppImportController.class.getName()).log(Level.SEVERE, null, ex);

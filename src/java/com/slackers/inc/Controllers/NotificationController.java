@@ -10,6 +10,7 @@ import com.slackers.inc.Controllers.Email.SMSWrapper;
 import com.slackers.inc.Controllers.Email.SMSWrapper.Provider;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.database.entities.LabelApplication.ApplicationStatus;
+import com.slackers.inc.database.entities.User;
 import java.util.LinkedList;
 
 /**
@@ -19,14 +20,14 @@ import java.util.LinkedList;
 public class NotificationController {
     private SMSWrapper text;
     private EmailWrapper email;
-    String msg;
-    String to;
-    String sub;
-    String phone;
-    Provider provider;
-    LinkedList< LabelApplication >listOfLabels;
+    private String msg;
+    private User to;
+    private String sub;
+    private String phone;
+    private Provider provider;
+    private LinkedList<LabelApplication >listOfLabels;
     
-    public NotificationController(String to, String phone, Provider provider){
+    public NotificationController(User to, String phone, Provider provider){
 
         this.to = to;
         this.phone = phone;
@@ -34,10 +35,10 @@ public class NotificationController {
         this.listOfLabels = new LinkedList();
     }
     
-    public NotificationController(String to ){
-
+    public NotificationController(User to){
         this.to = to;
-        System.out.println(to);
+        this.phone = to.getPhone().replace("[\\(\\)-\\s+_]", "");
+        this.provider = to.getProvider();
         this.listOfLabels = new LinkedList();
     }
     
@@ -46,6 +47,7 @@ public class NotificationController {
     }
     
     public void sendApprovedReject(){
+        
         this.msg = "The following is a list of approved labels";
         for (LabelApplication label : listOfLabels){
             if (label.getStatus().equals(ApplicationStatus.APPROVED))
@@ -59,43 +61,52 @@ public class NotificationController {
         
         this.sub = "Label Application Status";
         
-        this.email = new EmailWrapper(this.sub, this.msg, this.to);
+        this.email = new EmailWrapper(this.sub, this.msg, this.to.getEmail());
         this.text = new SMSWrapper(this.phone, this.provider, this.msg);
-        
-        email.sendEmail();
-        text.sendMsg();
+        if (this.to.isEmailAllowed())
+            email.sendEmail();
+        if (this.phone.length()>=10 && this.phone.length()<=12 && this.provider!=Provider.DO_NOT_CONTACT)
+            text.sendMsg();
         
     }
     
     public void sendApproved(String BrandName){
+        
         this.msg = "The following application was approved \n\t -" +  BrandName;
         this.sub = "Label Application Approved";
-        this.email = new EmailWrapper(this.sub, this.msg, this.to);
+        this.email = new EmailWrapper(this.sub, this.msg, this.to.getEmail());
         //this.text = new SMSWrapper(this.phone, this.provider, this.msg);
         
-        email.sendEmail();
-        //text.sendMsg();
+        if (this.to.isEmailAllowed())
+            email.sendEmail();
+        if (this.phone.length()>=10 && this.phone.length()<=12 && this.provider!=Provider.DO_NOT_CONTACT)
+            text.sendMsg();
         
     }
     public void sendRejected(String BrandName){
+        
         this.msg = "The following application was NOT approved \n\t -" +  BrandName;
         this.sub = "Label Application Rejected";
-        this.email = new EmailWrapper(this.sub, this.msg, this.to);
+        this.email = new EmailWrapper(this.sub, this.msg, this.to.getEmail());
         this.text = new SMSWrapper(this.phone, this.provider, this.msg);
         
-        email.sendEmail();
-        text.sendMsg();
+        if (this.to.isEmailAllowed())
+            email.sendEmail();
+        if (this.phone.length()>=10 && this.phone.length()<=12 && this.provider!=Provider.DO_NOT_CONTACT)
+            text.sendMsg();
         
     }
     
     public void sendRevision(String BrandName){
         this.msg = "The following application was NOT approved, but needs revisions \n\t -" +  BrandName;
         this.sub = "Applications In Need of Revision";
-        this.email = new EmailWrapper(this.sub, this.msg, this.to);
+        this.email = new EmailWrapper(this.sub, this.msg, this.to.getEmail());
         this.text = new SMSWrapper(this.phone, this.provider, this.msg);
         
-        email.sendEmail();
-        text.sendMsg();
+        if (this.to.isEmailAllowed())
+            email.sendEmail();
+        if (this.phone.length()>=10 && this.phone.length()<=12 && this.provider!=Provider.DO_NOT_CONTACT)
+            text.sendMsg();
         
     }
     

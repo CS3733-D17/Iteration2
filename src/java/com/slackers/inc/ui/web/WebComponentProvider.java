@@ -39,7 +39,8 @@ public class WebComponentProvider {
         String background = "";
         if (theme.equals("green-"))
         {
-            background = " background=\"" + WEB_ROOT + "background.jpg\" ";
+            background = " background=\"" + WEB_ROOT + "background.jpg\" style=\"background-repeat: no-repeat;\n" +
+            "    background-attachment: fixed;\" ";
         }
         StringBuilder b = new StringBuilder();
         b.append("<!DOCTYPE html>\n"

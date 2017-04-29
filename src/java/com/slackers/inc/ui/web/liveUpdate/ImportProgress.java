@@ -62,7 +62,7 @@ public class ImportProgress extends HttpServlet {
             else
                 file = "..."+file.substring(file.lastIndexOf("\\"));
             out.println(Json.createObjectBuilder().add("percent", (double)progress)
-                    .add("file", file).add("running", importer.isRunning())
+                    .add("file", file).add("running", importer.isRunning()).add("entries", importer.getLineNumber())
                     .add("filesToProcess", importer.getFiles().size()).build().toString());
         }
     }

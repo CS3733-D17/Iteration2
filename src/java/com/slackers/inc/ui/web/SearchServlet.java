@@ -35,7 +35,13 @@ public class SearchServlet extends HttpServlet {
 
             /* TODO output your page here. You may use following sample code. */
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Cola Search");
-            pg.setBody(WebComponentProvider.loadPartialPage(this, "home-partial.html"));
+            String home = WebComponentProvider.loadPartialPage(this, "home-partial.html");
+            String theme = WebComponentProvider.getCookieValue(request, WebComponentProvider.THEME_COOKIE);
+            if ("paper".equals(theme) || "lumen".equals(theme) || "blue".equals(theme))
+            {
+                home = home.replace("Slackers Inc.png", "Slackers Inc-dark.png");
+            }
+            pg.setBody(home);
             out.println(WebComponentProvider.buildPage(pg, request));
 
         }
