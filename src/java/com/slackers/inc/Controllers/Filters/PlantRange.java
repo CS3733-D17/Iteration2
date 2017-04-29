@@ -5,6 +5,9 @@ import com.slackers.inc.database.entities.Label;
 
 /**
  * Created by matt on 4/16/17.
+ *
+ * Used to find beverages wherer the name of the plant
+ * contains a string.
  */
 public class PlantRange implements RangeFilter {
 

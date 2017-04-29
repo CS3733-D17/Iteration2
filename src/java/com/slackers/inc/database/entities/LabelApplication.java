@@ -24,12 +24,15 @@ import java.util.logging.Logger;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents an application for a label.
  */
 public class LabelApplication implements IEntity{
 
+    // The name of the table that this class is held in in our database.
     private static final String TABLE = "LABEL_APPLICATIONS";
 
-
+    // the state of the application
     public static enum ApplicationStatus
     {
         NOT_COMPLETE,
@@ -41,7 +44,9 @@ public class LabelApplication implements IEntity{
         SENT_FOR_CORRECTIONS,
         UNKNOWN;
     }
-    
+
+    // An application could be revised, completely new, or
+    // in other states.
     public static enum ApplicationType
     {
         NEW,
@@ -49,11 +54,12 @@ public class LabelApplication implements IEntity{
         DISTINCT,
         RESUBMIT;
     }
-    
+
+    // The ID of this application in our database
     private long applicationId;
     
     
-    
+    // Information about the application
     private String representativeId;
     private Address applicantAddress;
     private Address mailingAddress;
@@ -351,7 +357,7 @@ public class LabelApplication implements IEntity{
     }
 
     public String getTBB_CT() {
-        return label.getTBB_CT();
+        return label.getTTB_CT();
     }
 
     public void setTBB_CT(String TBB_CT) {
@@ -359,13 +365,14 @@ public class LabelApplication implements IEntity{
     }
 
     public String getTBB_OR() {
-        return label.getTBB_OR();
+        return label.getTTB_OR();
     }
 
     public void setTBB_OR(String TBB_OR) {
         label.setTBB_OR(TBB_OR);
     }
-    
+
+    // Returns the Manufacturer (a user) who created this application.
     public Manufacturer getApplicant() {
         Manufacturer m = new Manufacturer();
         m.setPrimaryKeyValue(this.applicant);
@@ -381,6 +388,8 @@ public class LabelApplication implements IEntity{
         this.applicant = (String)applicant.getPrimaryKeyValue();
     }
 
+    // Returns the US employee who reviewed this application, and approved it
+    // or rejected it..
     public UsEmployee getReviewer() {
         UsEmployee e = new UsEmployee();
         e.setPrimaryKeyValue(this.reviewer);

@@ -2,6 +2,9 @@ package com.slackers.inc.Controllers.Filters;
 
 /**
  * Created by mattBoros on 4/16/17.
+ *
+ * Filter for searching for any beverages with
+ * alcohol contents in the range of lo to hi
  */
 public class AlcoholRange implements RangeFilter {
 

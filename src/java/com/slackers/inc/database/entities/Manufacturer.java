@@ -16,12 +16,18 @@ import java.util.logging.Logger;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents a manufacturer. Can create and submit applications.
  */
 public class Manufacturer extends User{
 
+    // NULL_MANUFACTURER is used when a placeholder is needed or a manufacturer
+    // is unknown.
     public static final Manufacturer NULL_MANUFACTURER = new Manufacturer("unknown","unknown","unknown","unknown");
-    
+
+    // The applications this manufacturer has
     private List<LabelApplication> applications;
+    // The template application for this manufacturer
     private LabelApplication templateApplication;
 
     public Manufacturer(String firstName, String lastName, String email, String password) {
@@ -71,6 +77,8 @@ public class Manufacturer extends User{
     @Override
     public void setEntityValues(Map<String, Object> values) {
         super.setEntityValues(values);
+        if (this.isBot()) // avoid large loads
+            return;
         if (values.containsKey("applications"))
         {
             List<LabelApplication> appList = LabelApplication.applicationListFromString((String)values.get("applications"));

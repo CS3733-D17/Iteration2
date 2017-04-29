@@ -4,7 +4,11 @@ package com.slackers.inc.Controllers.Filters;
 import com.slackers.inc.database.entities.Label;
 
 /**
- * Created by mattBoros on 4/16/2017.
+ * Created by mattBoros on 4/16/
+ *
+ * Used to search for any beverage with an ID
+ * in the range lo to hi, where lo and hi are
+ * held as attributes in this class.
  */
 public class IDRange implements RangeFilter {
 

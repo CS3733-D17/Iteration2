@@ -1,0 +1,87 @@
+.navbar-default {
+    filter: none;
+    border-bottom: 1px solid #178acc;
+}
+.navbar-default .badge {
+    background-color: #fff;
+    color: #2fa4e7;
+}
+.navbar-inverse {
+    filter: none;
+    border-bottom: 1px solid #022241;
+}
+.navbar-inverse .badge {
+    background-color: #fff;
+    color: #033c73;
+}
+.navbar .navbar-nav > li > a,
+.navbar-brand {
+    text-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+@media (max-width: 767px) {
+    .navbar .dropdown-header {
+        color: #fff;
+    }
+    .navbar .dropdown-menu a {
+        color: #fff;
+    }
+}
+.btn {
+    text-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+.btn .caret {
+    border-top-color: #fff;
+}
+.btn-default {
+    filter: none;
+    border-bottom: 1px solid #e6e6e6;
+}
+.btn-default:hover {
+    color: #555555;
+}
+.btn-default .caret {
+    border-top-color: #555555;
+}
+.btn-default {
+    filter: none;
+    border-bottom: 1px solid #e6e6e6;
+}
+.btn-primary {
+    filter: none;
+    border-bottom: 1px solid #178acc;
+}
+.btn-success {
+    filter: none;
+    border-bottom: 1px solid #59822c;
+}
+.btn-info {
+    filter: none;
+    border-bottom: 1px solid #022241;
+}
+.btn-warning {
+    filter: none;
+    border-bottom: 1px solid #aa4200;
+}
+.btn-danger {
+    filter: none;
+    border-bottom: 1px solid #9a161a;
+}
+.panel-primary .panel-heading,
+.panel-primary .panel-title,
+.panel-success .panel-heading,
+.panel-success .panel-title,
+.panel-warning .panel-heading,
+.panel-warning .panel-title,
+.panel-danger .panel-heading,
+.panel-danger .panel-title,
+.panel-info .panel-heading,
+.panel-info .panel-title {
+    color: #fff;
+}
+.panel-primary > .panel-heading .badge,
+.panel-success > .panel-heading .badge,
+.panel-warning > .panel-heading .badge,
+.panel-danger > .panel-heading .badge,
+.panel-info > .panel-heading .badge {
+    background-color: #fff;
+}

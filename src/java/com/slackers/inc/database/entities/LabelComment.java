@@ -22,14 +22,23 @@ import java.util.logging.Logger;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     When a US Employee looks over a label application,
+ *     they can send a comment back to the manufacturer.
+ *     That information is held in this class.
  */
 public class LabelComment implements IEntity{
-    
+
+    // Database table this class is held in.
     private static final String TABLE = "LABEL_COMMENTS";
 
+    // ID of this object in the database
     private long commentId;
+    // The comment given
     private String comment;
+    // The person who gave the comment
     private User commenter;
+    // The date the comment was given
     private Date date;
 
     public LabelComment(User submitter, String comment) {

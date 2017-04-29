@@ -6,6 +6,8 @@ import com.slackers.inc.database.entities.WineLabel;
 
 /**
  * Created by jestrada on 4/2/17.
+ *
+ * Used to find any beverage with an exact ph.
  */
 public class PHFilter implements ExactFilter {
 

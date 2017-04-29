@@ -5,8 +5,8 @@
  */
 
 /*!
- * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=4678ebcd19826cbcfbf31b284346b754)
- * Config saved to config.json and https://gist.github.com/4678ebcd19826cbcfbf31b284346b754
+ * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=c5ffdd6f77115e15f20d98254a826cd9)
+ * Config saved to config.json and https://gist.github.com/c5ffdd6f77115e15f20d98254a826cd9
  */
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
@@ -1386,7 +1386,7 @@ a.bg-primary:focus {
   background-color: #62686d;
 }
 .bg-success {
-  background-color: #00bc43;
+  background-color: #00bc8c;
 }
 a.bg-success:hover,
 a.bg-success:focus {
@@ -2373,7 +2373,7 @@ table th[class*="col-"] {
 .table > thead > tr.success > th,
 .table > tbody > tr.success > th,
 .table > tfoot > tr.success > th {
-  background-color: #00bc43;
+  background-color: #00bc8c;
 }
 .table-hover > tbody > tr > td.success:hover,
 .table-hover > tbody > tr > th.success:hover,
@@ -2577,14 +2577,14 @@ output {
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 .form-control::-moz-placeholder {
-  color: #7a8288;
+  color: #999999;
   opacity: 1;
 }
 .form-control:-ms-input-placeholder {
-  color: #7a8288;
+  color: #999999;
 }
 .form-control::-webkit-input-placeholder {
-  color: #7a8288;
+  color: #999999;
 }
 .form-control::-ms-expand {
   border: 0;
@@ -2593,7 +2593,7 @@ output {
 .form-control[disabled],
 .form-control[readonly],
 fieldset[disabled] .form-control {
-  background-color: #999999;
+  background-color: #3a3f44;
   opacity: 1;
 }
 .form-control[disabled],
@@ -2841,7 +2841,7 @@ select[multiple].input-lg {
 .has-success .input-group-addon {
   color: #ffffff;
   border-color: #ffffff;
-  background-color: #00bc43;
+  background-color: #00bc8c;
 }
 .has-success .form-control-feedback {
   color: #ffffff;
@@ -3178,8 +3178,8 @@ fieldset[disabled] .btn-primary.focus {
 }
 .btn-success {
   color: #ffffff;
-  background-color: #00bc43;
-  border-color: #00bc43;
+  background-color: #00bc8c;
+  border-color: #00bc8c;
 }
 .btn-success:focus,
 .btn-success.focus {
@@ -3226,11 +3226,11 @@ fieldset[disabled] .btn-success:focus,
 .btn-success.disabled.focus,
 .btn-success[disabled].focus,
 fieldset[disabled] .btn-success.focus {
-  background-color: #00bc43;
-  border-color: #00bc43;
+  background-color: #00bc8c;
+  border-color: #00bc8c;
 }
 .btn-success .badge {
-  color: #00bc43;
+  color: #00bc8c;
   background-color: #ffffff;
 }
 .btn-info {
@@ -4888,7 +4888,7 @@ a.label:focus {
   background-color: #62686d;
 }
 .label-success {
-  background-color: #00bc43;
+  background-color: #00bc8c;
 }
 .label-success[href]:hover,
 .label-success[href]:focus {
@@ -5062,7 +5062,7 @@ a.thumbnail.active {
   color: inherit;
 }
 .alert-success {
-  background-color: #00bc43;
+  background-color: #00bc8c;
   border-color: #00a35e;
   color: #ffffff;
 }
@@ -5168,7 +5168,7 @@ a.thumbnail.active {
   animation: progress-bar-stripes 2s linear infinite;
 }
 .progress-bar-success {
-  background-color: #00bc43;
+  background-color: #00bc8c;
 }
 .progress-striped .progress-bar-success {
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
@@ -5331,7 +5331,7 @@ button.list-group-item {
 }
 .list-group-item-success {
   color: #ffffff;
-  background-color: #00bc43;
+  background-color: #00bc8c;
 }
 a.list-group-item-success,
 button.list-group-item-success {
@@ -5729,14 +5729,14 @@ button.list-group-item-danger.active:focus {
 }
 .panel-success > .panel-heading {
   color: #ffffff;
-  background-color: #00bc43;
+  background-color: #00bc8c;
   border-color: rgba(0, 0, 0, 0.6);
 }
 .panel-success > .panel-heading + .panel-collapse > .panel-body {
   border-top-color: rgba(0, 0, 0, 0.6);
 }
 .panel-success > .panel-heading .badge {
-  color: #00bc43;
+  color: #00bc8c;
   background-color: #ffffff;
 }
 .panel-success > .panel-footer + .panel-collapse > .panel-body {

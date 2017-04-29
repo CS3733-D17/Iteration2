@@ -1,7 +1,7 @@
 <style>
-	.label { font-size: 10px; } 
-	.line { fill: none; stroke-width: 1.4px; stroke: #74736c; font-size: 15px;}
-	.area { fill: #cec6b9;
+	.label { font-size: 10px; fill:white; }
+	.line { fill: none; stroke-width: 1.4px; stroke: #ffffff; font-size: 15px; color:white;}
+	.area { fill: #ffffff;
 			opacity: 0.5;}
 	.background {fill: none;}
 	.chart {
@@ -15,18 +15,19 @@
 	.yaxis path,
 	.yaxis line {
 		fill:none;
-		stroke: #000;
+		stroke: #ffffff;
 		opacity: 0.5;
 		shape-rendering: crispEdges;
 	}
 	.xaxis text,
-	.yaxis text { font-size: 12px;}
-	.tick line {stroke-dasharray: 3,3; stroke: #74736c; }
-	svg { border: solid 0px #333; margin: 5px;}
+	.yaxis text { font-size: 12px; fill: white;}
+	.tick line {stroke-dasharray: 3,3; stroke: #ffffff; }
+        
+        .title{fill:white;}
+	svg { border: solid 0px #ffffff; margin: 5px;}
 </style>
 
-<head>
-</head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -137,9 +138,10 @@
 			.attr("class", "title")
 			.attr("text-anchor","middle")
 			.attr("y", height)
-			.attr("dy", margin.bot /2  + 20)
+			.attr("dy", margin.bot /2  + 25)
 			.attr("x", width /2)
-			.text(function(d) { return d.name;});
+			.text(function(d) { return d.name;});                
+                        
 		
 		g.append("g")
 			.attr("class", "yaxis")
@@ -150,10 +152,11 @@
 			.call(xAxis);
 		svg.append("text")
 			.attr("text-anchor", "middle")
-			.attr("transform", "translate(" +margin.left/2  + "," + height/2+")rotate(-90)")
+			.attr("transform", "translate(" +margin.left/3  + "," + height/2+")rotate(-90)")
 			.style('font-size', '12px')
+                        .style('fill', 'white')
 			.text("Forms Complete");
 		svg.selectAll(".xaxis text")
-			.attr("transform", "translate(-10,10)rotate(-45)");
+			.attr("transform", "translate(-10,15)rotate(-45)");
 	console.log(data);
 </script>

@@ -47,7 +47,16 @@ public class FormCreate extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String form = WebComponentProvider.loadPartialPage(this, "submit-label.html");
-            String formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            String formTemplate;
+            if (WebComponentProvider.getCookieValue(request, "SSVIEW_MODE")!=null && WebComponentProvider.getCookieValue(request, "SSVIEW_MODE").equalsIgnoreCase("legacy"))
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form-partial-legacy.html"); 
+            }
+            else
+            {
+                formTemplate = WebComponentProvider.loadPartialPage(this, "label-form.html");
+            }
+             
             formTemplate = formTemplate.replace("##LABEL_IMAGE_PATH","");
             IPageFrame pg = WebComponentProvider.getCorrectFrame(request, "Create Label Application");
             pg.setBody(form.replace("##FORM_CONTENT", formTemplate));
@@ -68,6 +77,7 @@ public class FormCreate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            System.out.println("Do something");
             LabelApplicationController appControl = new LabelApplicationController();
             appControl.createApplicationFromRequest(this.getServletContext(), request);
             appControl.writeApplicationToCookies(response);
@@ -98,6 +108,9 @@ public class FormCreate extends HttpServlet {
             }
         } catch (SQLException ex) {
             Logger.getLogger(FormCreate.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e){
+            System.out.println("It broke");
+            e.printStackTrace();
         }
     }
 

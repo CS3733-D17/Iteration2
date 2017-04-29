@@ -5,6 +5,8 @@ import com.slackers.inc.database.entities.WineLabel;
 
 /**
  * Created by Matt on 4/2/2017.
+ *
+ * Used to find beverages with a particular vintage year
  */
 public class VintageFilter implements ExactFilter {
 

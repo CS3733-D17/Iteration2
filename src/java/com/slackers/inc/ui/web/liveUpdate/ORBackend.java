@@ -3,21 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.slackers.inc.ui.web;
+package com.slackers.inc.ui.web.liveUpdate;
 
-import com.slackers.inc.Controllers.Filters.AcceptedFilter;
-import com.slackers.inc.Controllers.Filters.BrandNameRange;
-import com.slackers.inc.Controllers.Filters.Filter;
-import com.slackers.inc.database.DerbyConnection;
-import com.slackers.inc.database.entities.Label;
+import com.slackers.inc.Lists.CT;
+import com.slackers.inc.Lists.CTList;
+import com.slackers.inc.Lists.Origin;
+import com.slackers.inc.Lists.OriginList;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -32,8 +28,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
  */
-@WebServlet(name = "AutocompleteServlet", urlPatterns = {"/search/autocomplete"})
-public class SearchBackend extends HttpServlet {
+@WebServlet(name = "ORBACKServlet", urlPatterns = {"/search/OR"})
+public class ORBackend extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,38 +42,33 @@ public class SearchBackend extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("LANDING");
         response.setContentType("text/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             
-            Label l = new Label();
-            
-            String brand = request.getParameter("brand") != null ? request.getParameter("brand") : "";
-            
-            List<Filter> filters = new LinkedList<>();;
-            filters.add(new BrandNameRange(brand));
-            filters.add(new AcceptedFilter(true));
-            List<Label> labels = null;
-            try {
-                labels = DerbyConnection.getInstance().search(l, filters, 10, 0);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                out.println("");
-                return;
-            }
-            
-            if (labels==null)
-            {
-                out.println(Json.createArrayBuilder().build().toString());
-                return;
-            }
-            List<String> searches = labels.stream().map((m)->m.getBrandName()).collect(Collectors.toList());
-            Collections.sort(searches);
-            
+            List<Origin> list = new LinkedList<>();
+            if ((request.getParameter("code") == null || request.getParameter("code").equals(""))
+                    && (request.getParameter("desc") == null || request.getParameter("desc").equals(""))) {
+                list.addAll(OriginList.getInstance().getList());
+            } else {
+                if (request.getParameter("code") != null) {
+                    list.addAll(OriginList.getInstance().getList().stream().filter((e) -> e.getOC().startsWith(request.getParameter("code"))).collect(Collectors.toList()));
+                }
+                if (request.getParameter("desc") != null) {
+                    list.addAll(OriginList.getInstance().getList().stream().filter((e) -> e.getDescription().startsWith(request.getParameter("desc"))).collect(Collectors.toList()));
+                }
+            }   
+            List<String> searches = list.stream().map((o)->o.getOC()+":::"+o.getDescription()).collect(Collectors.toList());
+            Collections.sort(searches);            
             JsonArrayBuilder array = Json.createArrayBuilder();
             for (String s : searches)
             {
-                array = array.add(s);
+                String[] split = s.split(":::");
+                JsonObjectBuilder var = Json.createObjectBuilder().add("code", split[0]);
+                if (split.length==2 && split[1]!=null)
+                {
+                    var.add("desc", split[1]);
+                }
+                array = array.add(var);
             }
             out.println(array.build().toString());
         }

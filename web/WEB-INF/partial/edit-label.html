@@ -1,5 +1,23 @@
 <div class="container">
     <div class="well">
+        <div class="row">
+            <div class="col-xs-6">
+            </div>
+            <div class="col-xs-6" align="right">
+                <div class="dropdown" style="float: right;">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Change Form View
+                        <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button class="btn btn-warning" type="button" style="width:100%;" data-toggle="dropdown" onClick="setCookie('SSVIEW_MODE', 'legacy', 5); location.reload();" >Legacy View</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-warning" type="button" style="width:100%;" data-toggle="dropdown" onClick="setCookie('SSVIEW_MODE', 'modern', 5); location.reload();">Modern View</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <form action="/SuperSlackers/form/edit" method="post">
             <fieldset id="appForm" disabled>
                 ##FORM_CONTENT
@@ -67,13 +85,67 @@
                     <input class="tag-new-label" type="checkbox" name="rev12" id="rev12" onclick="handleRevisionDisplays()"/>
                     <label for="rev12">Add, change or delete an optional statement of alcohol content.</label>
                 </div>
+
+                <div class="funkyradio-success tag-distilled">
+                    <input class="tag-new-label tag-general" type="checkbox" name="rev13" id="rev13" onclick="handleRevisionDisplays()"/>
+                    <label for="rev13">Change the statement of percentage of neutral spirits and the name of the commodity from which a distilled spirit is produced.</label>
+                </div>
+                <div class="funkyradio-success tag-distilled">
+                    <input class="tag-new-label" type="checkbox" name="rev14" id="rev14" onclick="handleRevisionDisplays()"/>
+                    <label for="rev14">Add, change or delete the age statement for distilled spirits.</label>
+                </div>
+                <div class="funkyradio-success tag-beer tag-wine">
+                    <input class="tag-new-label" type="checkbox" name="rev15" id="rev15" onclick="handleRevisionDisplays()"/>
+                    <label for="rev15">Delete or change an optional age statement.</label>
+                </div>
+                <div class="funkyradio-success tag-beer">
+                    <input class="tag-new-label" type="checkbox" name="rev16" id="rev16" onclick="handleRevisionDisplays()"/>
+                    <label for="rev16">Add change or delete statements to meet requirements for the state in which the beverage will be sold.</label>
+                </div>
+                <div class="funkyradio-success">
+                    <input class="tag-new-label tag-general" type="checkbox" name="rev17" id="rev17" onclick="handleRevisionDisplays()"/>
+                    <label for="rev17">Add a new Serving Facts statement or change the numerical values for nutritional information already on the label.</label>
+                </div>
+                <div class="funkyradio-success">
+                    <input class="tag-new-label" type="checkbox" name="rev18" id="rev18" onclick="handleRevisionDisplays()"/>
+                    <label for="rev18">Add, change or delete bottling date, production date or freshness information.</label>
+                </div>
+
+                <div class="funkyradio-success">
+                    <input class="tag-new-label tag-brandName" type="checkbox" name="rev19" id="rev19" onclick="handleRevisionDisplays()"/>
+                    <label for="rev19">Change the name or trade name to reflect a different name already approved for use by the applicant.</label>
+                </div>
+                <div class="funkyradio-success">
+                    <input class="tag-new-label tag-address" type="checkbox" name="rev20" id="rev20" onclick="handleRevisionDisplays()"/>
+                    <label for="rev20">Add, change or delete the name or address of the foreign producer, bottler or shipper.</label>
+                </div>
             </div>
-            
+
             <br><br>
+            <div id="tag-address-div">
+                <div class="form-group">
+                    <label>Application Address</label>
+                    <textarea id="address-new" name="address-new" class="form-control tag-address-div-input" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Mailing Address</label>
+                    <textarea id="mailAddress-new" name="mailAddress-new" class="form-control tag-address-div-input" rows="3"></textarea>
+                </div>
+            </div>
             <div id="tag-alcohol-div">
                 <div class="form-group">
                     <label>Alcohol Content</label>
-                    <input id="alcoholContent-new" name="alcoholContent-new" class="form-control tag-alcohol-div-input" placeholder="0-100%" type="text" required>
+                    <input id="alcoholContent-new" name="alcoholContent-new" class="form-control tag-alcohol-div-input" placeholder="0-100%" type="text">
+                </div>
+            </div>
+            <div id="tag-brandName-div">
+                <div class="form-group">
+                    <label>Brand Name</label>
+                    <input id="brandName-new" name="brandName-new" class="form-control tag-brandName-div-input" type="text">
+                </div>
+                <div class="form-group">
+                    <label>Fanciful Name</label>
+                    <input id="fancifulName-new" name="fancifulName-new" class="form-control" type="text">
                 </div>
             </div>
             <div id="tag-wine-vintage-div">
@@ -94,8 +166,8 @@
                     <input id="grapeVarietal-new" name="grapeVarietal-new" class="form-control tag-wine-blend-div-input" placeholder="Grape Varietal" type="text" required>
                 </div>
                 <div class="form-group">
-                    <label>Wine Appelation</label>
-                    <input id="wineAppelation-new" name="wineAppelation-new" class="form-control tag-wine-blend-div-input" placeholder="Wine Appelation" type="text" required>
+                    <label>Wine Appellation</label>
+                    <input id="wineAppelation-new" name="wineAppelation-new" class="form-control tag-wine-blend-div-input" placeholder="Wine Appelation" type="text">
                 </div>
             </div>
             <div id="tag-formula-div">
@@ -116,7 +188,7 @@
             </div>
             <button id="submitRevisions" class="btn btn-success" style="width:100%; margin-top: 30px;">Submit Revisions</button>
         </form>
-        
+
     </div>
     <script>
         fillForm();

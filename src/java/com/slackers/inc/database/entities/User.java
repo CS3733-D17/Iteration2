@@ -12,13 +12,21 @@ import java.util.*;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents a user in our system. Holds fields for email, password, the user's type,
+ *     and the user's first and last name. The user type is an enum, telling us if the user is a
+ *     manufacturer, US employee, COLA user, admin, or something else.
  */
 public class User implements IEntity{
-    
+
+    // NULL_USER is used when a placeholder is needed or a user
+    // is unknown.
     public static final User NULL_USER = new User("unknown","unknown","unknown","unknown");
-    
+
+    // The table in our database for this class
     private static final String TABLE = "USERS";
-    
+
+    // What type of user is this?
     public static enum UserType
     {
         UNKNOWN,
@@ -27,21 +35,26 @@ public class User implements IEntity{
         COLA_USER,
         ADMIN;
     }
-    
+
+    // info about the user
     private String password;
     private String email;
     private UserType userType;
     private String firstName;
     private String lastName;
+    private String phone;
     private boolean isUpdate;
+    private boolean isBot;
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
+        this.phone = "";
         this.userType = UserType.UNKNOWN;
         this.isUpdate = false;
+        this.isBot = false;
     }
     
     public User(String email) {
@@ -50,6 +63,25 @@ public class User implements IEntity{
 
     public User() {
         this("", "", "", "");
+    }
+
+    public User setBot()
+    {
+        this.isBot = true;
+        return this;
+    }
+    
+    public boolean isBot()
+    {
+        return isBot;
+    }
+    
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
     
     public String getFirstName() {
@@ -103,7 +135,9 @@ public class User implements IEntity{
         temp.put("firstName", this.firstName);
         temp.put("lastName", this.lastName);
         temp.put("password", this.password);
+        temp.put("phone", this.phone);
         temp.put("email", this.email);
+        temp.put("isBot", this.isBot);
         temp.put("userType", this.userType.name());
         return temp;
     }
@@ -114,6 +148,8 @@ public class User implements IEntity{
         temp.put("firstName", this.firstName);
         temp.put("lastName", this.lastName);
         temp.put("password", this.password);
+        temp.put("phone", this.phone);
+        temp.put("isBot", this.isBot);
         if (!this.isUpdate)
             temp.put("email", this.email);
         temp.put("userType", this.userType.name());
@@ -132,6 +168,10 @@ public class User implements IEntity{
             this.email = (String)values.get("email");
         if (values.containsKey("userType"))
             this.userType = UserType.valueOf((String)values.get("userType"));
+        if (values.containsKey("isBot"))
+            this.isBot = (Boolean)values.get("isBot");
+        if (values.containsKey("phone"))
+            this.phone = (String)values.get("phone");
     }
 
     @Override
@@ -145,6 +185,8 @@ public class User implements IEntity{
         pairs.put("previousApplications", String.class);
         pairs.put("templateApplication", Long.class);
         pairs.put("userType", String.class);
+        pairs.put("phone", String.class);
+        pairs.put("isBot", Boolean.class);
         return pairs;
     }
 
@@ -175,6 +217,8 @@ public class User implements IEntity{
         cols.add("previousApplications long varchar");
         cols.add("templateApplication varchar(8192)");
         cols.add("userType varchar(512)");
+        cols.add("phone varchar(32)");
+        cols.add("isBot boolean");
         return cols;
     }
 

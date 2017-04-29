@@ -19,17 +19,24 @@ import java.util.logging.Logger;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents a label. Classes such as BeerLabel, DistilledLabel
+ *     extend this class to represent their respective beverages.
  */
 public class Label implements IEntity{
-    
+
+    // Label class is held in the "LABELS" table in our database
     private static final String TABLE = "LABELS";
-    
+
+    // Where this beverage came from. Domestic, imported or unknown.
     public static enum BeverageSource
     {
         DOMESTIC,
         IMPORTED,
         UNKNOWN;
-    }    
+    }
+
+    // What type of beverage this is.
     public static enum BeverageType
     {
         WINE,
@@ -37,11 +44,14 @@ public class Label implements IEntity{
         DISTILLED,
         UNKNOWN;
     }
-    
+
+    // The ID of this label in the database.
     private long labelId;
     private double alcoholContent;
+    // is the label approved?
     private boolean isAccepted;
-    
+
+    // All of this is information about the label.
     private String representativeIdNumber;
     private String plantNumber;
     private BeverageSource productSource;
@@ -55,7 +65,8 @@ public class Label implements IEntity{
     private String TBB_OR;
     private String labelImageType;
     private byte[] labelImage;
-    
+
+    // Contains the information about the label approval.
     private ApplicationApproval approval;
     
     private boolean pullImageOut;
@@ -238,11 +249,10 @@ public class Label implements IEntity{
         values.put("fancifulName", this.fancifulName);
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
-        
+        values.put("labelImageType", this.labelImageType);
         if (this.labelImage!=null)
         {
-            values.put("labelImage", this.labelImage);
-            values.put("labelImageType", this.labelImageType);
+            values.put("labelImage", this.labelImage);            
         }
         
         values.putAll(this.approval.getEntityValues()); // approval
@@ -267,10 +277,10 @@ public class Label implements IEntity{
         values.put("formula", this.formula);
         values.put("generalInfo", this.generalInfo);
         
+        values.put("labelImageType", this.labelImageType);
         if (this.labelImage!=null)
         {
             values.put("labelImage", this.labelImage);
-            values.put("labelImageType", this.labelImageType);
         }
         values.putAll(this.approval.getEntityValues()); // approval
         return values;
@@ -367,10 +377,10 @@ public class Label implements IEntity{
         pairs.put("TBB_CT", String.class); 
         pairs.put("TBB_OR", String.class);  
         pairs.put("generalInfo", String.class);
+        pairs.put("labelImageType", String.class);
         if (this.pullImageOut)
         {
             pairs.put("labelImage", byte[].class);
-            pairs.put("labelImageType", String.class);
         }
         pairs.putAll(this.approval.getEntityNameTypePairs());
         return pairs;
@@ -430,7 +440,7 @@ public class Label implements IEntity{
         return "Label{" + "labelId=" + labelId + ", alcoholContent=" + alcoholContent + ", isAccepted=" + isAccepted + ", representativeIdNumber=" + representativeIdNumber + ", plantNumber=" + plantNumber + ", productSource=" + productSource + ", productType=" + productType + ", brandName=" + brandName + ", general=" + generalInfo+ ", labelimage=" + labelImageType +": "+ (labelImage!=null) + '}';
     }
     
-    public String getTBB_CT() {
+    public String getTTB_CT() {
         return TBB_CT;
     }
 
@@ -438,7 +448,7 @@ public class Label implements IEntity{
         this.TBB_CT = TBB_CT;
     }
 
-    public String getTBB_OR() {
+    public String getTTB_OR() {
         return TBB_OR;
     }
 

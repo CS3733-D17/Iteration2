@@ -10,6 +10,9 @@ import java.io.Serializable;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Holds the address of any user. Contains information about the user's
+ *     line 1, line 2, city, state, zip code, and country.
  */
 public class Address implements Serializable{
     private String line1;
@@ -85,7 +88,7 @@ public class Address implements Serializable{
         if (this.zipCode!=-1)
             return line1 + "\n" + line2 + "\n" + city + " " + state + ", " + String.format("%05d", zipCode);
         else
-            return "";
+            return "Unknown";
     }
     
     public static Address tryParse(String addressBox)
@@ -93,7 +96,6 @@ public class Address implements Serializable{
         try
         {
             String[] lines = addressBox.split("\n");
-            System.out.println(lines.length);
             if (lines.length!=3)
                 return null;
 

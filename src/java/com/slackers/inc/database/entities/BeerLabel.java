@@ -8,6 +8,8 @@ package com.slackers.inc.database.entities;
 /**
  *
  * @author John Stegeman <j.stegeman@labyrinth-tech.com>
+ *
+ *     Represents label for a beer.
  */
 public class BeerLabel extends Label{
 

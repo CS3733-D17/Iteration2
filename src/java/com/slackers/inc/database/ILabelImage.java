@@ -7,8 +7,11 @@ package com.slackers.inc.database;
 
 /**
  *
- * @author Fabio Borges 
- * 
+ * @author Fabio Borges
+ *
+ * Base class used for the proxy design pattern
+ * for our images. Allows for efficient loading
+ * of images from the database.
  */
 public interface ILabelImage
 {
