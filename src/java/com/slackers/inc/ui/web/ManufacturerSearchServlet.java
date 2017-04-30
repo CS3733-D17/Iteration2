@@ -22,9 +22,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -180,6 +185,34 @@ public class ManufacturerSearchServlet extends HttpServlet {
                                     break;
                             }
                         }
+                        break;
+                        
+                    case "date":
+                        if (request.getParameter("date").equals("between")) {
+                            if (!(request.getParameter("date_low").equals("")) && !(request.getParameter("date_hi").equals(""))) {
+                                String lo = request.getParameter("date_low");
+                                String hi = request.getParameter("date_hi");
+                                SimpleDateFormat ft = new SimpleDateFormat("MM/dd/yyyy");
+                                Date low = null;
+                                try {
+                                    low = ft.parse(lo);
+                                } catch (ParseException ex) {
+                                    System.out.println("low dont work");
+                                    Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                Date high = null;
+                                try {
+                                    high = ft.parse(hi);
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                
+                                f.add(new DateRange(low, high ));
+                            }
+                        } else if (!(request.getParameter("date_low") == null || request.getParameter("date_low").equals(""))) {
+                            f.add(new OriginFilter(request.getParameter("origin_low")));
+                        }
+                        
                         break;
 
                     case "type":
