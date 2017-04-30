@@ -44,12 +44,6 @@ public class CsvAppImportController implements ApplicationConsumer {
         try {
             if (app.getStatus()==ApplicationStatus.APPROVED)
             {
-                if (app.getLabel().getLabelImageType().equals("image/ttbId"))
-                {
-                    System.out.println("Approving image");
-                    System.out.println(app.getLabel().getBrandName());
-                    System.out.println(app.getLabel().getFancifulName());
-                }
                 Date temp = new Date(app.getApplicationDate().getTime());
                 controller.setApplication(app);
                 controller.submitApplication(importer.getSubmitter());

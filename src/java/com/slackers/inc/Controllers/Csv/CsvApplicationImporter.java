@@ -327,7 +327,6 @@ public class CsvApplicationImporter implements Runnable {
             this.application.addApplicationType(LabelApplication.ApplicationType.NEW, null);
             if (wasElectronic)
             {
-                System.out.println("Electronic");
                 this.application.getLabel().setLabelImageType("image/ttbId");
                 this.application.getLabel().setLabelImage(ttbId.getBytes(StandardCharsets.US_ASCII));
             }
@@ -343,6 +342,7 @@ public class CsvApplicationImporter implements Runnable {
 
     private String sanitizeLine(String line) {
         line = line.replaceAll("\"+", "\"");
+        line = line.replaceAll("[\\(\\)\\*\\^\\$\\[\\]\\+\\?\\{\\}\\\\]", "");
         Matcher m = ent.matcher(line);
         while (m.find())
         {
