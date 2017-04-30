@@ -23,6 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /*
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
  */
 public class CsvApplicationImporter implements Runnable {
     private static final String MEM_FILE = "importer.mem";
+    private static final Pattern ent = Pattern.compile("\\\"(.*?)\\\"");
     private static final SimpleDateFormat DATE_PARSER = new SimpleDateFormat("MM/dd/yyyy");
     private static final UsEmployee EMPLOYEE_BOT = (UsEmployee) new UsEmployee("Importer", "Bot", "agent-bot@superslackers.com", "agent-bot").setBot();
     private static final Manufacturer MANUFACTURER_BOT = (Manufacturer) new Manufacturer("Submitter", "Bot", "submitter-bot@superslackers.com", "submitter-bot").setBot();
@@ -102,7 +105,6 @@ public class CsvApplicationImporter implements Runnable {
         } catch (IOException ex) {
             Logger.getLogger(CsvApplicationImporter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(String.join("\n", this.files));
     }
 
     public void setStartIndex(int index) {
@@ -125,7 +127,11 @@ public class CsvApplicationImporter implements Runnable {
         String nextName = this.files.get(0);
         currentFile = nextName;
         file = new BufferedReader(new FileReader(nextName));
-        this.totalLines = Files.lines(Paths.get(nextName)).count();
+        try
+        {
+            this.totalLines = Files.lines(Paths.get(nextName)).count();
+        }
+        catch (Exception e){this.totalLines = 500000;}
         String header = file.readLine();
         headers = header.split(",");
         while (this.lineNumber < this.targetStart) {
@@ -199,7 +205,6 @@ public class CsvApplicationImporter implements Runnable {
             this.currentFile = null;
             return null;
         }
-
         line = this.sanitizeLine(line);
         lineNumber++;
 
@@ -221,14 +226,14 @@ public class CsvApplicationImporter implements Runnable {
                 i++) {
 
             String hName = headers[i].toUpperCase();
-
             if (linArr[i].equals(".")) {
                 linArr[i] = "";
             }
+            linArr[i] = linArr[i].replaceAll("@@@@", ",");
             if (hName.contains("REP_ID")) {
                 this.application.setRepresentativeId(linArr[i]);
             } else if (hName.contains("CFM_APPL_ID")) {
-                ttbId = "0" + linArr[i];
+                ttbId = linArr[i];
             } else if (hName.contains("CLASS_TYPE_CODE")) {
                 this.application.setTBB_CT(linArr[i]);
             } else if (hName.contains("ORIGIN_CODE")) {
@@ -270,9 +275,8 @@ public class CsvApplicationImporter implements Runnable {
             } else if (hName.contains("RECEIVED_CODE")) {
                 if (linArr[i].equalsIgnoreCase("Electronic Submission"))
                 {
-                    wasElectronic = true;
+                    wasElectronic = true;                    
                 }
-                this.application.getApplicantAddress().setState(linArr[i]);
             } else if (hName.contains("PERMIT_ZIP_ADDR")) {
                 if (linArr[i].length() > 0) {
                     try {
@@ -323,6 +327,7 @@ public class CsvApplicationImporter implements Runnable {
             this.application.addApplicationType(LabelApplication.ApplicationType.NEW, null);
             if (wasElectronic)
             {
+                System.out.println("Electronic");
                 this.application.getLabel().setLabelImageType("image/ttbId");
                 this.application.getLabel().setLabelImage(ttbId.getBytes(StandardCharsets.US_ASCII));
             }
@@ -338,6 +343,12 @@ public class CsvApplicationImporter implements Runnable {
 
     private String sanitizeLine(String line) {
         line = line.replaceAll("\"+", "\"");
+        Matcher m = ent.matcher(line);
+        while (m.find())
+        {
+            String res = m.group(1);
+            line = line.replaceAll(res, res.replace(",", "@@@@"));
+        }
         line = line.replaceAll("\\\"([^,]+?)(,?)([^,]+?)\\\"", "$1$3");
         line = line.replaceAll("\"", "").replaceAll("\\(", "").replaceAll("\\)", "");
         return line;
@@ -391,7 +402,6 @@ public class CsvApplicationImporter implements Runnable {
             while (this.initNext() && this.shouldRun) {
                 try {
                     while (this.shouldRun && this.doEntry() != null);
-
                 } catch (IOException ex) {
                     Logger.getLogger(CsvApplicationImporter.class
                             .getName()).log(Level.SEVERE, null, ex);
