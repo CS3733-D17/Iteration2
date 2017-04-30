@@ -70,6 +70,11 @@ public class SearchController {
             return db.search(target, combined, RESULTS_PER_PAGE, page*RESULTS_PER_PAGE, true, excuded);
         }
     }
+    
+    public int runSearchCount(Label target, List<List<Filter>> combined, String... excuded) throws SQLException 
+    {
+        return db.search_ResultCount(target, combined, true);
+    }
 
 
 }

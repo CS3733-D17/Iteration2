@@ -892,6 +892,63 @@ public class DerbyConnection {
         results.close();
         return entites;
     }
+    
+    public <T extends IEntity> int search_ResultCount(T entity, List<Filter> filters) throws SQLException {
+        String stmt;
+        List<String> statements = new LinkedList<>();
+        List<Object> vals = new LinkedList<>();
+        if (!filters.isEmpty()) {
+            for (Filter f : filters) {
+                if (f instanceof ExactFilter) {
+                    statements.add(f.getColumn() + " =(?)");
+                    vals.add(((ExactFilter) f).getValue());
+                }
+                if (f instanceof RangeFilter) {
+                    statements.add(f.getColumn() + " between (?) and (?)");
+                    vals.add(((RangeFilter) f).getValueMin());
+                    vals.add(((RangeFilter) f).getValueMax());
+                }
+            }
+            stmt = String.format("SELECT COUNT(*) AS results_count FROM %s WHERE %s", entity.getTableName(), String.join(" and ", statements));
+        } else {
+            stmt = String.format("SELECT COUNT(*) AS results_count FROM %s", entity.getTableName());
+        }
+        PreparedStatement call = con.prepareStatement(stmt);
+        int i = 1;
+        for (Object o : vals) {
+            DerbyConnection.setStatementValue(con, call, i, o);
+            i++;
+        }
+        ResultSet results = call.executeQuery();
+
+        int c = 0;
+        Map<String, Object> valMap = new HashMap<>();
+        List<T> entites = new LinkedList<>();
+        if (results.isClosed())
+            return 0;
+        int result = 0;
+        while (results.next()) {
+            result = results.getInt("results_count");
+            break;
+        }
+        results.close();
+        return result;
+    }
+    
+    public <T extends IEntity> int search_ResultCount(T entity, List<List<Filter>> filtersList, boolean union) throws SQLException {
+        if (filtersList.isEmpty()) {
+            return 0;
+        }
+
+        int results = 0;
+
+        List<Object> vals = new LinkedList<>();
+        List<String> statementList = new LinkedList<>();
+        for (List<Filter> filters : filtersList) {
+            results+=this.search_ResultCount(entity, filters);
+        }
+        return results;
+    }
 
     
     /**

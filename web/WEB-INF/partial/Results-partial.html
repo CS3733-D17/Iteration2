@@ -122,6 +122,43 @@
                                             <input type="text" name="alcohol_hi" id="alcohol_hi" placeholder="Values between 0.0 - 100.0%" class="form-control as-variable-input " value="" style="display: none;">
                                         </div>
                                     </div>
+                                    <div class="form-group">
+
+                                        <br>
+                                        <label>Date</label>
+                                        <select id="date" name="date" onchange="dateFunction()" >
+                                            <option value="equal" >is equal to</option>
+                                            <option value="between" selected>is between</option>
+                                        </select>
+                                        <div class='row'>
+                                            <div class="col-xs-5">
+                                                <div class='input-group date' id='datetimepicker1'>
+                                                    <input type='date' class="form-control" name = "date_low" id = "date_low"/>
+                                                    <span class="input-group-addon"   >
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-2" align="center" style="vertical-align: middle;">
+                                                <span id="dateAnd" style="display: none; vertical-align: middle;" >and</span>
+                                            </div>
+                                            <div class="col-xs-5">
+                                                <div class='input-group date' id='datetimepicker2'>
+                                                    <input type='date' class="form-control" name="date_hi" id ="date_hi"/>
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="funkyradio">
+                                        <div class="funkyradio-success">                                            
+                                            <input type='checkbox' name="FILTER_IMAGES" id="image-only">
+                                            <label for="image-only" style="background-color: lightgray; color: black;">Only show labels with images</label>
+                                        </div>
+                                    </div>
 
 
 
@@ -207,6 +244,13 @@
 
     </div>
     <br>
+    <div class="row">
+        <div class="col-sm-9 col-xs-3">
+        </div>
+        <div class="col-sm-3 col-xs-9">
+            ##RESULT_STATS
+        </div>
+    </div>
     <ul class="pager">
         <li class="previous"><a href="##PREV">Previous</a></li>
         <li>##PAGE</li>
@@ -224,6 +268,8 @@
 </div>
 <script>
 
+
+    //$("#datetimepicker1").datepicker({format: 'yyyy-mm-dd'});
 
 
     function alcoholFunction() {
@@ -260,6 +306,20 @@
         } else {
             document.getElementById("phAnd").style.display = "inline-block";
             document.getElementById("ph_hi").style.display = "inline-block";
+
+        }
+    }
+
+    function dateFunction() {
+        if (document.getElementById("date").value === "equal") {
+            console.log(document.getElementById("date").value);
+            document.getElementById("dateAnd").style.display = "none";
+            document.getElementById("date_hi").style.display = "none";
+            document.getElementById("date_hi").value = "";
+
+        } else {
+            document.getElementById("dateAnd").style.display = "inline-block";
+            document.getElementById("date_hi").style.display = "inline-block";
 
         }
     }
