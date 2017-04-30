@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.Controllers.Filters;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -32,7 +32,7 @@ public class DateRange implements RangeFilter{
 
     @Override
     public String getColumn() {
-        return "date";
+        return "approvalDate";
     }
     
 }

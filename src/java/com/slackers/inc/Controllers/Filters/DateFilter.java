@@ -5,7 +5,7 @@
  */
 package com.slackers.inc.Controllers.Filters;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -14,6 +14,10 @@ import java.util.Date;
 public class DateFilter implements ExactFilter {
     
     Date date;
+    
+    public DateFilter(Date date){
+        this.date = date;
+    }
 
     @Override
     public Object getValue() {
@@ -22,7 +26,7 @@ public class DateFilter implements ExactFilter {
 
     @Override
     public String getColumn() {
-        return "date";
+        return "approvalDate";
     }
     
 }

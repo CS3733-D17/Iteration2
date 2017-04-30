@@ -24,7 +24,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -192,25 +192,44 @@ public class ManufacturerSearchServlet extends HttpServlet {
                             if (!(request.getParameter("date_low").equals("")) && !(request.getParameter("date_hi").equals(""))) {
                                 String lo = request.getParameter("date_low");
                                 String hi = request.getParameter("date_hi");
-                                SimpleDateFormat ft = new SimpleDateFormat("MM/dd/yyyy");
-                                Date low = null;
+                                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+                                //java.util.Date date = sdf1.parse(startDate);
+                                //java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());  
+
+                                java.util.Date low = null;
+                                java.sql.Date loDate = null;
                                 try {
                                     low = ft.parse(lo);
+                                    loDate = new java.sql.Date(low.getTime()); 
                                 } catch (ParseException ex) {
                                     System.out.println("low dont work");
                                     Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                Date high = null;
+                                java.util.Date high = null;
+                                java.sql.Date hiDate = null;
                                 try {
                                     high = ft.parse(hi);
+                                    hiDate = new java.sql.Date(high.getTime()); 
                                 } catch (ParseException ex) {
                                     Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 
-                                f.add(new DateRange(low, high ));
+                                f.add(new DateRange(loDate, hiDate ));
                             }
                         } else if (!(request.getParameter("date_low") == null || request.getParameter("date_low").equals(""))) {
-                            f.add(new OriginFilter(request.getParameter("origin_low")));
+                            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+                            String lo = request.getParameter("date_low");
+                            System.out.println(lo);
+                            java.util.Date low = null;
+                            java.sql.Date loDate = null;
+                            try {
+                                low = ft.parse(lo);
+                                loDate = new java.sql.Date(low.getTime()); 
+                            } catch (ParseException ex) {
+                                System.out.println("low dont work");
+                                Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            f.add(new DateFilter(loDate));
                         }
                         
                         break;
