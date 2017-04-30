@@ -228,7 +228,7 @@ public class CsvApplicationImporter implements Runnable {
             if (hName.contains("REP_ID")) {
                 this.application.setRepresentativeId(linArr[i]);
             } else if (hName.contains("CFM_APPL_ID")) {
-                ttbId = "0" + linArr[i];
+                ttbId = linArr[i];
             } else if (hName.contains("CLASS_TYPE_CODE")) {
                 this.application.setTBB_CT(linArr[i]);
             } else if (hName.contains("ORIGIN_CODE")) {
