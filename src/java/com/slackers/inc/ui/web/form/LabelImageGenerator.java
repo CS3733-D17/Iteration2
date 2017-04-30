@@ -6,6 +6,7 @@
 package com.slackers.inc.ui.web.form;
 
 import com.slackers.inc.Controllers.LabelApplicationController;
+import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.ui.web.WebComponentProvider;
@@ -57,7 +58,7 @@ public class LabelImageGenerator extends HttpServlet {
     public static String getAccessStringForApplication(long id) {
         return WebComponentProvider.WEB_ROOT + "image/label?id=" + Long.toString(id);
     }
-    
+
     public static String getAccessStringForExistingApplication(HttpServletRequest request, String existingTTBid) {
         return WebComponentProvider.root(request) + "image/label?ttbId=" + existingTTBid;
     }
@@ -101,25 +102,71 @@ public class LabelImageGenerator extends HttpServlet {
                     response.sendRedirect(url);
                     return;
                 }*/
-                
+
                 Label label = appControl.getLabelImage(id);
                 /*String mimeType = label.getLabelImageType();
                 if (mimeType==null)
                 {
                     mimeType = "image/png";
                 }*/
-                
-                
-                
+
+                if (label == null || label.getLabelImageType() == null || label.getLabelImageType().equals("")) {
+                    response.sendRedirect("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg");
+                    return;
+                }
+
                 if (label.getLabelImageType().equalsIgnoreCase("urlAbsolute")) {
                     String url = new String(label.getLabelImage(), StandardCharsets.US_ASCII);
                     response.sendRedirect(url);
                     return;
                 }
-                
+
+                if (label.getLabelImageType().equalsIgnoreCase("image/ttbId")) {
+                    String ttbId = new String(label.getLabelImage(), StandardCharsets.US_ASCII);
+                    FormImporter importer = new FormImporter(ttbId);
+                    FormImporter.ImageData imageData = importer.getImageData();
+                    if (imageData == null) {
+                        importer = new FormImporter("0" + ttbId);
+                        imageData = importer.getImageData();
+                        if (imageData == null) {
+                            label.setLabelImageType("urlAbsolute");
+                            label.setLabelImage("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg".getBytes(StandardCharsets.US_ASCII));
+                            try {
+                                DerbyConnection.getInstance().writeEntity(label, label.getPrimaryKeyName());
+                            } catch (Exception e) {
+                            }
+                            response.sendRedirect("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg");
+                            return;
+                        } else {
+                            label.setLabelImage(imageData.getBytes());
+                            if (imageData.getType() == FormImporter.ImageData.TYPE_PNG) {
+                                label.setLabelImageType("image/png");
+                            }
+                            if (imageData.getType() == FormImporter.ImageData.TYPE_JPEG) {
+                                label.setLabelImageType("image/jpeg");
+                            }
+                            try {
+                                DerbyConnection.getInstance().writeEntity(label, label.getPrimaryKeyName());
+                            } catch (Exception e) {
+                            }
+                        }
+                    } else {
+                        label.setLabelImage(imageData.getBytes());
+                        if (imageData.getType() == FormImporter.ImageData.TYPE_PNG) {
+                            label.setLabelImageType("image/png");
+                        }
+                        if (imageData.getType() == FormImporter.ImageData.TYPE_JPEG) {
+                            label.setLabelImageType("image/jpeg");
+                        }
+                        try {
+                            DerbyConnection.getInstance().writeEntity(label, label.getPrimaryKeyName());
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+
                 response.setContentType(label.getLabelImageType());
-                if (label.getLabelImageType().equals("image/jpg")|| label.getLabelImageType().equals("image/jpeg"))
-                {
+                if (label.getLabelImageType().equals("image/jpg") || label.getLabelImageType().equals("image/jpeg")) {
                     try (ByteArrayInputStream bis = new ByteArrayInputStream(label.getLabelImage())) {
                         OutputStream outStream = response.getOutputStream();
                         byte[] b = new byte[256];

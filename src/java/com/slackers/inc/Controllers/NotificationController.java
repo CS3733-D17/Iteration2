@@ -75,7 +75,7 @@ public class NotificationController {
         this.msg = "The following application was approved \n\t -" +  BrandName;
         this.sub = "Label Application Approved";
         this.email = new EmailWrapper(this.sub, this.msg, this.to.getEmail());
-        //this.text = new SMSWrapper(this.phone, this.provider, this.msg);
+        this.text = new SMSWrapper(this.phone, this.provider, this.msg);
         
         if (this.to.isEmailAllowed())
             email.sendEmail();
@@ -100,6 +100,19 @@ public class NotificationController {
     public void sendRevision(String BrandName){
         this.msg = "The following application was NOT approved, but needs revisions \n\t -" +  BrandName;
         this.sub = "Applications In Need of Revision";
+        this.email = new EmailWrapper(this.sub, this.msg, this.to.getEmail());
+        this.text = new SMSWrapper(this.phone, this.provider, this.msg);
+        
+        if (this.to.isEmailAllowed())
+            email.sendEmail();
+        if (this.phone.length()>=10 && this.phone.length()<=12 && this.provider!=Provider.DO_NOT_CONTACT)
+            text.sendMsg();
+        
+    }
+    
+    public void sendSubmit(String BrandName){
+        this.msg = "You just submitted the following applications \n\t -" +  BrandName;
+        this.sub = BrandName + " was Submitted Succesfully";
         this.email = new EmailWrapper(this.sub, this.msg, this.to.getEmail());
         this.text = new SMSWrapper(this.phone, this.provider, this.msg);
         
