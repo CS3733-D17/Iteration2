@@ -189,7 +189,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         
                     case "date":
                         if (request.getParameter("date").equals("between")) {
-                            if (!(request.getParameter("date_low").equals("")) && !(request.getParameter("date_hi").equals(""))) {
+                            if (!(request.getParameter("date_low")!=null) && !(request.getParameter("date_hi")!=null)) {
                                 String lo = request.getParameter("date_low");
                                 String hi = request.getParameter("date_hi");
                                 SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
@@ -198,22 +198,16 @@ public class ManufacturerSearchServlet extends HttpServlet {
 
                                 java.util.Date low = null;
                                 java.sql.Date loDate = null;
-                                try {
-                                    low = ft.parse(lo);
-                                    loDate = new java.sql.Date(low.getTime()); 
-                                } catch (ParseException ex) {
-                                    System.out.println("low dont work");
-                                    Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
-                                }
                                 java.util.Date high = null;
                                 java.sql.Date hiDate = null;
                                 try {
+                                    low = ft.parse(lo);
+                                    loDate = new java.sql.Date(low.getTime()); 
                                     high = ft.parse(hi);
                                     hiDate = new java.sql.Date(high.getTime());
-                                    f.add(new DateRange(loDate, hiDate ));
-                                } catch (ParseException ex) {
-                                    Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
-                                }     
+                                    f.add(new DateRange(loDate, hiDate));
+                                } catch (Exception ex) {
+                                }  
                             }
                         } else if (!(request.getParameter("date_low") == null || request.getParameter("date_low").equals(""))) {
                             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
@@ -292,14 +286,26 @@ public class ManufacturerSearchServlet extends HttpServlet {
                             f.add(new OriginFilter(request.getParameter("origin_low")));
                         }
                         break;
+                    case "FILTER_IMAGES":
+                        if (request.getParameter("FILTER_IMAGES")!=null && request.getParameter("FILTER_IMAGES").equalsIgnoreCase("on"))
+                        {
+                            f.add(new ValidImageFilter());
+                        }
+                        break;
                 }
             }
         }
 
         //f.add(new AcceptedFilter(true));
         List<Label> drinkList;
+        int resultCount = 0;
+        long time = 0;
         try {
+            long start = System.currentTimeMillis();
             drinkList = search.runSearch(label, combined, "labelImage");
+            resultCount = search.runSearchCount(label, combined, "labelImage");
+            long end = System.currentTimeMillis();
+            time = end-start;
         } catch (SQLException ex) {
             ex.printStackTrace();
             response.sendRedirect("/SuperSlackers/search");
@@ -377,6 +383,8 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 }
 
                 results = results.replace("##Drinks", b);
+                results = results.replace("##RESULT_STATS", "Found " + resultCount + " results in "+(time/1000.0)+" seconds");
+                
                 results = results.replace("##PAGE", "Page " + (search.getPage() + 1));
                 List<String> params = new LinkedList<>();
                 for (String parameter : param.keySet()) {

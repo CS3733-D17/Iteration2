@@ -110,7 +110,11 @@ public class LabelImageGenerator extends HttpServlet {
                     mimeType = "image/png";
                 }*/
                 
-                
+                if (label==null || label.getLabelImageType()==null || label.getLabelImageType().equals(""))
+                {
+                    response.sendRedirect("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg");
+                    return;
+                }
                 
                 if (label.getLabelImageType().equalsIgnoreCase("urlAbsolute")) {
                     String url = new String(label.getLabelImage(), StandardCharsets.US_ASCII);
