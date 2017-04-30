@@ -214,6 +214,8 @@ public class CsvApplicationImporter implements Runnable {
         this.application.setPhoneNumber(
                 "555-555-5555");
         String[] linArr = line.split(",");
+        String ttbId = "";
+        boolean wasElectronic = false;
         for (int i = 0;
                 i < linArr.length && i < headers.length;
                 i++) {
@@ -225,6 +227,8 @@ public class CsvApplicationImporter implements Runnable {
             }
             if (hName.contains("REP_ID")) {
                 this.application.setRepresentativeId(linArr[i]);
+            } else if (hName.contains("CFM_APPL_ID")) {
+                ttbId = "0" + linArr[i];
             } else if (hName.contains("CLASS_TYPE_CODE")) {
                 this.application.setTBB_CT(linArr[i]);
             } else if (hName.contains("ORIGIN_CODE")) {
@@ -262,6 +266,12 @@ public class CsvApplicationImporter implements Runnable {
             } else if (hName.contains("PERMIT_CITY_ADDR")) {
                 this.application.getApplicantAddress().setCity(linArr[i]);
             } else if (hName.contains("PERMIT_STATE_ADDR")) {
+                this.application.getApplicantAddress().setState(linArr[i]);
+            } else if (hName.contains("RECEIVED_CODE")) {
+                if (linArr[i].equalsIgnoreCase("Electronic Submission"))
+                {
+                    wasElectronic = true;
+                }
                 this.application.getApplicantAddress().setState(linArr[i]);
             } else if (hName.contains("PERMIT_ZIP_ADDR")) {
                 if (linArr[i].length() > 0) {
@@ -311,8 +321,16 @@ public class CsvApplicationImporter implements Runnable {
 
         if (this.consumer!= null) {
             this.application.addApplicationType(LabelApplication.ApplicationType.NEW, null);
-            this.application.getLabel().setLabelImageType("urlAbsolute");
-            this.application.getLabel().setLabelImage("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg".getBytes(StandardCharsets.US_ASCII));
+            if (wasElectronic)
+            {
+                this.application.getLabel().setLabelImageType("image/ttbId");
+                this.application.getLabel().setLabelImage(ttbId.getBytes(StandardCharsets.US_ASCII));
+            }
+            else
+            {
+                this.application.getLabel().setLabelImageType("urlAbsolute");
+                this.application.getLabel().setLabelImage("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg".getBytes(StandardCharsets.US_ASCII));
+            }
             this.consumer.consume(this.application, this);
         }
         return line;

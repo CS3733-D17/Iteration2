@@ -6,6 +6,7 @@
 package com.slackers.inc.ui.web.form;
 
 import com.slackers.inc.Controllers.LabelApplicationController;
+import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.entities.Label;
 import com.slackers.inc.database.entities.LabelApplication;
 import com.slackers.inc.ui.web.WebComponentProvider;
@@ -117,8 +118,39 @@ public class LabelImageGenerator extends HttpServlet {
                     return;
                 }
                 
+                if (label.getLabelImageType().equalsIgnoreCase("image/ttbId")) {
+                    String ttbId = new String(label.getLabelImage(), StandardCharsets.US_ASCII);
+                    FormImporter importer = new FormImporter(ttbId);
+                    FormImporter.ImageData imageData = importer.getImageData();
+                    if (imageData == null)
+                    {
+                        label.setLabelImageType("urlAbsolute");
+                        label.setLabelImage("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg".getBytes(StandardCharsets.US_ASCII));
+                        try
+                        {
+                            DerbyConnection.getInstance().writeEntity(label, label.getPrimaryKeyName());
+                        } catch (Exception e){}
+                        response.sendRedirect("http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg");
+                        return;
+                    }
+                    else
+                    {
+                        label.setLabelImage(imageData.getBytes());
+                        if (imageData.getType() == FormImporter.ImageData.TYPE_PNG) {
+                            label.setLabelImageType("image/png");
+                        }
+                        if (imageData.getType() == FormImporter.ImageData.TYPE_JPEG) {
+                            label.setLabelImageType("image/jpeg");
+                        }
+                        try
+                        {
+                            DerbyConnection.getInstance().writeEntity(label, label.getPrimaryKeyName());
+                        } catch (Exception e){}
+                    }
+                }
+                
                 response.setContentType(label.getLabelImageType());
-                if (label.getLabelImageType().equals("image/jpg")|| label.getLabelImageType().equals("image/jpeg"))
+                if (label.getLabelImageType().equals("image/jpg") || label.getLabelImageType().equals("image/jpeg"))
                 {
                     try (ByteArrayInputStream bis = new ByteArrayInputStream(label.getLabelImage())) {
                         OutputStream outStream = response.getOutputStream();

@@ -209,12 +209,11 @@ public class ManufacturerSearchServlet extends HttpServlet {
                                 java.sql.Date hiDate = null;
                                 try {
                                     high = ft.parse(hi);
-                                    hiDate = new java.sql.Date(high.getTime()); 
+                                    hiDate = new java.sql.Date(high.getTime());
+                                    f.add(new DateRange(loDate, hiDate ));
                                 } catch (ParseException ex) {
                                     Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                
-                                f.add(new DateRange(loDate, hiDate ));
+                                }     
                             }
                         } else if (!(request.getParameter("date_low") == null || request.getParameter("date_low").equals(""))) {
                             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
@@ -225,11 +224,12 @@ public class ManufacturerSearchServlet extends HttpServlet {
                             try {
                                 low = ft.parse(lo);
                                 loDate = new java.sql.Date(low.getTime()); 
+                                f.add(new DateFilter(loDate));
                             } catch (ParseException ex) {
                                 System.out.println("low dont work");
                                 Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            f.add(new DateFilter(loDate));
+                            
                         }
                         
                         break;
