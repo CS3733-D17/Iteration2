@@ -176,7 +176,6 @@ public class UsEmployeeController {
                 int i=0;
                 for (LabelApplication app : forms2)
                 {
-                    System.out.println(app);
                     if (i==10)
                         break;
                     newforms.add(app);
@@ -184,7 +183,6 @@ public class UsEmployeeController {
                 i=0;
                 while (newforms.size()<10 && i<forms.size())
                 {
-                    System.out.println(forms.get(i));
                     newforms.add(forms.get(i));
                     i++;
                 }

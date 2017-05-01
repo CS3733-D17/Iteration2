@@ -1,269 +1,270 @@
 <div class="container-fluid col-md-10 col-md-offset-1">
     <div class="well">
-    <div><h1>
-            <span>Results</span>
-        </h1>
-        <div class="row">
+        <div><h1>
+                <span>Results</span>
+            </h1>
+            <div class="row">
 
-            <div class="col-md-4">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Download Results As
-                        <span class="caret"></span></button>
-                    <ul class="dropdown-menu col-md-1">
-                        <li>
-                            <form  action="##SEARCH_URL" method="POST" target="_blank" style="padding:5px;">
-                                <button type ="submit" class='btn btn-primary col-md-12'>Csv Format</button>
-                            </form></li>
-                        <li>
-                            <form  action="##SEARCH_URL&Dtype=tsv" method="POST" target="_blank" style="padding:5px;">
-                                <button type ="submit" class='btn btn-primary col-md-12'>Tsv Format</button>
-                            </form></li>
-                        <li>
-                            <form  action="##SEARCH_URL&Dtype=delimiter" method="POST" target="_blank" style="padding:5px;">
-                                <button type ="submit" class='btn btn-primary col-md-12'>Custom Format </button>
-                                <input type="text" name="delimiter" class="form-control" placeholder="Custom Delimiter">
-                            </form></li>
+                <div class="col-md-4">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Download Results As
+                            <span class="caret"></span></button>
+                        <ul class="dropdown-menu col-md-1">
+                            <li>
+                                <form  action="##SEARCH_URL" method="POST" target="_blank" style="padding:5px;">
+                                    <button type ="submit" class='btn btn-primary col-md-12'>Csv Format</button>
+                                </form></li>
+                            <li>
+                                <form  action="##SEARCH_URL&Dtype=tsv" method="POST" target="_blank" style="padding:5px;">
+                                    <button type ="submit" class='btn btn-primary col-md-12'>Tsv Format</button>
+                                </form></li>
+                            <li>
+                                <form  action="##SEARCH_URL&Dtype=delimiter" method="POST" target="_blank" style="padding:5px;">
+                                    <button type ="submit" class='btn btn-primary col-md-12'>Custom Format </button>
+                                    <input type="text" name="delimiter" class="form-control" placeholder="Custom Delimiter">
+                                </form></li>
 
-                    </ul>
+                        </ul>
+                    </div>
+                    <br>
                 </div>
-                <br>
-            </div>
-            <div class="col-md-8">
-                <form action="/SuperSlackers/search" method="post">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <div class="input-group dropdown">
-                                <input name ="keywords" type="text" class="form-control" placeholder="Search" id="keywords" onkeypress="getSearches();" oninput="getSearches();" onchange="getSearches();" onfocus="showSuggestions(true)" onfocusout="showSuggestions(false)">
-                                <div class="input-group-btn">
-                                    <button class="btn btn-default" type="submit" value="">
-                                        <i class="glyphicon glyphicon-search"></i>
-                                    </button>
+                <div class="col-md-8">
+                    <form action="/SuperSlackers/search" method="post">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="input-group dropdown">
+                                    <input name ="keywords" type="text" class="form-control" placeholder="Search" id="keywords" onkeypress="getSearches();" oninput="getSearches();" onchange="getSearches();" onfocus="showSuggestions(true)" onfocusout="showSuggestions(false)">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" type="submit" value="">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                        </button>
+                                    </div>
+                                    <ul class="dropdown-menu open" id="suggestions">
+                                    </ul>
                                 </div>
-                                <ul class="dropdown-menu open" id="suggestions">
-                                </ul>
-                            </div>
-                            <br>
-                            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#advanced">Advanced</button>
-                            <input id="bType" type="hidden" value="ALL" name="type">
-                            <div id="advanced" class="collapse">
-                                <ul class = "pagination">
-                                    <li class="active"><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value = 'ALL'">All</a></li>
-                                    <li><a href="#Wine" data-toggle="tab" onclick="document.getElementById('bType').value = 'WINE'">Wine</a></li>
-                                    <li><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value = 'BEER'">Beer</a></li>
-                                    <li><a href="#Distilled" data-toggle="tab" onclick="document.getElementById('bType').value = 'DISTILLED'">Distilled</a></li>
-                                </ul>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Search Type</label>
-                                            <select class="form-control" id="keywordType" name="keywordType">
-                                                <option selected value="BRAND">
-                                                    Brand Name
-                                                </option>
-                                                <option value="FANCIFUL">
-                                                    Fanciful Name
-                                                </option>
-                                                <option value="BOTH">
-                                                    Either
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Source of Product</label>
-                                            <select class="form-control" id="source" name="source">
-                                                <option selected value="na">
-                                                    Choose One:
-                                                </option>
-                                                <option value="Domestic">
-                                                    DOMESTIC
-                                                </option>
-                                                <option value="Imported">
-                                                    IMPORTED
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Origin Code</label>
-                                        <div class="input-group dropdown" style="width:100%;" >
-                                            <input style="width:100%;" name = "TTB_OR-new" type="text" class="form-control" placeholder="Origin Code" id="TTB_OR-new" onkeypress="getOR();" oninput="getOR();" onchange="getOR();" onfocus="showOR(true)" onfocusout="showOR(false)">
-                                            <ul class="dropdown-menu open" id="OR-suggestions">
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Product Category Code</label>
-                                        <div class="input-group dropdown" style="width:100%;" >
-                                            <input style="width:100%;" name = "TTB_CT-new" type="text" class="form-control" placeholder="Product Category Code" id="TTB_CT-new" onkeypress="getCT();" oninput="getCT();" onchange="getCT();" onfocus="showCT(true)" onfocusout="showCT(false)">
-                                            <ul class="dropdown-menu open" id="CT-suggestions">
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br><br>
-                                <div class="form-group">
-                                    <label>Alcohol Content</label>
-                                    <select id="alcohol" name="alcoholSearchType" onchange="alcoholFunction()" >
-                                        <option value="equal" >is equal to</option>
-                                        <option value="between">is between</option>
-                                    </select>
+                                <br>
+                                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#advanced">Advanced</button>
+                                <input id="bType" type="hidden" value="ALL" name="type">
+                                <div id="advanced" class="collapse">
+                                    <ul class = "pagination">
+                                        <li class="active"><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value = 'ALL'">All</a></li>
+                                        <li><a href="#Wine" data-toggle="tab" onclick="document.getElementById('bType').value = 'WINE'">Wine</a></li>
+                                        <li><a href="#Beer" data-toggle="tab" onclick="document.getElementById('bType').value = 'BEER'">Beer</a></li>
+                                        <li><a href="#Distilled" data-toggle="tab" onclick="document.getElementById('bType').value = 'DISTILLED'">Distilled</a></li>
+                                    </ul>
                                     <div class="row">
-                                        <div class="col-xs-5">
-                                            <input type="text" name="alcohol_low" id="alcohol_low" placeholder="Values between 0.0 - 100.0%" class="form-control as-variable-input" value="">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Search Type</label>
+                                                <select class="form-control" id="keywordType" name="keywordType">
+                                                    <option selected value="BRAND">
+                                                        Brand Name
+                                                    </option>
+                                                    <option value="FANCIFUL">
+                                                        Fanciful Name
+                                                    </option>
+                                                    <option value="BOTH">
+                                                        Either
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-2" align="center" style="vertical-align: middle;">
-                                            <span id="alcoholAnd" style="display: none; vertical-align: middle;" >and</span>
-                                        </div>
-                                        <div class="col-xs-5">
-                                            <input type="text" name="alcohol_hi" id="alcohol_hi" placeholder="Values between 0.0 - 100.0%" class="form-control as-variable-input " value="" style="display: none;">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Source of Product</label>
+                                                <select class="form-control" id="source" name="source">
+                                                    <option selected value="na">
+                                                        Choose One:
+                                                    </option>
+                                                    <option value="Domestic">
+                                                        DOMESTIC
+                                                    </option>
+                                                    <option value="Imported">
+                                                        IMPORTED
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Origin Code</label>
+                                            <div class="input-group dropdown" style="width:100%;" >
+                                                <input style="width:100%;" name = "TTB_OR-new" type="text" class="form-control" placeholder="Origin Code" id="TTB_OR-new" onkeypress="getOR();" oninput="getOR();" onchange="getOR();" onfocus="showOR(true)" onfocusout="showOR(false)">
+                                                <ul class="dropdown-menu open" id="OR-suggestions">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Product Category Code</label>
+                                            <div class="input-group dropdown" style="width:100%;" >
+                                                <input style="width:100%;" name = "TTB_CT-new" type="text" class="form-control" placeholder="Product Category Code" id="TTB_CT-new" onkeypress="getCT();" oninput="getCT();" onchange="getCT();" onfocus="showCT(true)" onfocusout="showCT(false)">
+                                                <ul class="dropdown-menu open" id="CT-suggestions">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br><br>
                                     <div class="form-group">
-
-                                        <br>
-                                        <label>Date</label>
-                                        <select id="date" name="date" onchange="dateFunction()" >
+                                        <label>Alcohol Content</label>
+                                        <select id="alcohol" name="alcoholSearchType" onchange="alcoholFunction()" >
                                             <option value="equal" >is equal to</option>
-                                            <option value="between" selected>is between</option>
+                                            <option value="between">is between</option>
                                         </select>
-                                        <div class='row'>
+                                        <div class="row">
                                             <div class="col-xs-5">
-                                                <div class='input-group date' id='datetimepicker1'>
-                                                    <input type='date' class="form-control" name = "date_low" id = "date_low"/>
-                                                    <span class="input-group-addon"   >
-                                                        <span class="glyphicon glyphicon-calendar"></span>
-                                                    </span>
-                                                </div>
+                                                <input type="text" name="alcohol_low" id="alcohol_low" placeholder="Values between 0.0 - 100.0%" class="form-control as-variable-input" value="">
                                             </div>
                                             <div class="col-xs-2" align="center" style="vertical-align: middle;">
-                                                <span id="dateAnd" style="display: none; vertical-align: middle;" >and</span>
+                                                <span id="alcoholAnd" style="display: none; vertical-align: middle;" >and</span>
                                             </div>
                                             <div class="col-xs-5">
-                                                <div class='input-group date' id='datetimepicker2'>
-                                                    <input type='date' class="form-control" name="date_hi" id ="date_hi"/>
-                                                    <span class="input-group-addon">
-                                                        <span class="glyphicon glyphicon-calendar"></span>
-                                                    </span>
+                                                <input type="text" name="alcohol_hi" id="alcohol_hi" placeholder="Values between 0.0 - 100.0%" class="form-control as-variable-input " value="" style="display: none;">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+
+                                            <br>
+                                            <label>Date</label>
+                                            <select id="date" name="date" onchange="dateFunction()" >
+                                                <option value="equal" >is equal to</option>
+                                                <option value="between" selected>is between</option>
+                                            </select>
+                                            <div class='row'>
+                                                <div class="col-xs-5">
+                                                    <div class='input-group date' id='datetimepicker1'>
+                                                        <input type='date' class="form-control" name = "date_low" id = "date_low"/>
+                                                        <span class="input-group-addon"   >
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2" align="center" style="vertical-align: middle;">
+                                                    <span id="dateAnd" style="display: none; vertical-align: middle;" >and</span>
+                                                </div>
+                                                <div class="col-xs-5">
+                                                    <div class='input-group date' id='datetimepicker2'>
+                                                        <input type='date' class="form-control" name="date_hi" id ="date_hi"/>
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </div>
+
+
+
+
+
+
+
+
+
+                                        <!--<input class="form-control" placeholder="Values between 0.0 - 100.0%" type="text" id="alcoholContent" name="alcoholContent">-->
+
+                                    </div>
+
+                                    <!--<div class="form-group">
+                                        <label>Origin Location</label>
+                                        <input class="form-control" placeholder="Origin Location" type="text" id="originLocation" name="originLocation">
+                                    </div>-->
+
+                                    <div class="tab-content" id="type">
+                                        <div id = "Beer" class="tab-pane fade in active">
+
+                                        </div>
+                                        <div id="Distilled" class="tab-pane fade">
+                                        </div>
+                                        <div id = "Wine" class="tab-pane fade">
+
+                                            <div class="form-group">
+                                                <label>pH Level</label>
+
+
+                                                <select id="ph" name="ph" onchange="phFunction()">
+                                                    <option value="equal" >is equal to</option>
+                                                    <option value="between">is between</option>
+
+                                                </select>
+                                                <div class="row">
+                                                    <div class="col-xs-5">
+                                                        <input type="text" name="ph_low" id="ph_low" placeholder="pH Level: 0.0-14.0" class="form-control" value="">
+                                                    </div>
+                                                    <div class="col-xs-2" align="center">
+                                                        <span id="phAnd" style="display: none;">and</span>
+                                                    </div>
+                                                    <div class="col-xs-5">
+                                                        <input type="text" name="ph_hi" id="ph_hi" placeholder="pH Level: 0.0-14.0" class="form-control" value="" style="display: none;">
+                                                    </div>
+                                                </div>
+
+
+
+                                                <!--<input class="form-control" placeholder="PH Level" type="text" name = "pHLevel" id="pHLevel">-->
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Vintage Year</label>
+
+                                                <select id="vintage" name="vintage" onchange="vintageFunction()">
+                                                    <option value="equal" >is equal to</option>
+                                                    <option value="between">is between</option>
+
+                                                </select>
+                                                <div class="row">
+                                                    <div class="col-xs-5">
+                                                        <input type="text" name="vintage_low" id="vintage_low" placeholder="Year" class="form-control" value="">
+                                                    </div>
+                                                    <div class="col-xs-2" align="center">
+                                                        <span id="vintageAnd" style="display: none;">and</span>
+                                                    </div>
+                                                    <div class="col-xs-5">
+                                                        <input type="text" name="vintage_hi" id="vintage_hi" placeholder="Year" class="form-control" value="" style="display: none;">
+                                                    </div>
+                                                </div>
+
+                                                <!--<input class="form-control" placeholder="Vintage Year" type="text" name="vintageYear" id="vintageYear">-->
+                                            </div>
+
                                         </div>
                                     </div>
                                     <br>
                                     <div class="funkyradio">
                                         <div class="funkyradio-success">                                            
-                                            <input type='checkbox' name="FILTER_IMAGES" id="image-only">
+                                            <input type='checkbox' name="FILTER_IMAGES" id="image-only" checked>
                                             <label for="image-only" style="background-color: lightgray; color: black;">Only show labels with images</label>
                                         </div>
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <!--<input class="form-control" placeholder="Values between 0.0 - 100.0%" type="text" id="alcoholContent" name="alcoholContent">-->
-
-                                </div>
-
-                                <!--<div class="form-group">
-                                    <label>Origin Location</label>
-                                    <input class="form-control" placeholder="Origin Location" type="text" id="originLocation" name="originLocation">
-                                </div>-->
-
-                                <div class="tab-content" id="type">
-                                    <div id = "Beer" class="tab-pane fade in active">
-
-                                    </div>
-                                    <div id="Distilled" class="tab-pane fade">
-                                    </div>
-                                    <div id = "Wine" class="tab-pane fade">
-
-                                        <div class="form-group">
-                                            <label>pH Level</label>
-
-
-                                            <select id="ph" name="ph" onchange="phFunction()">
-                                                <option value="equal" >is equal to</option>
-                                                <option value="between">is between</option>
-
-                                            </select>
-                                            <div class="row">
-                                                <div class="col-xs-5">
-                                                    <input type="text" name="ph_low" id="ph_low" placeholder="pH Level: 0.0-14.0" class="form-control" value="">
-                                                </div>
-                                                <div class="col-xs-2" align="center">
-                                                    <span id="phAnd" style="display: none;">and</span>
-                                                </div>
-                                                <div class="col-xs-5">
-                                                    <input type="text" name="ph_hi" id="ph_hi" placeholder="pH Level: 0.0-14.0" class="form-control" value="" style="display: none;">
-                                                </div>
-                                            </div>
-
-
-
-                                            <!--<input class="form-control" placeholder="PH Level" type="text" name = "pHLevel" id="pHLevel">-->
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Vintage Year</label>
-
-                                            <select id="vintage" name="vintage" onchange="vintageFunction()">
-                                                <option value="equal" >is equal to</option>
-                                                <option value="between">is between</option>
-
-                                            </select>
-                                            <div class="row">
-                                                <div class="col-xs-5">
-                                                    <input type="text" name="vintage_low" id="vintage_low" placeholder="Year" class="form-control" value="">
-                                                </div>
-                                                <div class="col-xs-2" align="center">
-                                                    <span id="vintageAnd" style="display: none;">and</span>
-                                                </div>
-                                                <div class="col-xs-5">
-                                                    <input type="text" name="vintage_hi" id="vintage_hi" placeholder="Year" class="form-control" value="" style="display: none;">
-                                                </div>
-                                            </div>
-
-                                            <!--<input class="form-control" placeholder="Vintage Year" type="text" name="vintageYear" id="vintageYear">-->
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-9 col-xs-3">
+            </div>
+            <div class="col-sm-3 col-xs-9">
+                ##RESULT_STATS
             </div>
         </div>
-
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-sm-9 col-xs-3">
+        <ul class="pager">
+            <li class="previous"><a href="##PREV">Previous</a></li>
+            <li>##PAGE</li>
+            <li class="next"><a href="##NEXT">Next</a></li>
+        </ul>
+        <div class="panel-group" id="applicationAccordion">        
+            ##Drinks
         </div>
-        <div class="col-sm-3 col-xs-9">
-            ##RESULT_STATS
-        </div>
-    </div>
-    <ul class="pager">
-        <li class="previous"><a href="##PREV">Previous</a></li>
-        <li>##PAGE</li>
-        <li class="next"><a href="##NEXT">Next</a></li>
-    </ul>
-    <div class="panel-group" id="applicationAccordion">        
-        ##Drinks
-    </div>
-    <ul class="pager">
-        <li class="previous"><a href="##PREV">Previous</a></li>
-        <li>##PAGE</li>
-        <li class="next"><a href="##NEXT">Next</a></li>
-    </ul>
+        <ul class="pager">
+            <li class="previous"><a href="##PREV">Previous</a></li>
+            <li>##PAGE</li>
+            <li class="next"><a href="##NEXT">Next</a></li>
+        </ul>
     </div>
 </div>
 <script>
@@ -363,7 +364,21 @@
                     {
                         namestr = " (" + sug[i].fanciful + ")";
                     }
-                    htm += "<li><a onclick=\"setSearchText('" + sug[i].brand + "');\">" + sug[i].brand + namestr + "</a></li>";
+                    if (document.getElementById('keywordType')!=null)
+                    {
+                        if (document.getElementById('keywordType').value == "FANCIFUL")
+                        {
+                           htm += "<li><a onclick=\"setSearchText('" + sug[i].fanciful + "');\">" + sug[i].brand + namestr + "</a></li>";  
+                        }
+                        else
+                        {
+                           htm += "<li><a onclick=\"setSearchText('" + sug[i].brand + "');\">" + sug[i].brand + namestr + "</a></li>"; 
+                        }
+                    }
+                    else
+                    {
+                        htm += "<li><a onclick=\"setSearchText('" + sug[i].brand + "');\">" + sug[i].brand + namestr + "</a></li>";
+                    }
                 }
                 document.getElementById("suggestions").innerHTML = htm;
             }

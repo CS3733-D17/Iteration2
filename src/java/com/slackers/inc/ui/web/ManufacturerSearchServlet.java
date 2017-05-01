@@ -13,6 +13,7 @@ import com.slackers.inc.Controllers.Csv.IDelimiterFormat;
 import com.slackers.inc.Controllers.Filters.*;
 import com.slackers.inc.Controllers.LabelRenderer;
 import com.slackers.inc.Controllers.SearchController;
+import com.slackers.inc.database.DerbyConnection;
 import com.slackers.inc.database.entities.BeerLabel;
 import com.slackers.inc.database.entities.DistilledLabel;
 import com.slackers.inc.database.entities.Label;
@@ -114,7 +115,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
             filters.add(new FancifulNameRange(fancy));
             filters.add(new AcceptedFilter(true));
             combined.add(filters);
-        } else { 
+        } else if (request.getParameter("keywordType") != null && request.getParameter("keywordType").equals("BOTH")) {
             String brand = request.getParameter("keywords") != null ? request.getParameter("keywords") : "";
             List<Filter> filters = new LinkedList<>();
             filters.add(new BrandNameRange(brand));
@@ -123,6 +124,12 @@ public class ManufacturerSearchServlet extends HttpServlet {
             String fancy = request.getParameter("keywords") != null ? request.getParameter("keywords") : "";
             filters = new LinkedList<>();
             filters.add(new FancifulNameRange(fancy));
+            filters.add(new AcceptedFilter(true));
+            combined.add(filters);
+        } else {
+            String brand = request.getParameter("keywords") != null ? request.getParameter("keywords") : "";
+            List<Filter> filters = new LinkedList<>();
+            filters.add(new BrandNameRange(brand));
             filters.add(new AcceptedFilter(true));
             combined.add(filters);
         }
@@ -139,13 +146,13 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         f.add(filter);
                     //}
                     break;*/
-                    case "TTB_CT-new": 
+                    case "TTB_CT-new":
                         if (!(request.getParameter("TTB_CT-new").equals(""))) {
                             filter = new CTFilter(request.getParameter("TTB_CT-new"));
                             f.add(filter);
                         }
                         break;
-                    case "TTB_OR-new": 
+                    case "TTB_OR-new":
                         if (!(request.getParameter("TTB_OR-new").equals(""))) {
                             filter = new ORFilter(request.getParameter("TTB_OR-new"));
                             f.add(filter);
@@ -186,10 +193,10 @@ public class ManufacturerSearchServlet extends HttpServlet {
                             }
                         }
                         break;
-                        
+
                     case "date":
                         if (request.getParameter("date").equals("between")) {
-                            if (!(request.getParameter("date_low")!=null) && !(request.getParameter("date_hi")!=null)) {
+                            if (!(request.getParameter("date_low") != null) && !(request.getParameter("date_hi") != null)) {
                                 String lo = request.getParameter("date_low");
                                 String hi = request.getParameter("date_hi");
                                 SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
@@ -202,30 +209,30 @@ public class ManufacturerSearchServlet extends HttpServlet {
                                 java.sql.Date hiDate = null;
                                 try {
                                     low = ft.parse(lo);
-                                    loDate = new java.sql.Date(low.getTime()); 
+                                    loDate = new java.sql.Date(low.getTime());
                                     high = ft.parse(hi);
                                     hiDate = new java.sql.Date(high.getTime());
                                     f.add(new DateRange(loDate, hiDate));
                                 } catch (Exception ex) {
-                                }  
+                                }
                             }
                         } else if (!(request.getParameter("date_low") == null || request.getParameter("date_low").equals(""))) {
                             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
                             String lo = request.getParameter("date_low");
-                            System.out.println(lo);
+                            //System.out.println(lo);
                             java.util.Date low = null;
                             java.sql.Date loDate = null;
                             try {
                                 low = ft.parse(lo);
-                                loDate = new java.sql.Date(low.getTime()); 
+                                loDate = new java.sql.Date(low.getTime());
                                 f.add(new DateFilter(loDate));
                             } catch (ParseException ex) {
                                 System.out.println("low dont work");
                                 Logger.getLogger(ManufacturerSearchServlet.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            
+
                         }
-                        
+
                         break;
 
                     case "type":
@@ -287,8 +294,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                         }
                         break;
                     case "FILTER_IMAGES":
-                        if (request.getParameter("FILTER_IMAGES")!=null && request.getParameter("FILTER_IMAGES").equalsIgnoreCase("on"))
-                        {
+                        if (request.getParameter("FILTER_IMAGES") != null && request.getParameter("FILTER_IMAGES").equalsIgnoreCase("on")) {
                             f.add(new ValidImageFilter());
                         }
                         break;
@@ -302,12 +308,14 @@ public class ManufacturerSearchServlet extends HttpServlet {
         long time = 0;
         try {
             long start = System.currentTimeMillis();
+
             drinkList = search.runSearch(label, combined, "labelImage");
             resultCount = search.runSearchCount(label, combined, "labelImage");
             long end = System.currentTimeMillis();
-            time = end-start;
+            time = end - start;
         } catch (SQLException ex) {
             ex.printStackTrace();
+            DerbyConnection.getInstance().reset();
             response.sendRedirect("/SuperSlackers/search");
             return;
         }
@@ -383,8 +391,8 @@ public class ManufacturerSearchServlet extends HttpServlet {
                 }
 
                 results = results.replace("##Drinks", b);
-                results = results.replace("##RESULT_STATS", "Found " + resultCount + " results in "+(time/1000.0)+" seconds");
-                
+                results = results.replace("##RESULT_STATS", "Found " + resultCount + " results in " + (time / 1000.0) + " seconds");
+
                 results = results.replace("##PAGE", "Page " + (search.getPage() + 1));
                 List<String> params = new LinkedList<>();
                 for (String parameter : param.keySet()) {

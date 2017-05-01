@@ -640,7 +640,6 @@ public class LabelApplicationController {
                 generalObj.add("RESUBMIT", "checked");
                 generalObj.add("tbbid", e.getValue());
             }
-            System.out.println(e.getKey());
         }
 
         Label l = this.application.getLabel();

@@ -59,7 +59,6 @@ public class ManufacturerController {
     public boolean editApplication() throws SQLException {
         this.manufacturer.removeApplications(this.labelAppController.getLabelApplication());
         this.manufacturer.addApplications(this.labelAppController.getLabelApplication());
-        System.out.println(this.labelAppController.getLabelApplication());
         boolean res = labelAppController.editApplication();
         this.updateManufacturer();
         return res;

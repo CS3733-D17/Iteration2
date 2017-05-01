@@ -60,8 +60,8 @@ public class FormImporter {
             Pattern imgs = Pattern.compile("<img src=\"(\\/colasonline\\/publicViewAttachment[\\s\\S]+?)\"");
             Matcher matchedimgs = imgs.matcher(response.getResponse());
             if (matchedimgs.find()) {
-                System.out.println(COLAURL + this.tbbId);
-                System.out.println("URL:" + matchedimgs.group(1));
+                //System.out.println(COLAURL + this.tbbId);
+                //System.out.println("URL:" + matchedimgs.group(1));
                 return "https://www.ttbonline.gov" + matchedimgs.group(1);
             }
         }

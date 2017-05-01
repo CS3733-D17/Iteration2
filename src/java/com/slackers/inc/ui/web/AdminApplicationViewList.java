@@ -135,7 +135,6 @@ public class AdminApplicationViewList extends HttpServlet {
             StringBuilder b = new StringBuilder();
             for (LabelApplication a : apps)
             {
-                System.out.println(a);
                 b.append(ApplicationRenderer.getInstance().renderApplication(this, a, pg.getUser()));
                 //b.append(this.buildApp(a, i++));
             }

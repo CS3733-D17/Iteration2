@@ -119,7 +119,7 @@ public class EmployeeProductivity extends HttpServlet {
                             .add("forms", e.getValue());
                             
                     history.add(day);
-                    System.out.println("OuterKey: " + key + " InnerKey: " + e.getKey()+ " VALUE:" +e.getValue());
+                    //System.out.println("OuterKey: " + key + " InnerKey: " + e.getKey()+ " VALUE:" +e.getValue());
                 }
                 JsonObjectBuilder employee = Json.createObjectBuilder()
                         .add("name", key);
@@ -129,7 +129,6 @@ public class EmployeeProductivity extends HttpServlet {
             }
             
             String global = data.build().toString();
-            System.out.println(global);
             
             
             

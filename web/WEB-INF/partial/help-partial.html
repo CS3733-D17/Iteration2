@@ -1,0 +1,149 @@
+<button type="button" class="btn btn-info btn-md" id="myBtn" style="float:left; margin: 15p;" data-toggle="modal" data-target="#helpModal">Help</button>
+
+<div class="modal fade" id="helpModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#account_help">Account Creation</a></li>
+                    <li><a data-toggle="tab" href="#search_help">Search Help</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Manufacturer Help
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-toggle="tab" href="#form_submit_help">Form Submission</a></li>
+                            <li><a data-toggle="tab" href="#form_edit_help">Form Editing</a></li>
+                            <li><a data-toggle="tab" href="#form_import_help">Form Importing</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Employee Help
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-toggle="tab" href="#process_help">Application Processing Workflow</a></li>
+                            <li><a data-toggle="tab" href="#form_process_help">Application Processing</a></li>  
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="account_help" class="tab-pane fade in active">
+                        <h1>Create Account Help:</h1>
+                        <hr>
+                        <h3>Please fill the specified fields.</h3>
+                        <br>
+                        <br><strong>First Name Example:</strong> Bob
+                        <br><strong>Last Name Example:</strong> Wong
+                        <br>
+                        <br><strong>Email Address Example:</strong> name@email.com
+                        <br><strong>Password:</strong> any desired characters (ex: Peter1234!)
+                    </div>
+                    <div id="search_help" class="tab-pane fade">
+                        <h1>Label Search Help:</h1>
+                        <hr>
+                        <p><strong>Search Field:</strong> Enter the name of the brand you want to search for</p>
+                        <br>
+                        <strong>Advanced:</strong>
+                        <br><strong>Beverage Type:</strong> Select From “All”, “Wine”, “Beer”, or “Distilled”
+                        <br>
+                        <br><strong>Select Search Type:</strong> “Brand Name” or “Fanciful Name” or “Either”
+                        <br><strong>Select Product Source:</strong> “DOMESTIC” or “IMPORTED”
+                        <br><strong>Origin Code:</strong> Enter either the numerical code or the description of the origin code. Autocomplete options will be shown.
+                        <br><strong>Product Category Code:</strong> Enter either the numerical code or the description of the product category code. Autocomplete options will be shown.
+                        <br>
+                        <br><strong>Alcohol Content:</strong> Search for alcohol content “equal to” or “between”
+                        <br><strong>Values:</strong> Enter the alcohol content value(s) for the search
+                        <br>
+                        <br><strong>Wine Only:</strong>
+                        <br><strong>pH Level</strong> Select a pH level “equal to” or “between”
+                        <br><strong>Values:</strong> Enter the pH level(s) for the search
+                    </div>
+                    <div id="form_submit_help" class="tab-pane fade">
+                        <h1>Application Form Help:</h1>
+                        <hr>
+                        <strong>Representative ID:</strong> Your employee identification number for the manufacturer that you work for
+                        <br>
+                        <strong>Phone Number:</strong> Your work phone number (###-###-####)
+                        <br>
+                        <strong>Plant Number:</strong> Plant Identification Number (@@-@@-####)
+                        <br>
+                        <strong>Email Address:</strong> email where name@email.com
+                        <br>
+                        <br>
+                        <strong>Application Address:</strong> (Address of applicant)
+                        <br>Location Name (ex: manufacturer)
+                        <br>Street Address (ex: 23 Hickory Drive)
+                        <br>Town State, Zip (ex: Worcester MA, 01541)
+                        <br><strong>Mailing Address:</strong> (if different from Application Address)
+                        <br>Location Name (ex: manufacturer)
+                        <br>Street Address (ex: 23 Hickory Drive)
+                        <br>Town    State, Zip (ex: Worcester MA, 01541)
+                        <br>
+                        <br><strong>Serial Number:</strong> ##-####
+                        <br><strong>Serial Number Example:</strong> 55-1234
+                        <br>
+                        <br><strong>Alcohol content:</strong> 0-100(%)
+                        <br><strong>AC Example:</strong> 10.4
+                        <br>
+                        <br><strong>State:</strong> The state that the company you work for is located in (ex: MA)
+                        <br>
+                        <br><strong>Bottle capacity:</strong> The capacity of the bottle (mL)
+                        <br><strong>Capacity Example:</strong> 250
+                        <br>
+                        <br><strong>TTB ID:</strong> The identification number assigned to the COLA that you work for (ex: 12345678901234)
+                        <br>
+                        <br><strong>Brand Name Example:</strong> Samuel Adams
+                        <br>
+                        <br><strong>Fanciful Name Example:</strong> Pinot Noir
+                        <br>
+                        <br><strong>Additional Information:</strong> any additional information about the application
+                    </div>
+                    <div id="form_edit_help" class="tab-pane fade">
+                        <h1>Application Edit Help:</h1>
+                        <hr>
+                        <br><strong>Allowed Revisions:</strong> select all fields you wish to revise
+                        <br> The same restrictions to fields apply as did when creating the application.
+                        <br><strong>Submit Revisions:</strong> submit the edited application for review in place of the old application.
+                    </div>
+                    <div id="form_import_help" class="tab-pane fade">
+                        <h1>Import an Existing Application:</h1>
+                        <hr><br>
+                        <ul>
+                            <li>Click the import button at the top of the create application page</li>
+                            <li>Enter the existing TTB number into the text field</li>
+                            <li>Click import to begin importing the form</li>
+                            <li>Fill in any fields that were not found in the existing form with your label information</li>
+                            <li>Click “Submit” when you are finished.</li>
+                        </ul>
+                    </div>
+                    <div id="form_process_help" class="tab-pane fade">
+                        <h1>Application Processing Help:</h1>
+                        <hr>
+                        <br><strong>Accept:</strong> Accept the application and allow the label to be searched
+                        <br><strong>Send for Corrections:</strong> Send the application back to the applicant for corrections before accepting it
+                        <br><strong>Reject:</strong> Reject the application and prevent it from ever showing up on a search
+                        <br><strong>Send for Second Opinion:</strong> If you are unsure, send it to another employee for review with comments
+                        <br><strong>Second Opinion Employee:</strong> Email of employee desired to give a second opinion. This will provide autocomplete options
+                    </div>
+                    <div id="process_help" class="tab-pane fade">
+                        <h1>Application Processing Workflow:</h1>
+                        <br>
+                        An employee can look at the list of applications they have been assigned, 
+                        and can review them. The name of the label application and some basic information is located in each box.
+                        <br>
+                        Click the blue “Review Application” button to review the application.
+                        <br>
+                        Employees get applications limited to ten at a time.
+                        <br>
+                        New applications will be automatically pulled when all current forms in the inbox are finished.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

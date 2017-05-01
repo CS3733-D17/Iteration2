@@ -204,7 +204,7 @@ public class LabelImageGenerator extends HttpServlet {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 
