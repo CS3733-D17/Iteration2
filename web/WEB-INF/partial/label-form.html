@@ -20,24 +20,24 @@
 
         <div class="form-group">
             <label>Plant Registry/Basic Permit/Brewer's No.</label>
-            <input id="plantNumber" name = "plantNumber" class="form-control" placeholder="Value" type="text" oninput="validateForm('plantNumber')">
+            <input id="plantNumber" name = "plantNumber" class="form-control" placeholder="Value" type="text" oninput="validateForm('plantNumber')" required>
         </div>
     </div>
     <div class="col-sm-6">
         <div class="form-group">                
             <label>Phone Number</label> 
-            <input id="phone" name="phone" class="form-control" placeholder="Phone Number" type="text" oninput="validateForm('phone')">
+            <input id="phone" name="phone" class="form-control" placeholder="Phone Number" type="text" oninput="validateForm('phone')" required>
         </div>
 
         <div class="form-group">                
             <label>Email Address</label> 
-            <input id="email" name="email" class="form-control" placeholder="E-Mail Address" type="text" onfocus="validateForm('email')">
+            <input id="email" name="email" class="form-control" placeholder="E-Mail Address" type="text" onfocus="validateForm('email')" required>
         </div>
     </div>
 </div>
 <div class="form-group">
     <label>Application Address</label>
-    <textarea id="address" name="address" class="form-control" rows="3" onfocus="validateForm('address')" ></textarea>
+    <textarea id="address" name="address" class="form-control" rows="3" onfocus="validateForm('address')" required></textarea>
 </div>
 <div class="form-group">
     <label>Mailing Address</label>
@@ -52,33 +52,33 @@
     <div class="col-sm-6">
         <div class="form-group">
             <label>Serial Number</label>
-            <input id="serialNumber" name="serialNumber" class="form-control" placeholder="##-####" type="text" onfocus="validateForm('serialNumber')">
+            <input id="serialNumber" name="serialNumber" class="form-control" placeholder="##-####" type="text" onfocus="validateForm('serialNumber')" required>
         </div>
         <div class="form-group">
             <label>Alcohol Content</label>
-            <input data-toggle="tooltip" title="Note: a value of -1.0 implies the alcohol content is unknown" id="alcoholContent" name="alcoholContent" class="form-control" placeholder="0-100%" type="text" oninput="validateForm('alcoholContent')">
+            <input data-toggle="tooltip" title="Note: a value of -1.0 implies the alcohol content is unknown" id="alcoholContent" name="alcoholContent" class="form-control" placeholder="0-100%" type="text" oninput="validateForm('alcoholContent')" required>
         </div>
     </div>
     <div class="col-sm-6">
         <label>Product Source</label><br>
         <div class="btn-group" data-toggle="buttons">
             <label id = "DOMESTIC-lbl" for="DOMESTIC" class="btn btn-default" style="border-color: #000;">
-                <input name="source" id = "DOMESTIC" value="DOMESTIC" type="radio">Domestic
+                <input name="source" id = "DOMESTIC" value="DOMESTIC" type="radio" required>Domestic
             </label>
             <label id = "IMPORTED-lbl" for="IMPORTED" class="btn btn-default" style="border-color: #000;">
-                <input name="source" id = "IMPORTED" value="IMPORTED" type="radio">Imported
+                <input name="source" id = "IMPORTED" value="IMPORTED" type="radio" required>Imported
             </label>
         </div><br><br>
         <label>Product Type</label><br>
         <div class="btn-group" data-toggle="buttons" style="width:100%;">            
             <label  id = "BEER-lbl" class="btn btn-default" onclick="document.getElementById('wineInfo').style.display = 'none'" style="border-color: #000;">
-                <input name="type"  id = "BEER" value="BEER" type="radio">Beer
+                <input name="type"  id = "BEER" value="BEER" type="radio" required>Beer
             </label>
             <label id = "WINE-lbl" class="btn btn-default" onclick="document.getElementById('wineInfo').style.display = 'block'" style="border-color: #000;">
-                <input name="type" id = "WINE" value="WINE" type="radio">Wine
+                <input name="type" id = "WINE" value="WINE" type="radio" required>Wine
             </label>
             <label id = "DISTILLED-lbl" class="btn btn-default" onclick="document.getElementById('wineInfo').style.display = 'none'" style="border-color: #000;">
-                <input name="type" id = "DISTILLED" value="DISTILLED" type="radio">Distilled
+                <input name="type" id = "DISTILLED" value="DISTILLED" type="radio" required>Distilled
             </label>
         </div><br>
     </div>
@@ -106,7 +106,7 @@
 </div>
 <div class="form-group">
     <label>Brand Name</label>
-    <input id="brandName" name="brandName" class="form-control" placeholder="Brand Name" type="text" onfocus="validateForm('brandName')">
+    <input id="brandName" name="brandName" class="form-control" placeholder="Brand Name" type="text" onfocus="validateForm('brandName')" required>
 </div>
 <div class="form-group">
     <label>Fanciful Name</label>
@@ -114,7 +114,7 @@
 </div>
 <div class="form-group">
     <label>Formula</label>
-    <textarea id="formula" name="formula" class="form-control" rows="4" onfocus="validateForm('formula')"></textarea>
+    <textarea id="formula" name="formula" class="form-control" rows="4" onfocus="validateForm('formula')" required></textarea>
 </div>
 <div class="form-group">
     <label>Write any information below, not on the label that is on the container.</label>
