@@ -1,7 +1,7 @@
 <style>
-	.label { font-size: 10px; fill:white; }
-	.line { fill: none; stroke-width: 1.4px; stroke: #ffffff; font-size: 15px; color:white;}
-	.area { fill: #ffffff;
+	.label { font-size: 10px; fill:#82542d; }
+	.line { fill: none; stroke-width: 1.4px; stroke: #82542d; font-size: 15px; color:#82542d;}
+	.area { fill: #f5cdaf;
 			opacity: 0.5;}
 	.background {fill: none;}
 	.chart {
@@ -15,16 +15,16 @@
 	.yaxis path,
 	.yaxis line {
 		fill:none;
-		stroke: #ffffff;
+		stroke: #82542d;
 		opacity: 0.5;
 		shape-rendering: crispEdges;
 	}
 	.xaxis text,
-	.yaxis text { font-size: 12px; fill: white;}
-	.tick line {stroke-dasharray: 3,3; stroke: #ffffff; }
+	.yaxis text { font-size: 12px; fill: #82542d;}
+	.tick line {stroke-dasharray: 3,3; stroke: #82542d; }
         
-        .title{fill:white;}
-	svg { border: solid 0px #ffffff; margin: 5px;}
+        .title{fill:#82542d;}
+	svg { border: solid 0px #82542d; margin: 5px;}
 </style>
 
 
@@ -155,7 +155,7 @@
 			.attr("text-anchor", "middle")
 			.attr("transform", "translate(" +margin.left/3  + "," + height/2+")rotate(-90)")
 			.style('font-size', '12px')
-                        .style('fill', 'white')
+                        .style('fill', '#82542d')
 			.text("Forms Complete");
 		svg.selectAll(".xaxis text")
 			.attr("transform", "translate(-10,15)rotate(-45)");
