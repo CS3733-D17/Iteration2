@@ -129,7 +129,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
         } else {
             String brand = request.getParameter("keywords") != null ? request.getParameter("keywords") : "";
             List<Filter> filters = new LinkedList<>();
-            filters.add(new BrandNameRange(brand));
+            //filters.add(new BrandNameRange(brand));
             filters.add(new AcceptedFilter(true));
             combined.add(filters);
         }
@@ -196,7 +196,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
 
                     case "date":
                         if (request.getParameter("date").equals("between")) {
-                            if (!(request.getParameter("date_low") != null) && !(request.getParameter("date_hi") != null)) {
+                            if ((request.getParameter("date_low") != null) && (request.getParameter("date_hi") != null)) {
                                 String lo = request.getParameter("date_low");
                                 String hi = request.getParameter("date_hi");
                                 SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
@@ -214,6 +214,7 @@ public class ManufacturerSearchServlet extends HttpServlet {
                                     hiDate = new java.sql.Date(high.getTime());
                                     f.add(new DateRange(loDate, hiDate));
                                 } catch (Exception ex) {
+                                    ex.printStackTrace();
                                 }
                             }
                         } else if (!(request.getParameter("date_low") == null || request.getParameter("date_low").equals(""))) {
